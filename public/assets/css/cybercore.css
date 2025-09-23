@@ -1,0 +1,220 @@
+/* Design tokens */
+:root{
+  --cc-bg:        #FFFFFF;
+  --cc-primary:   #035E7B;  /* blue-gray */
+  --cc-accent:    #FF2E00;  /* warm neon/orange */
+  --cc-surface:   #ffffe8;  /* soft panel */
+  --cc-border:    #d0cfcf;
+  --cc-text:      #22313a;  /* neutral body copy */
+  --cc-muted:     #6b7280;
+
+  /* Bootstrap runtime variables (no Sass compile needed) */
+  --bs-body-bg:         var(--cc-bg);
+  --bs-body-color:      var(--cc-text);
+
+  --bs-primary:         var(--cc-primary);
+  --bs-primary-rgb:     88,111,124;
+
+  --bs-danger:          var(--cc-accent);      /* we reuse "danger" as Accent */
+  --bs-danger-rgb:      245,93,62;
+
+  --bs-link-color:      var(--cc-primary);
+  --bs-link-hover-color:#435864;
+}
+
+/* Base & accessibility */
+html{
+  scroll-behavior:smooth;
+  /* Prevent anchors from hiding under sticky header */
+  scroll-padding-top:5rem;
+}
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+body{
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+               Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  line-height:1.6;
+  color:var(--cc-text);
+  background:var(--cc-bg);
+}
+
+/* Ensure section anchors land with breathing room beneath sticky header */
+section[id]{ scroll-margin-top:5rem; }
+
+/* Keep standard links underlined for readability; buttons handle their own */
+a{ text-underline-offset:.12em; }
+a:hover{ text-decoration-thickness:2px; }
+
+/* Visible focus outlines for keyboard users */
+:focus-visible{
+  outline:3px solid var(--cc-primary);
+  outline-offset:2px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Navbar (dark)
+   ───────────────────────────────────────────────────────────── */
+.navbar-dark{
+  background:var(--cc-primary);
+  --bs-navbar-color:rgba(255,255,255,.85);
+  --bs-navbar-hover-color:#fff;
+  --bs-navbar-brand-color:#fff;
+  --bs-navbar-brand-hover-color:#fff;
+}
+.navbar-dark .nav-link{
+  text-decoration:none;  /* nav feels like app chrome */
+}
+
+/* Brand mark — use a web path */
+.navbar-brand .brand-mark{
+  width:40px;height:40px;border-radius:10px;
+  display:inline-block;margin-right:.5rem;
+  background:url("/assets/img/favicon.ico") no-repeat center / contain;
+}
+
+/* Optional scrolled style */
+.navbar.scrolled{
+  box-shadow:0 6px 20px rgba(0,0,0,.12);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Footer (dark)
+   ───────────────────────────────────────────────────────────── */
+.footer-dark{
+  background:var(--cc-primary);
+  color:#fff;
+}
+.footer-dark .footer-link{
+  color:rgba(255,255,255,.8);
+  text-decoration:none;
+}
+.footer-dark .footer-link:hover{ color:#fff; }
+
+/* ─────────────────────────────────────────────────────────────
+   Hero (echo logo glow)
+   ───────────────────────────────────────────────────────────── */
+.hero-wrap{
+  position:relative;
+  background:
+    radial-gradient(60% 60% at 90% 0%, rgba(88,111,124,.12) 0%, transparent 60%),
+    radial-gradient(35% 35% at 15% 20%, rgba(245,93,62,.12) 0%, transparent 70%),
+    var(--cc-bg);
+}
+.hero-kicker{
+  color:var(--cc-accent);
+  font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  font-size:.85rem;
+}
+.hero-title{ font-weight:800; letter-spacing:-.02em; }
+.hero-sub{ color:var(--cc-muted); max-width:56ch; }
+
+/* ─────────────────────────────────────────────────────────────
+   Cards, modules, surfaces
+   ───────────────────────────────────────────────────────────── */
+.card{ border-color:var(--cc-border); background:#fff; }
+.bg-surface{ background:var(--cc-surface)!important; }
+
+.module-card{
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.module-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 30px rgba(0,0,0,.10);
+}
+
+.feature-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:grid;place-items:center;font-weight:700;
+  background:rgba(88,111,124,.14); color:var(--cc-primary);
+}
+
+/* Badges row */
+.badge-pill{
+  padding:.5rem .8rem;border-radius:999px;
+  background:rgba(245,93,62,.10);
+  color:var(--cc-accent); font-weight:600;font-size:.9rem;
+}
+
+/* CTA panel */
+.cta{
+  background:linear-gradient(120deg, rgba(88,111,124,.10), rgba(245,93,62,.10));
+  border:1px solid rgba(88,111,124,.20);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Buttons (accent + primary) and “button-like” links
+   ───────────────────────────────────────────────────────────── */
+a.btn,
+a.btn:visited,
+a.btn:hover,
+a.btn:focus,
+a.btn:active{ text-decoration:none !important; }
+
+.btn-primary{
+  background:var(--cc-primary);
+  border-color:var(--cc-primary);
+}
+.btn-primary:hover{ filter:brightness(.95); }
+
+.btn-accent,
+.btn-danger{            /* map .btn-danger to Accent for CTA pop */
+  background:var(--cc-accent);
+  border-color:var(--cc-accent);
+  box-shadow:0 0 .6rem rgba(245,93,62,.45), 0 0 1.2rem rgba(245,93,62,.25);
+}
+.btn-accent:hover,
+.btn-danger:hover{ filter:brightness(.96); }
+
+.btn-outline-light{
+  color:#fff;border-color:#ffffff66;
+}
+.btn-outline-light:hover{
+  color:#222;background:#fff;border-color:#fff;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Forms & Quiz readability
+   ───────────────────────────────────────────────────────────── */
+.quiz-stem{ max-width:65ch; font-size:1.1rem; }
+
+.form-check .form-check-input{ width:1.2rem;height:1.2rem; }
+.form-check .form-check-label{ padding-left:.35rem; }
+
+.option-block{
+  padding:.75rem 1rem;
+  border:1px solid var(--cc-border);
+  border-radius:.5rem;
+}
+.option-block:hover{ background:#fafafa; }
+
+#timerRegion{ color:var(--cc-muted); }
+
+/* Inputs/borders tone */
+.form-control, .form-select, .form-check-input{
+  border-color:var(--cc-border);
+}
+.form-control:focus, .form-select:focus{
+  border-color:var(--cc-primary);
+  box-shadow:0 0 0 .2rem rgba(88,111,124,.25);
+}
+
+/* Progress bars in brand colors */
+.progress{ background:#f1f3f4; }
+.progress-bar{ background:var(--cc-primary); }
+.progress-bar.accent{ background:var(--cc-accent); }
+
+/* Tables */
+.table > :not(caption) > * > *{
+  border-color:var(--cc-border);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Utilities
+   ───────────────────────────────────────────────────────────── */
+.navbar .btn{ /* keep nav buttons compact on large screens */
+  --bs-btn-padding-y:.35rem;
+  --bs-btn-padding-x:.75rem;
+}
+
+/* Optional subtle shadows for cards/boxes */
+.shadow-soft{ box-shadow:0 8px 24px rgba(0,0,0,.08); }
