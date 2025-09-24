@@ -1,25 +1,25 @@
 /* Design tokens */
 :root{
-  --cc-bg:        #FFFFFF;
-  --cc-primary:   #035E7B;  /* blue-gray */
-  --cc-accent:    #FF2E00;  /* warm neon/orange */
-  --cc-surface:   #ffffe8;  /* soft panel */
-  --cc-border:    #d0cfcf;
-  --cc-text:      #22313a;  /* neutral body copy */
-  --cc-muted:     #6b7280;
+  --cc-bg:        #f8f9fa;  /* Soft off-white */
+  --cc-primary:   #2a4b7c;  /* Modern blue */
+  --cc-accent:    #ba3521;  /* User-specified red */
+  --cc-surface:   #ffffff;  /* Pure white for panels */
+  --cc-border:    #dee2e6;
+  --cc-text:      #212529;  /* neutral body copy */
+  --cc-muted:     #6c757d;
 
   /* Bootstrap runtime variables (no Sass compile needed) */
   --bs-body-bg:         var(--cc-bg);
   --bs-body-color:      var(--cc-text);
 
   --bs-primary:         var(--cc-primary);
-  --bs-primary-rgb:     88,111,124;
+  --bs-primary-rgb:     42, 75, 124;
 
   --bs-danger:          var(--cc-accent);      /* we reuse "danger" as Accent */
-  --bs-danger-rgb:      245,93,62;
+  --bs-danger-rgb:      186, 53, 33;
 
   --bs-link-color:      var(--cc-primary);
-  --bs-link-hover-color:#435864;
+  --bs-link-hover-color: #203a60; /* Darker blue for hover */
 }
 
 /* Base & accessibility */
@@ -96,8 +96,8 @@ a:hover{ text-decoration-thickness:2px; }
 .hero-wrap{
   position:relative;
   background:
-    radial-gradient(60% 60% at 90% 0%, rgba(88,111,124,.12) 0%, transparent 60%),
-    radial-gradient(35% 35% at 15% 20%, rgba(245,93,62,.12) 0%, transparent 70%),
+    radial-gradient(60% 60% at 90% 0%, rgba(var(--bs-primary-rgb),.12) 0%, transparent 60%),
+    radial-gradient(35% 35% at 15% 20%, rgba(var(--bs-danger-rgb),.12) 0%, transparent 70%),
     var(--cc-bg);
 }
 .hero-kicker{
@@ -122,23 +122,29 @@ a:hover{ text-decoration-thickness:2px; }
   box-shadow:0 12px 30px rgba(0,0,0,.10);
 }
 
-.feature-icon{
-  width:48px;height:48px;border-radius:12px;
-  display:grid;place-items:center;font-weight:700;
-  background:rgba(88,111,124,.14); color:var(--cc-primary);
+.feature-icon-wrap{
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--cc-primary);
+  margin-bottom: 1rem;
 }
 
 /* Badges row */
 .badge-pill{
   padding:.5rem .8rem;border-radius:999px;
-  background:rgba(245,93,62,.10);
+  background:rgba(var(--bs-danger-rgb),.10);
   color:var(--cc-accent); font-weight:600;font-size:.9rem;
 }
 
 /* CTA panel */
 .cta{
-  background:linear-gradient(120deg, rgba(88,111,124,.10), rgba(245,93,62,.10));
-  border:1px solid rgba(88,111,124,.20);
+  background:linear-gradient(120deg, rgba(var(--bs-primary-rgb),.10), rgba(var(--bs-danger-rgb),.10));
+  border:1px solid rgba(var(--bs-primary-rgb),.20);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -160,7 +166,7 @@ a.btn:active{ text-decoration:none !important; }
 .btn-danger{            /* map .btn-danger to Accent for CTA pop */
   background:var(--cc-accent);
   border-color:var(--cc-accent);
-  box-shadow:0 0 .6rem rgba(245,93,62,.45), 0 0 1.2rem rgba(245,93,62,.25);
+  box-shadow:0 0 .6rem rgba(var(--bs-danger-rgb),.45), 0 0 1.2rem rgba(var(--bs-danger-rgb),.25);
 }
 .btn-accent:hover,
 .btn-danger:hover{ filter:brightness(.96); }
@@ -195,7 +201,7 @@ a.btn:active{ text-decoration:none !important; }
 }
 .form-control:focus, .form-select:focus{
   border-color:var(--cc-primary);
-  box-shadow:0 0 0 .2rem rgba(88,111,124,.25);
+  box-shadow:0 0 0 .2rem rgba(var(--bs-primary-rgb),.25);
 }
 
 /* Progress bars in brand colors */
