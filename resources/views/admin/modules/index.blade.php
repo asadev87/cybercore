@@ -5,7 +5,9 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h4 class="mb-0">Modules</h4>
-  <a href="{{ route('admin.modules.create') }}" class="btn btn-primary btn-sm">New Module</a>
+  @can('create', App\Models\Module::class)
+    <a href="{{ route('admin.modules.create') }}" class="btn btn-primary btn-sm">New Module</a>
+  @endcan
 </div>
 
 @if(session('ok')) <div class="alert alert-success">{{ session('ok') }}</div> @endif

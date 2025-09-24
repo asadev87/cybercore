@@ -27,7 +27,7 @@ class LearnController extends Controller
     // join simple progress
     $prog = \DB::table('user_section_progress')->where('user_id',$userId)->pluck('percent_complete','section_id');
 
-    return view('learn.module', compact('module','sections','prog'));
+    return view('learn.show', compact('module','sections','prog'));
 }
 
 }

@@ -53,12 +53,11 @@
     <x-dropdown-link :href="route('admin.dashboard')">
         {{ __('Admin Dashboard') }}
     </x-dropdown-link>
-  @else
-    @role('lecturer')
-        <x-dropdown-link :href="route('admin.modules.index')">
-            {{ __('Lecturer Dashboard') }}
-        </x-dropdown-link>
-    @endrole
+  @endrole
+  @role('lecturer')
+    <x-dropdown-link :href="route('admin.modules.index')">
+        {{ __('Lecturer Dashboard') }}
+    </x-dropdown-link>
   @endrole
 @endauth
 

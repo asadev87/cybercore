@@ -53,7 +53,7 @@ Route::get('/_mail/test', function () {
 
 
 //Admin
-Route::middleware(['auth','verified','role:admin|lecturer'])
+Route::middleware(['auth','verified','role:admin'])
 ->prefix('admin')->name('admin.')
 ->group(function(){
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
