@@ -53,19 +53,22 @@ Route::get('/_mail/test', function () {
 
 
 //Admin
-Route::middleware(['auth','verified','role:admin'])
-->prefix('admin')->name('admin.')
-->group(function(){
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('modules', ModuleController::class);
-    Route::resource('modules.questions', QuestionController::class); // nested
-    Route::post('modules/{module}/questions/import', [ImportController::class,'questions'])->name('modules.questions.import');
-    Route::get('modules/{module}/questions/template', [\App\Http\Controllers\Admin\ImportController::class, 'template'])->name('modules.questions.template');
-    Route::get('reports',               [ReportsController::class, 'index'])->name('reports.index');
-    Route::get('reports/export/excel',  [ReportsController::class, 'exportExcel'])->name('reports.export.excel');
-    Route::get('reports/export/pdf',    [ReportsController::class, 'exportPdf'])->name('reports.export.pdf');
-    Route::resource('modules.sections', SectionController::class);
-    Route::resource('modules.questions', \App\Http\Controllers\Admin\QuestionController::class);
+Route::middleware(['auth','verified'])->prefix('admin')->name('admin.')->group(function(){
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard')->middleware('role:admin');
+
+    Route::middleware(['role:admin|lecturer'])->group(function () {
+        Route::resource('modules', ModuleController::class);
+        Route::resource('modules.questions', QuestionController::class);
+        Route::resource('modules.sections', SectionController::class);
+        Route::post('modules/{module}/questions/import', [ImportController::class,'questions'])->name('modules.questions.import');
+        Route::get('modules/{module}/questions/template', [\App\Http\Controllers\Admin\ImportController::class, 'template'])->name('modules.questions.template');
+    });
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
+        Route::get('reports/export/excel',  [ReportsController::class, 'exportExcel'])->name('reports.export.excel');
+        Route::get('reports/export/pdf',    [ReportsController::class, 'exportPdf'])->name('reports.export.pdf');
+    });
 });
 
 
