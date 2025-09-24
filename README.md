@@ -1,62 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CyberCore E-Learning Platform
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/logo.png" width="120" alt="CyberCore Logo">
+</p>
+<p align="center">
+  <strong>A modern, secure e-learning platform for cybersecurity education.</strong>
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## About CyberCore
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+CyberCore is a web-based e-learning application designed to provide accessible, engaging, and effective cybersecurity training. It's built on the Laravel framework and focuses on providing a clean, modern user experience for students, lecturers, and administrators.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The platform allows lecturers to create and manage their own courses, while administrators oversee the entire system. Students can enroll in courses, take quizzes, track their progress, and earn certificates.
 
-## Learning Laravel
+## Key Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Role-Based Access Control:**
+  - **Admin:** Full control over all courses, users, and system settings.
+  - **Lecturer:** Can create, manage, and edit their own courses.
+  - **Student:** Can enroll in courses, complete lessons, and take quizzes.
+- **Modern User Interface:** A clean, responsive, and visually appealing design with a focus on user experience.
+- **Interactive Course Management:** Lecturers have a dedicated dashboard to create and manage their course content.
+- **Progress Tracking:** Students can easily view their progress through courses and sections.
+- **Sample Content:** The platform comes pre-loaded with sample cybersecurity courses to get started right away.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Getting Started
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Follow these steps to get the project up and running on your local machine.
 
-## Laravel Sponsors
+### 1. Prerequisites
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- A database (e.g., MySQL, PostgreSQL, SQLite)
 
-### Premium Partners
+### 2. Installation
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd cybercore
+    ```
 
-## Contributing
+2.  **Install PHP dependencies:**
+    ```bash
+    composer install
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3.  **Install NPM dependencies:**
+    ```bash
+    npm install
+    npm run build
+    ```
 
-## Code of Conduct
+4.  **Set up your environment file:**
+    - Copy the example environment file:
+      ```bash
+      cp .env.example .env
+      ```
+    - Generate an application key:
+      ```bash
+      php artisan key:generate
+      ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5.  **Configure your database:**
+    - Open the `.env` file and update the `DB_*` variables with your database credentials.
+      ```
+      DB_CONNECTION=mysql
+      DB_HOST=127.0.0.1
+      DB_PORT=3306
+      DB_DATABASE=cybercore
+      DB_USERNAME=root
+      DB_PASSWORD=
+      ```
 
-## Security Vulnerabilities
+6.  **Run the database migrations and seeders:**
+    - This will create the necessary tables and populate the database with default roles, users, and courses.
+    ```bash
+    php artisan migrate --seed
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+7.  **Start the development server:**
+    ```bash
+    php artisan serve
+    ```
+
+You can now access the application at `http://127.0.0.1:8000`.
+
+## Default User Accounts
+
+The database seeder creates two default accounts for you to use:
+
+| Role      | Email                      | Password   |
+| :-------- | :------------------------- | :--------- |
+| **Admin** | `admin@cybercore.local`    | `anas0807` |
+| **Lecturer**| `lecturer@cybercore.local` | `password` |
+
+You can also register a new account, which will have the "student" role by default.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# cybercore
+The CyberCore platform is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
