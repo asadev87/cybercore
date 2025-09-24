@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
     ]);
         $this->call(\Database\Seeders\DemoQuizSeeder::class);
         $this->call(RoleAndAdminSeeder::class);
+        $this->call(LecturerSeeder::class);
+        $this->call(CourseSeeder::class);
         // User::factory(10)->create();
 
         User::factory()->create([

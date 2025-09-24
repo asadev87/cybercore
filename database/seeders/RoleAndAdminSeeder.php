@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class RoleAndAdminSeeder extends Seeder {
   public function run(): void {
     $admin = Role::firstOrCreate(['name'=>'admin']);
+    $lecturer = Role::firstOrCreate(['name' => 'lecturer']);
     $user  = Role::firstOrCreate(['name'=>'user']);
 
     $u = User::firstOrCreate(

@@ -7,6 +7,7 @@
     <div class="card-body">
       <h3 class="mb-1">{{ $module->title }}</h3>
       <p class="text-muted mb-3">{{ $module->description }}</p>
+      <p class="text-muted small">Taught by: {{ $module->user->name ?? 'N/A' }}</p>
       @php
         $total = max(1,$sections->count());
         $done  = $sections->filter(fn($s)=>($prog[$s->id]??0) >= 100)->count();

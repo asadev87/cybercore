@@ -49,10 +49,10 @@
                             </x-dropdown-link>
                         </form>
                         @auth
-  @role('admin')
-    <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-outline-danger ms-2">
-      Admin
-    </a>
+  @role('admin|lecturer')
+    <x-dropdown-link :href="route('admin.modules.index')">
+        {{ __('Manage Modules') }}
+    </x-dropdown-link>
   @endrole
 @endauth
 
