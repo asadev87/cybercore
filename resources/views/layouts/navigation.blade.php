@@ -49,10 +49,16 @@
                             </x-dropdown-link>
                         </form>
                         @auth
-  @role('admin|lecturer')
-    <x-dropdown-link :href="route('admin.modules.index')">
-        {{ __('Manage Modules') }}
+  @role('admin')
+    <x-dropdown-link :href="route('admin.dashboard')">
+        {{ __('Admin Dashboard') }}
     </x-dropdown-link>
+  @else
+    @role('lecturer')
+        <x-dropdown-link :href="route('admin.modules.index')">
+            {{ __('Lecturer Dashboard') }}
+        </x-dropdown-link>
+    @endrole
   @endrole
 @endauth
 
