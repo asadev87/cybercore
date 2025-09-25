@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Module;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +27,8 @@ class ModuleController extends Controller
     public function create()
     {
         $this->authorize('create', Module::class);
-        return view('admin.modules.create');
+        $lecturers = User::role('lecturer')->get();
+        return view('admin.modules.create', compact('lecturers'));
     }
 
     public function store(Request $r)
@@ -37,11 +39,15 @@ class ModuleController extends Controller
             'title' => 'required|string|max:150',
             'description' => 'nullable|string',
             'pass_score' => 'required|integer|min:1|max:100',
-            'is_active' => 'nullable|boolean'
+            'is_active' => 'nullable|boolean',
+            'user_id' => 'required|exists:users,id'
         ]);
 
         $data['is_active'] = $r->boolean('is_active');
-        $data['user_id'] = Auth::id();
+
+        if (Auth::user()->hasRole('lecturer')) {
+            $data['user_id'] = Auth::id();
+        }
 
         Module::create($data);
         return redirect()->route('admin.modules.index')->with('ok', 'Module created.');
@@ -50,7 +56,8 @@ class ModuleController extends Controller
     public function edit(Module $module)
     {
         $this->authorize('update', $module);
-        return view('admin.modules.edit', compact('module'));
+        $lecturers = User::role('lecturer')->get();
+        return view('admin.modules.edit', compact('module', 'lecturers'));
     }
 
     public function update(Request $r, Module $module)
@@ -61,10 +68,16 @@ class ModuleController extends Controller
             'title' => 'required|string|max:150',
             'description' => 'nullable|string',
             'pass_score' => 'required|integer|min:1|max:100',
-            'is_active' => 'nullable|boolean'
+            'is_active' => 'nullable|boolean',
+            'user_id' => 'required|exists:users,id'
         ]);
 
         $data['is_active'] = $r->boolean('is_active');
+
+        if (Auth::user()->hasRole('lecturer')) {
+            $data['user_id'] = Auth::id();
+        }
+
         $module->update($data);
         return redirect()->route('admin.modules.index')->with('ok', 'Module updated.');
     }
