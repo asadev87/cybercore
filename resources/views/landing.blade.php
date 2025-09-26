@@ -30,9 +30,7 @@
 
     <div class="collapse navbar-collapse" id="ccNav">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-        <li class="nav-item"><a class="nav-link" href="#how">How it works</a></li>
-        <li class="nav-item"><a class="nav-link" href="#topics">Topics</a></li>
-        <li class="nav-item"><a class="nav-link" href="#security">Security</a></li>
+        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
 
         @auth
           @role('admin')
@@ -78,8 +76,8 @@
           for students, educators, and non-technical users through interactive modules and quizzes.
         </p>
         <div class="d-flex gap-3 mt-4">
-          <a class="btn btn-primary btn-lg" href="{{ route('register') }}">Start learning</a>
-          <a class="btn btn-light btn-lg" href="#topics">Browse topics</a>
+          <a class="btn btn-primary btn-lg" href="{{ route('register') }}">Start Learning</a>
+          <a class="btn btn-light btn-lg" href="#features">Explore Features</a>
         </div>
         <div class="d-flex align-items-center gap-3 mt-4">
           <span class="badge-pill">Phishing</span>
@@ -91,19 +89,19 @@
 
       <div class="col-lg-6">
         {{-- Accessible illustrative panel (SVG, no external images) --}}
-        <div class="p-4 p-lg-5 border rounded-4 shadow-sm bg-white">
+        <div class="p-4 p-lg-5 border rounded-4 shadow-sm" style="background-color: var(--cc-surface);">
           <svg role="img" aria-label="Illustration of secure learning" width="100%" height="260" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="700" height="260" rx="18" fill="#f8fafc"/>
-            <rect x="28" y="24" width="300" height="210" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
-            <rect x="52" y="56" width="252" height="16" rx="8" fill="#dbeafe"/>
-            <rect x="52" y="84" width="180" height="12" rx="6" fill="#bfdbfe"/>
-            <rect x="52" y="108" width="220" height="12" rx="6" fill="#bfdbfe"/>
-            <rect x="52" y="156" width="120" height="32" rx="8" fill="#2b6cb0"/>
-            <rect x="360" y="24" width="312" height="210" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
-            <circle cx="516" cy="100" r="48" fill="#8b0000" opacity=".12"/>
-            <path d="M488 112 l24 24 l40 -56" stroke="#8b0000" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="420" y="156" width="180" height="12" rx="6" fill="#e5e7eb"/>
-            <rect x="420" y="176" width="160" height="12" rx="6" fill="#e5e7eb"/>
+            <rect x="0" y="0" width="700" height="260" rx="18" fill="var(--cc-bg)"/>
+            <rect x="28" y="24" width="300" height="210" rx="12" fill="var(--cc-surface)" stroke="var(--cc-border)"/>
+            <rect x="52" y="56" width="252" height="16" rx="8" fill="rgba(var(--bs-primary-rgb), 0.2)"/>
+            <rect x="52" y="84" width="180" height="12" rx="6" fill="rgba(var(--bs-primary-rgb), 0.2)"/>
+            <rect x="52" y="108" width="220" height="12" rx="6" fill="rgba(var(--bs-primary-rgb), 0.2)"/>
+            <rect x="52" y="156" width="120" height="32" rx="8" fill="var(--cc-primary)"/>
+            <rect x="360" y="24" width="312" height="210" rx="12" fill="var(--cc-surface)" stroke="var(--cc-border)"/>
+            <circle cx="516" cy="100" r="48" fill="rgba(var(--bs-danger-rgb), 0.1)"/>
+            <path d="M488 112 l24 24 l40 -56" stroke="var(--cc-accent)" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="420" y="156" width="180" height="12" rx="6" fill="rgba(var(--bs-primary-rgb), 0.1)"/>
+            <rect x="420" y="176" width="160" height="12" rx="6" fill="rgba(var(--bs-primary-rgb), 0.1)"/>
           </svg>
           <div class="mt-3 small text-secondary">No downloads required • Web-based • Works on desktop & mobile</div>
         </div>
@@ -112,82 +110,34 @@
   </div>
 </header>
 
-{{-- HOW IT WORKS --}}
-<section id="how" class="py-5 bg-hint">
+{{-- FEATURES --}}
+<section id="features" class="py-5">
   <div class="container">
-    <div class="text-center mb-4">
-      <h2 class="fw-bold">How CyberCore works</h2>
-      <p class="text-secondary mb-0">Learn → Take quizzes → Earn certificates</p>
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">A modern learning platform</h2>
+      <p class="text-secondary mb-0">Designed for engagement and effective learning.</p>
     </div>
-    <div class="row g-4">
-      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
-        <h5 class="card-title">1. Learn</h5>
-        <p class="text-secondary mb-0">Short modules that respect your time.</p>
-      </div></div></div>
-      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
-        <h5 class="card-title">2. Quiz</h5>
-        <p class="text-secondary mb-0">Adaptive questions with instant feedback.</p>
-      </div></div></div>
-      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
-        <h5 class="card-title">3. Certificate</h5>
-        <p class="text-secondary mb-0">View-only certificate upon passing.</p>
-      </div></div></div>
-    </div>
-  </div>
-</section>
-
-{{-- TOPICS (Modules) --}}
-<section id="topics" class="py-5">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-end mb-4">
-      <div>
-        <h2 class="fw-bold mb-0">Core topics</h2>
-        <p class="text-secondary mb-0">Start with these essentials—designed for all learners.</p>
+    <div class="row g-4 text-center">
+      <div class="col-md-4">
+        <div class="feature-icon-wrap mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 11.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/></svg>
+        </div>
+        <h5 class="fw-semibold">Interactive Learning</h5>
+        <p class="text-secondary">Engage with concise, easy-to-digest modules that respect your time and keep you focused.</p>
       </div>
-      <a class="btn btn-outline-primary" href="{{ route('register') }}">Enroll free</a>
-    </div>
-
-    @php($modules = \App\Models\Module::where('is_active',true)->orderBy('title')->limit(4)->get())
-    <div class="row g-4">
-      @forelse($modules as $m)
-        <div class="col-md-6 col-lg-3">
-          <div class="card h-100 module-card">
-            <div class="card-body">
-              <h5 class="card-title">{{ $m->title }}</h5>
-              <p class="card-text text-secondary">{{ \Illuminate\Support\Str::limit($m->description, 90) }}</p>
-              @auth
-                <a href="{{ route('learn.start',$m) }}" class="btn btn-sm btn-primary">Begin</a>
-              @else
-                <a href="{{ route('register') }}" class="btn btn-sm btn-primary">Begin</a>
-              @endauth
-            </div>
-          </div>
+      <div class="col-md-4">
+        <div class="feature-icon-wrap mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8.211 6.148a.5.5 0 0 0-.422 0l-3.32 1.66A.5.5 0 0 0 4 8.216V14.5a.5.5 0 0 0 .789.407l3.32-1.66a.5.5 0 0 0 .422 0l3.32 1.66A.5.5 0 0 0 12 14.5V8.216a.5.5 0 0 0-.789-.408l-3.32-1.66zM5 8.618l2.875-1.438L10.75 8.618 8 10.057 5 8.618z"/><path d="M14 4.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5zM2 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 3zm12 3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z"/></svg>
         </div>
-      @empty
-        {{-- Fallback tiles if no DB modules yet --}}
-        <div class="col-12">
-          <div class="alert alert-info mb-0">Modules will appear here once published by Admin.</div>
-        </div>
-      @endforelse
-    </div>
-  </div>
-</section>
-
-{{-- SECURITY --}}
-<section id="security" class="py-5">
-  <div class="container">
-    <div class="row align-items-center gy-4">
-      <div class="col-lg-6">
-        <h2 class="fw-bold"></h2>
-        <ul class="text-secondary mb-0">
-        </ul>
+        <h5 class="fw-semibold">Adaptive Quizzes</h5>
+        <p class="text-secondary">Test your knowledge with dynamic quizzes that provide instant feedback to reinforce learning.</p>
       </div>
-      <div class="col-lg-6">
-        <div class="cta rounded-4 p-4 p-lg-5">
-          <h5 class="mb-3">Learners first, always.</h5>
-          <p class="text-secondary mb-4">We combine engaging content with learning science so anyone can develop real-world cyber safety skills.</p>
-          <a href="{{ route('register') }}" class="btn btn-danger">Create your free account</a>
+      <div class="col-md-4">
+        <div class="feature-icon-wrap mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8 11.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5z"/><path d="M2.5 8a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm2 1.5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2-3a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2 2.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm2-5a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-1 0v-9a.5.5 0 0 1 .5-.5zM1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zM1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5-.5h-13a.5.5 0 0 1-.5-.5v-9z"/></svg>
         </div>
+        <h5 class="fw-semibold">Progress & Certificates</h5>
+        <p class="text-secondary">Track your progress and earn shareable certificates to showcase your achievements.</p>
       </div>
     </div>
   </div>
@@ -200,9 +150,7 @@
     <div class="d-flex gap-3">
       <a class="footer-link" href="#">Privacy</a>
       <a class="footer-link" href="#">Terms</a>
-      <a class="footer-link" href="#how">How</a>
-      <a class="footer-link" href="#topics">Topics</a>
-      <a class="footer-link" href="#security">Security</a>
+      <a class="footer-link" href="#features">Features</a>
     </div>
   </div>
 </footer>
