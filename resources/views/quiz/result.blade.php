@@ -4,17 +4,6 @@
 @section('content')
 <div class="container py-4">
 
-  @php
-    $passScore   = $attempt->module->pass_score ?? 70;
-    $passed      = (int)($attempt->score ?? 0) >= $passScore;
-
-    // Fetch latest certificate for this user+module (if any)
-    $certificate = \App\Models\Certificate::where('user_id', auth()->id())
-                  ->where('module_id', $attempt->module_id)
-                  ->latest('issued_at')
-                  ->first();
-  @endphp
-
   <div class="card shadow-sm mb-4">
     <div class="card-body">
       <div class="d-flex align-items-center gap-2 flex-wrap">
