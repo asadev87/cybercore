@@ -1,10 +1,10 @@
 /* Design tokens */
 :root{
-  --cc-bg:        #f8f9fa;  /* Soft off-white */
-  --cc-primary:   #2a4b7c;  /* Modern blue */
-  --cc-accent:    #ba3521;  /* User-specified red */
-  --cc-surface:   #ffffff;  /* Pure white for panels */
-  --cc-border:    #dee2e6;
+  --cc-bg:        #e7f0ff;  /* Main Page Background */
+  --cc-primary:   #79bcff;  /* Primary Color */
+  --cc-accent:    #abd0ff;  /* Accent Color */
+  --cc-surface:   #eaeaff;  /* Card/Panel Background */
+  --cc-border:    #cedaff;  /* Borders */
   --cc-text:      #212529;  /* neutral body copy */
   --cc-muted:     #6c757d;
 
@@ -13,13 +13,13 @@
   --bs-body-color:      var(--cc-text);
 
   --bs-primary:         var(--cc-primary);
-  --bs-primary-rgb:     42, 75, 124;
+  --bs-primary-rgb:     121, 188, 255;
 
   --bs-danger:          var(--cc-accent);      /* we reuse "danger" as Accent */
-  --bs-danger-rgb:      186, 53, 33;
+  --bs-danger-rgb:      171, 208, 255;
 
   --bs-link-color:      var(--cc-primary);
-  --bs-link-hover-color: #203a60; /* Darker blue for hover */
+  --bs-link-hover-color: #5d9ee6; /* Darker blue for hover */
 }
 
 /* Base & accessibility */
