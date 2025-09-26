@@ -36,6 +36,19 @@ body{
   line-height:1.6;
   color:var(--cc-text);
   background:var(--cc-bg);
+  position: relative;
+}
+
+.background-grid {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+        linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+    background-size: 20px 30px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
 }
 
 /* Ensure section anchors land with breathing room beneath sticky header */

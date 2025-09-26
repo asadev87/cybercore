@@ -16,6 +16,8 @@
 </head>
 <body>
 
+<div class="background-grid"></div>
+
 {{-- NAVBAR --}}
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
   <div class="container">
@@ -120,21 +122,21 @@
     <div class="row g-4 text-center">
       <div class="col-md-4">
         <div class="feature-icon-wrap mb-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 11.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M13 2.05078C13 2.05078 16 6.00001 16 12C16 18 13 21.9492 13 21.9492" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11 2.05078C11 2.05078 8 6.00001 8 12C8 18 11 21.9492 11 21.9492" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.62988 15.5H21.37" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.62988 8.5H21.37" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </div>
         <h5 class="fw-semibold">Interactive Learning</h5>
         <p class="text-secondary">Engage with concise, easy-to-digest modules that respect your time and keep you focused.</p>
       </div>
       <div class="col-md-4">
         <div class="feature-icon-wrap mb-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8.211 6.148a.5.5 0 0 0-.422 0l-3.32 1.66A.5.5 0 0 0 4 8.216V14.5a.5.5 0 0 0 .789.407l3.32-1.66a.5.5 0 0 0 .422 0l3.32 1.66A.5.5 0 0 0 12 14.5V8.216a.5.5 0 0 0-.789-.408l-3.32-1.66zM5 8.618l2.875-1.438L10.75 8.618 8 10.057 5 8.618z"/><path d="M14 4.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5zM2 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 3zm12 3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z"/></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.8284 16.8284L18.2426 15.4142M18.2426 15.4142L15.4142 18.2426M18.2426 15.4142L19.6568 14M5.75736 5.75736L4.34315 7.17157M4.34315 7.17157L7.17157 4.34315M4.34315 7.17157L3 8.68629" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.5 12C14.5 13.3807 13.3807 14.5 12 14.5C10.6193 14.5 9.5 13.3807 9.5 12C9.5 10.6193 10.6193 9.5 12 9.5C13.3807 9.5 14.5 10.6193 14.5 12Z" stroke="currentColor"></path></svg>
         </div>
         <h5 class="fw-semibold">Adaptive Quizzes</h5>
         <p class="text-secondary">Test your knowledge with dynamic quizzes that provide instant feedback to reinforce learning.</p>
       </div>
       <div class="col-md-4">
         <div class="feature-icon-wrap mb-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8 11.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5z"/><path d="M2.5 8a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm2 1.5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2-3a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2 2.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm2-5a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-1 0v-9a.5.5 0 0 1 .5-.5zM1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zM1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5-.5h-13a.5.5 0 0 1-.5-.5v-9z"/></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.5 13.5L10.5 15.5L15.5 10.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </div>
         <h5 class="fw-semibold">Progress & Certificates</h5>
         <p class="text-secondary">Track your progress and earn shareable certificates to showcase your achievements.</p>
