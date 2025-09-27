@@ -45,7 +45,7 @@ class ModuleController extends Controller
 
         $data['is_active'] = $r->boolean('is_active');
 
-        if (!Auth::user()->hasRole('admin')) {
+        if (Auth::user()->hasRole('lecturer')) {
             $data['user_id'] = Auth::id();
         }
 
@@ -74,7 +74,7 @@ class ModuleController extends Controller
 
         $data['is_active'] = $r->boolean('is_active');
 
-        if (!Auth::user()->hasRole('admin')) {
+        if (Auth::user()->hasRole('lecturer')) {
             $data['user_id'] = Auth::id();
         }
 

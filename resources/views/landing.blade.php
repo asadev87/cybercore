@@ -16,8 +16,6 @@
 </head>
 <body>
 
-<div class="background-grid"></div>
-
 {{-- NAVBAR --}}
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
   <div class="container">
@@ -32,7 +30,9 @@
 
     <div class="collapse navbar-collapse" id="ccNav">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+        <li class="nav-item"><a class="nav-link" href="#how">How it works</a></li>
+        <li class="nav-item"><a class="nav-link" href="#topics">Topics</a></li>
+        <li class="nav-item"><a class="nav-link" href="#security">Security</a></li>
 
         @auth
           @role('admin')
@@ -78,8 +78,8 @@
           for students, educators, and non-technical users through interactive modules and quizzes.
         </p>
         <div class="d-flex gap-3 mt-4">
-          <a class="btn btn-primary btn-lg" href="{{ route('register') }}">Start Learning</a>
-          <a class="btn btn-light btn-lg" href="#features">Explore Features</a>
+          <a class="btn btn-primary btn-lg" href="{{ route('register') }}">Start learning</a>
+          <a class="btn btn-light btn-lg" href="#topics">Browse topics</a>
         </div>
         <div class="d-flex align-items-center gap-3 mt-4">
           <span class="badge-pill">Phishing</span>
@@ -91,19 +91,19 @@
 
       <div class="col-lg-6">
         {{-- Accessible illustrative panel (SVG, no external images) --}}
-        <div class="p-4 p-lg-5 border rounded-4 shadow-sm" style="background-color: var(--cc-surface);">
+        <div class="p-4 p-lg-5 border rounded-4 shadow-sm bg-white">
           <svg role="img" aria-label="Illustration of secure learning" width="100%" height="260" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="700" height="260" rx="18" fill="var(--cc-bg)"/>
-            <rect x="28" y="24" width="300" height="210" rx="12" fill="var(--cc-surface)" stroke="var(--cc-border)"/>
-            <rect x="52" y="56" width="252" height="16" rx="8" fill="rgba(var(--bs-primary-rgb), 0.2)"/>
-            <rect x="52" y="84" width="180" height="12" rx="6" fill="rgba(var(--bs-primary-rgb), 0.2)"/>
-            <rect x="52" y="108" width="220" height="12" rx="6" fill="rgba(var(--bs-primary-rgb), 0.2)"/>
-            <rect x="52" y="156" width="120" height="32" rx="8" fill="var(--cc-primary)"/>
-            <rect x="360" y="24" width="312" height="210" rx="12" fill="var(--cc-surface)" stroke="var(--cc-border)"/>
-            <circle cx="516" cy="100" r="48" fill="rgba(var(--bs-danger-rgb), 0.1)"/>
-            <path d="M488 112 l24 24 l40 -56" stroke="var(--cc-accent)" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="420" y="156" width="180" height="12" rx="6" fill="rgba(var(--bs-primary-rgb), 0.1)"/>
-            <rect x="420" y="176" width="160" height="12" rx="6" fill="rgba(var(--bs-primary-rgb), 0.1)"/>
+            <rect x="0" y="0" width="700" height="260" rx="18" fill="#f8fafc"/>
+            <rect x="28" y="24" width="300" height="210" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+            <rect x="52" y="56" width="252" height="16" rx="8" fill="#dbeafe"/>
+            <rect x="52" y="84" width="180" height="12" rx="6" fill="#bfdbfe"/>
+            <rect x="52" y="108" width="220" height="12" rx="6" fill="#bfdbfe"/>
+            <rect x="52" y="156" width="120" height="32" rx="8" fill="#2b6cb0"/>
+            <rect x="360" y="24" width="312" height="210" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+            <circle cx="516" cy="100" r="48" fill="#8b0000" opacity=".12"/>
+            <path d="M488 112 l24 24 l40 -56" stroke="#8b0000" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="420" y="156" width="180" height="12" rx="6" fill="#e5e7eb"/>
+            <rect x="420" y="176" width="160" height="12" rx="6" fill="#e5e7eb"/>
           </svg>
           <div class="mt-3 small text-secondary">No downloads required • Web-based • Works on desktop & mobile</div>
         </div>
@@ -112,34 +112,82 @@
   </div>
 </header>
 
-{{-- FEATURES --}}
-<section id="features" class="py-5">
+{{-- HOW IT WORKS --}}
+<section id="how" class="py-5 bg-hint">
   <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="fw-bold">A modern learning platform</h2>
-      <p class="text-secondary mb-0">Designed for engagement and effective learning.</p>
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">How CyberCore works</h2>
+      <p class="text-secondary mb-0">Learn → Take quizzes → Earn certificates</p>
     </div>
-    <div class="row g-4 text-center">
-      <div class="col-md-4">
-        <div class="feature-icon-wrap mb-3">
-          <svg width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M13 2.05078C13 2.05078 16 6.00001 16 12C16 18 13 21.9492 13 21.9492" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11 2.05078C11 2.05078 8 6.00001 8 12C8 18 11 21.9492 11 21.9492" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.62988 15.5H21.37" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.62988 8.5H21.37" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-        </div>
-        <h5 class="fw-semibold">Interactive Learning</h5>
-        <p class="text-secondary">Engage with concise, easy-to-digest modules that respect your time and keep you focused.</p>
+    <div class="row g-4">
+      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
+        <h5 class="card-title">1. Learn</h5>
+        <p class="text-secondary mb-0">Short modules that respect your time.</p>
+      </div></div></div>
+      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
+        <h5 class="card-title">2. Quiz</h5>
+        <p class="text-secondary mb-0">Adaptive questions with instant feedback.</p>
+      </div></div></div>
+      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
+        <h5 class="card-title">3. Certificate</h5>
+        <p class="text-secondary mb-0">View-only certificate upon passing.</p>
+      </div></div></div>
+    </div>
+  </div>
+</section>
+
+{{-- TOPICS (Modules) --}}
+<section id="topics" class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <h2 class="fw-bold mb-0">Core topics</h2>
+        <p class="text-secondary mb-0">Start with these essentials—designed for all learners.</p>
       </div>
-      <div class="col-md-4">
-        <div class="feature-icon-wrap mb-3">
-          <svg width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.8284 16.8284L18.2426 15.4142M18.2426 15.4142L15.4142 18.2426M18.2426 15.4142L19.6568 14M5.75736 5.75736L4.34315 7.17157M4.34315 7.17157L7.17157 4.34315M4.34315 7.17157L3 8.68629" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.5 12C14.5 13.3807 13.3807 14.5 12 14.5C10.6193 14.5 9.5 13.3807 9.5 12C9.5 10.6193 10.6193 9.5 12 9.5C13.3807 9.5 14.5 10.6193 14.5 12Z" stroke="currentColor"></path></svg>
+      <a class="btn btn-outline-primary" href="{{ route('register') }}">Enroll free</a>
+    </div>
+
+    @php($modules = \App\Models\Module::where('is_active',true)->orderBy('title')->limit(4)->get())
+    <div class="row g-4">
+      @forelse($modules as $m)
+        <div class="col-md-6 col-lg-3">
+          <div class="card h-100 module-card">
+            <div class="card-body">
+              <h5 class="card-title">{{ $m->title }}</h5>
+              <p class="card-text text-secondary">{{ \Illuminate\Support\Str::limit($m->description, 90) }}</p>
+              @auth
+                <a href="{{ route('learn.start',$m) }}" class="btn btn-sm btn-primary">Begin</a>
+              @else
+                <a href="{{ route('register') }}" class="btn btn-sm btn-primary">Begin</a>
+              @endauth
+            </div>
+          </div>
         </div>
-        <h5 class="fw-semibold">Adaptive Quizzes</h5>
-        <p class="text-secondary">Test your knowledge with dynamic quizzes that provide instant feedback to reinforce learning.</p>
+      @empty
+        {{-- Fallback tiles if no DB modules yet --}}
+        <div class="col-12">
+          <div class="alert alert-info mb-0">Modules will appear here once published by Admin.</div>
+        </div>
+      @endforelse
+    </div>
+  </div>
+</section>
+
+{{-- SECURITY --}}
+<section id="security" class="py-5">
+  <div class="container">
+    <div class="row align-items-center gy-4">
+      <div class="col-lg-6">
+        <h2 class="fw-bold"></h2>
+        <ul class="text-secondary mb-0">
+        </ul>
       </div>
-      <div class="col-md-4">
-        <div class="feature-icon-wrap mb-3">
-          <svg width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.5 13.5L10.5 15.5L15.5 10.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div class="col-lg-6">
+        <div class="cta rounded-4 p-4 p-lg-5">
+          <h5 class="mb-3">Learners first, always.</h5>
+          <p class="text-secondary mb-4">We combine engaging content with learning science so anyone can develop real-world cyber safety skills.</p>
+          <a href="{{ route('register') }}" class="btn btn-danger">Create your free account</a>
         </div>
-        <h5 class="fw-semibold">Progress & Certificates</h5>
-        <p class="text-secondary">Track your progress and earn shareable certificates to showcase your achievements.</p>
       </div>
     </div>
   </div>
@@ -152,7 +200,9 @@
     <div class="d-flex gap-3">
       <a class="footer-link" href="#">Privacy</a>
       <a class="footer-link" href="#">Terms</a>
-      <a class="footer-link" href="#features">Features</a>
+      <a class="footer-link" href="#how">How</a>
+      <a class="footer-link" href="#topics">Topics</a>
+      <a class="footer-link" href="#security">Security</a>
     </div>
   </div>
 </footer>

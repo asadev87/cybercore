@@ -45,7 +45,7 @@
           <div class="d-flex justify-content-center align-items-center mt-5">
             <div class="me-4 text-center">
               <div style="border-top:1px solid #000; width:200px; margin:0 auto;"></div>
-              <small class="d-block">{{ $certificate->module->user->name ?? 'Instructor' }}</small>
+              <small class="d-block">Instructor Signature</small>
             </div>
             <div class="text-center">
               <div style="border-top:1px solid #000; width:200px; margin:0 auto;"></div>

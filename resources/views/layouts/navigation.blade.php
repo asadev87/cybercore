@@ -12,22 +12,9 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    @if(request()->routeIs('dashboard'))
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('learn.index')" :active="request()->routeIs('learn.index')">
-                            {{ __('Learn') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('leaderboard.index')" :active="request()->routeIs('leaderboard.index')">
-                            {{ __('Leaderboard') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('badges.index')" :active="request()->routeIs('badges.index')">
-                            {{ __('Badges') }}
-                        </x-nav-link>
-                    @else
-                        <x-menu-dropdown />
-                    @endif
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
                 </div>
             </div>
 
