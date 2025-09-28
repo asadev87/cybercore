@@ -6,7 +6,6 @@
   <div class="card bg-surface shadow-soft mb-4">
     <div class="card-body">
       <h3 class="mb-1">{{ $module->title }}</h3>
-      <p class="text-muted">Taught by: {{ $module->user->name ?? 'N/A' }}</p>
       <p class="text-muted mb-3">{{ $module->description }}</p>
       @php
         $total = max(1,$sections->count());

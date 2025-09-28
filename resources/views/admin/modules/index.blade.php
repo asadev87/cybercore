@@ -5,9 +5,7 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h4 class="mb-0">Modules</h4>
-  @can('create', App\Models\Module::class)
-    <a href="{{ route('admin.modules.create') }}" class="btn btn-primary btn-sm">New Module</a>
-  @endcan
+  <a href="{{ route('admin.modules.create') }}" class="btn btn-primary btn-sm">New Module</a>
 </div>
 
 @if(session('ok')) <div class="alert alert-success">{{ session('ok') }}</div> @endif
@@ -18,7 +16,7 @@
       <thead>
         <tr>
           <th>Title</th>
-          <th>Lecturer</th>
+          <th>Slug</th>
           <th>Pass</th>
           <th>Status</th>
           <th class="text-end">Actions</th>
@@ -28,19 +26,22 @@
       @forelse($modules as $m)
         <tr>
           <td>{{ $m->title }}</td>
-          <td>{{ $m->user->name ?? 'N/A' }}</td>
+          <td class="text-muted">{{ $m->slug }}</td>
           <td>{{ $m->pass_score ?? 70 }}%</td>
           <td>{!! $m->is_active ? '<span class="badge text-bg-success">Active</span>' : '<span class="badge text-bg-secondary">Hidden</span>' !!}</td>
           <td class="text-end">
-            <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.modules.edit', $m) }}">Edit</a>
-            <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.modules.sections.index', $m) }}">Sections</a>
-            <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.modules.questions.index', $m) }}">Questions</a>
-            @can('delete', $m)
-            <form class="d-inline" method="POST" action="{{ route('admin.modules.destroy', $m) }}">
-              @csrf @method('DELETE')
-              <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete module?')">Delete</button>
-            </form>
-            @endcan
+            @if(Auth::user()->hasRole('admin') || Auth::id() == $m->user_id)
+              <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.modules.edit', $m) }}">Edit</a>
+              <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.modules.sections.index', $m) }}">Sections</a>
+              <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.modules.questions.index', $m) }}">Questions</a>
+            @endif
+
+            @if(Auth::user()->hasRole('admin'))
+              <form class="d-inline" method="POST" action="{{ route('admin.modules.destroy', $m) }}">
+                @csrf @method('DELETE')
+                <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete module?')">Delete</button>
+              </form>
+            @endif
           </td>
         </tr>
       @empty
