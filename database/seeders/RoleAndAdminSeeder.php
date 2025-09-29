@@ -3,21 +3,32 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
-class RoleAndAdminSeeder extends Seeder {
-  public function run(): void {
-    $admin = Role::firstOrCreate(['name'=>'admin']);
-    $lecturer = Role::firstOrCreate(['name' => 'lecturer']);
-    $user  = Role::firstOrCreate(['name'=>'user']);
+class RoleAndAdminSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // Create roles
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'lecturer']);
 
-    $u = User::firstOrCreate(
-      ['email' => 'admin@cybercore.local'],
-      ['name' => 'CyberCore Admin', 'password'=>Hash::make('anas0807'), 'email_verified_at'=>now()]
-    );
-    $u->assignRole('admin');
-  }
+        // Create admin user
+        $adminUser = User::firstOrCreate(
+            ['email' => 'admin@cybercore.test'],
+            [
+                'name' => 'Admin User',
+                'password' => bcrypt('password'),
+            ]
+        );
+
+        // Assign admin role to the admin user
+        if (!$adminUser->hasRole($adminRole)) {
+            $adminUser->assignRole($adminRole);
+        }
+    }
 }
-

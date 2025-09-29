@@ -1,25 +1,25 @@
 /* Design tokens */
 :root{
-  --cc-bg:        #FFFFFF;
-  --cc-primary:   #035E7B;  /* blue-gray */
-  --cc-accent:    #FF2E00;  /* warm neon/orange */
-  --cc-surface:   #ffffe8;  /* soft panel */
-  --cc-border:    #d0cfcf;
-  --cc-text:      #22313a;  /* neutral body copy */
-  --cc-muted:     #6b7280;
+  --cc-bg:        #e7f0ff;  /* base background */
+  --cc-primary:   #79bcff;  /* primary blue */
+  --cc-accent:    #abd0ff;  /* secondary blue */
+  --cc-surface:   #eaeaff;  /* panels, cards */
+  --cc-border:    #cedaff;  /* borders */
+  --cc-text:      #22313a;  /* neutral body copy (unchanged for readability) */
+  --cc-muted:     #6b7280;  /* muted text (unchanged for readability) */
 
   /* Bootstrap runtime variables (no Sass compile needed) */
   --bs-body-bg:         var(--cc-bg);
   --bs-body-color:      var(--cc-text);
 
   --bs-primary:         var(--cc-primary);
-  --bs-primary-rgb:     88,111,124;
+  --bs-primary-rgb:     121,188,255;
 
   --bs-danger:          var(--cc-accent);      /* we reuse "danger" as Accent */
-  --bs-danger-rgb:      245,93,62;
+  --bs-danger-rgb:      171,208,255;
 
   --bs-link-color:      var(--cc-primary);
-  --bs-link-hover-color:#435864;
+  --bs-link-hover-color: #5d94c7; /* A darker shade of primary for hover */
 }
 
 /* Base & accessibility */
@@ -55,7 +55,7 @@ a:hover{ text-decoration-thickness:2px; }
    Navbar (dark)
    ───────────────────────────────────────────────────────────── */
 .navbar-dark{
-  background:var(--cc-primary);
+  background: #334155; /* A dark blue-gray for contrast */
   --bs-navbar-color:rgba(255,255,255,.85);
   --bs-navbar-hover-color:#fff;
   --bs-navbar-brand-color:#fff;
@@ -81,7 +81,7 @@ a:hover{ text-decoration-thickness:2px; }
    Footer (dark)
    ───────────────────────────────────────────────────────────── */
 .footer-dark{
-  background:var(--cc-primary);
+  background:#334155; /* Matching the navbar */
   color:#fff;
 }
 .footer-dark .footer-link{
@@ -96,22 +96,23 @@ a:hover{ text-decoration-thickness:2px; }
 .hero-wrap{
   position:relative;
   background:
-    radial-gradient(60% 60% at 90% 0%, rgba(88,111,124,.12) 0%, transparent 60%),
-    radial-gradient(35% 35% at 15% 20%, rgba(245,93,62,.12) 0%, transparent 70%),
+    radial-gradient(60% 60% at 90% 0%, rgba(121,188,255,.15) 0%, transparent 60%),
+    radial-gradient(35% 35% at 15% 20%, rgba(171,208,255,.15) 0%, transparent 70%),
     var(--cc-bg);
 }
 .hero-kicker{
-  color:var(--cc-accent);
+  color:var(--cc-primary);
   font-weight:700; letter-spacing:.06em; text-transform:uppercase;
   font-size:.85rem;
 }
 .hero-title{ font-weight:800; letter-spacing:-.02em; }
+.hero-title > span { color: var(--cc-primary); }
 .hero-sub{ color:var(--cc-muted); max-width:56ch; }
 
 /* ─────────────────────────────────────────────────────────────
    Cards, modules, surfaces
    ───────────────────────────────────────────────────────────── */
-.card{ border-color:var(--cc-border); background:#fff; }
+.card{ border-color:var(--cc-border); background:var(--cc-surface); }
 .bg-surface{ background:var(--cc-surface)!important; }
 
 .module-card{
@@ -125,20 +126,21 @@ a:hover{ text-decoration-thickness:2px; }
 .feature-icon{
   width:48px;height:48px;border-radius:12px;
   display:grid;place-items:center;font-weight:700;
-  background:rgba(88,111,124,.14); color:var(--cc-primary);
+  background:rgba(121,188,255,.2); color:var(--cc-primary);
 }
 
 /* Badges row */
 .badge-pill{
   padding:.5rem .8rem;border-radius:999px;
-  background:rgba(245,93,62,.10);
-  color:var(--cc-accent); font-weight:600;font-size:.9rem;
+  background:rgba(121,188,255,.2);
+  color: #1e3a8a; /* Darker blue text for contrast */
+  font-weight:600;font-size:.9rem;
 }
 
 /* CTA panel */
 .cta{
-  background:linear-gradient(120deg, rgba(88,111,124,.10), rgba(245,93,62,.10));
-  border:1px solid rgba(88,111,124,.20);
+  background:linear-gradient(120deg, rgba(121,188,255,.15), rgba(171,208,255,.15));
+  border:1px solid rgba(121,188,255,.25);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -160,7 +162,7 @@ a.btn:active{ text-decoration:none !important; }
 .btn-danger{            /* map .btn-danger to Accent for CTA pop */
   background:var(--cc-accent);
   border-color:var(--cc-accent);
-  box-shadow:0 0 .6rem rgba(245,93,62,.45), 0 0 1.2rem rgba(245,93,62,.25);
+  box-shadow:0 0 .6rem rgba(171,208,255,.45), 0 0 1.2rem rgba(171,208,255,.25);
 }
 .btn-accent:hover,
 .btn-danger:hover{ filter:brightness(.96); }
@@ -195,7 +197,7 @@ a.btn:active{ text-decoration:none !important; }
 }
 .form-control:focus, .form-select:focus{
   border-color:var(--cc-primary);
-  box-shadow:0 0 0 .2rem rgba(88,111,124,.25);
+  box-shadow:0 0 0 .2rem rgba(121,188,255,.25);
 }
 
 /* Progress bars in brand colors */

@@ -2,27 +2,23 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    
+    /**
+     * Seed the application's database.
+     */
     public function run(): void
     {
+        // The order of seeders is important.
+        // Roles must be created before users can be assigned to them.
+        // Users (lecturers) must be created before courses can be assigned to them.
         $this->call([
-        ModuleSeeder::class,
-    ]);
-        $this->call(\Database\Seeders\DemoQuizSeeder::class);
-        $this->call(RoleAndAdminSeeder::class);
-        $this->call(LecturerSeeder::class);
-        $this->call(CourseSeeder::class);
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            RoleAndAdminSeeder::class,
+            LecturerSeeder::class,
+            CourseSeeder::class,
+            DemoQuizSeeder::class, // Keep this for existing demo data
         ]);
     }
 }

@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class LecturerSeeder extends Seeder
 {
@@ -14,17 +13,21 @@ class LecturerSeeder extends Seeder
      */
     public function run(): void
     {
+        // Find the lecturer role
         $lecturerRole = Role::firstOrCreate(['name' => 'lecturer']);
 
-        $lecturer = User::firstOrCreate(
-            ['email' => 'lecturer@cybercore.local'],
+        // Create a default lecturer user
+        $lecturerUser = User::firstOrCreate(
+            ['email' => 'lecturer@cybercore.test'],
             [
-                'name' => 'CyberCore Lecturer',
-                'password' => Hash::make('password'),
-                'email_verified_at' => now()
+                'name' => 'Lecturer User',
+                'password' => bcrypt('password'),
             ]
         );
 
-        $lecturer->assignRole($lecturerRole);
+        // Assign the lecturer role to the user
+        if (!$lecturerUser->hasRole($lecturerRole)) {
+            $lecturerUser->assignRole($lecturerRole);
+        }
     }
 }

@@ -4,26 +4,37 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Module;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ModuleController extends Controller
 {
+    public function __construct()
+    {
+        // This applies the ModulePolicy to the resource controller methods.
+        $this->authorizeResource(Module::class, 'module');
+    }
+
     public function index()
     {
-        if (Auth::user()->hasRole('admin')) {
-            $modules = Module::orderBy('created_at', 'desc')->paginate(10);
-        } else {
-            $modules = Module::where('user_id', Auth::id())
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+        $query = Module::with('user')->orderBy('created_at', 'desc');
+
+        // If the user is not an admin, scope the query to their own modules.
+        // The policy has already ensured the user is either an admin or lecturer.
+        if (!Auth::user()->hasRole('admin')) {
+            $query->where('user_id', Auth::id());
         }
+
+        $modules = $query->paginate(10);
+
         return view('admin.modules.index', compact('modules'));
     }
 
     public function create()
     {
-        return view('admin.modules.create');
+        $lecturers = User::role('lecturer')->get();
+        return view('admin.modules.create', compact('lecturers'));
     }
 
     public function store(Request $r)
@@ -33,44 +44,51 @@ class ModuleController extends Controller
             'title' => 'required|string|max:150',
             'description' => 'nullable|string',
             'pass_score' => 'required|integer|min:1|max:100',
-            'is_active' => 'nullable|boolean'
+            'is_active' => 'nullable|boolean',
+            'user_id' => 'sometimes|exists:users,id' // Required only for admins
         ]);
         $data['is_active'] = $r->boolean('is_active');
-        $data['user_id'] = Auth::id();
+
+        // If the authed user is not an admin, they can only create modules for themselves.
+        if (!Auth::user()->hasRole('admin')) {
+            $data['user_id'] = Auth::id();
+        }
+
         Module::create($data);
+
         return redirect()->route('admin.modules.index')->with('ok', 'Module created.');
     }
 
     public function edit(Module $module)
     {
-        if (!Auth::user()->hasRole('admin') && $module->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
-        return view('admin.modules.edit', compact('module'));
+        $lecturers = User::role('lecturer')->get();
+        return view('admin.modules.edit', compact('module', 'lecturers'));
     }
 
     public function update(Request $r, Module $module)
     {
-        if (!Auth::user()->hasRole('admin') && $module->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
         $data = $r->validate([
             'slug' => "required|string|max:80|unique:modules,slug,{$module->id}",
             'title' => 'required|string|max:150',
             'description' => 'nullable|string',
             'pass_score' => 'required|integer|min:1|max:100',
-            'is_active' => 'nullable|boolean'
+            'is_active' => 'nullable|boolean',
+            'user_id' => 'sometimes|exists:users,id' // Required only for admins
         ]);
         $data['is_active'] = $r->boolean('is_active');
+
+        // If the user is not an admin, they cannot change the owner.
+        if (!Auth::user()->hasRole('admin')) {
+            unset($data['user_id']);
+        }
+
         $module->update($data);
+
         return redirect()->route('admin.modules.index')->with('ok', 'Module updated.');
     }
 
     public function destroy(Module $module)
     {
-        if (!Auth::user()->hasRole('admin')) {
-            abort(403, 'Unauthorized action.');
-        }
         $module->delete();
         return back()->with('ok', 'Module deleted.');
     }

@@ -1,11 +1,11 @@
-{{-- resources/views/admin/modules/index.blade.php --}}
-
 @extends('admin.layout')
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h4 class="mb-0">Modules</h4>
-  <a href="{{ route('admin.modules.create') }}" class="btn btn-primary btn-sm">New Module</a>
+  @can('create', App\Models\Module::class)
+    <a href="{{ route('admin.modules.create') }}" class="btn btn-primary btn-sm">New Module</a>
+  @endcan
 </div>
 
 @if(session('ok')) <div class="alert alert-success">{{ session('ok') }}</div> @endif
@@ -16,8 +16,8 @@
       <thead>
         <tr>
           <th>Title</th>
-          <th>Slug</th>
-          <th>Pass</th>
+          <th>Owner</th>
+          <th>Pass Score</th>
           <th>Status</th>
           <th class="text-end">Actions</th>
         </tr>
@@ -26,22 +26,22 @@
       @forelse($modules as $m)
         <tr>
           <td>{{ $m->title }}</td>
-          <td class="text-muted">{{ $m->slug }}</td>
+          <td class="text-muted">{{ $m->user->name ?? 'N/A' }}</td>
           <td>{{ $m->pass_score ?? 70 }}%</td>
           <td>{!! $m->is_active ? '<span class="badge text-bg-success">Active</span>' : '<span class="badge text-bg-secondary">Hidden</span>' !!}</td>
           <td class="text-end">
-            @if(Auth::user()->hasRole('admin') || Auth::id() == $m->user_id)
+            @can('update', $m)
               <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.modules.edit', $m) }}">Edit</a>
               <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.modules.sections.index', $m) }}">Sections</a>
               <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.modules.questions.index', $m) }}">Questions</a>
-            @endif
+            @endcan
 
-            @if(Auth::user()->hasRole('admin'))
+            @can('delete', $m)
               <form class="d-inline" method="POST" action="{{ route('admin.modules.destroy', $m) }}">
                 @csrf @method('DELETE')
                 <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete module?')">Delete</button>
               </form>
-            @endif
+            @endcan
           </td>
         </tr>
       @empty

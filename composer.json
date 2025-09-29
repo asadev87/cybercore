@@ -60,9 +60,6 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
-        ],
-        "seed": [
-            "@php artisan db:seed"
         ]
     },
     "extra": {

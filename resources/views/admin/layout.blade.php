@@ -13,9 +13,9 @@
       <a class="navbar-brand" href="{{ route('admin.dashboard') }}">CyberCore Admin</a>
 
       <div class="ms-auto d-flex gap-2">
-        @if(Auth::user()->hasRole('admin'))
+        @can('view-reports')
           <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.reports.index') }}">Reports</a>
-        @endif
+        @endcan
         <a class="btn btn-sm btn-outline-secondary" href="{{ route('dashboard') }}">Learner View</a>
       </div>
     </div>

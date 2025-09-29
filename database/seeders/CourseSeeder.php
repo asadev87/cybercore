@@ -14,7 +14,8 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
-        $lecturer = User::where('email', 'lecturer@cybercore.local')->first();
+        // Find the first user with the 'lecturer' role.
+        $lecturer = User::role('lecturer')->first();
 
         if ($lecturer) {
             $courses = [

@@ -35,11 +35,11 @@
         <li class="nav-item"><a class="nav-link" href="#security">Security</a></li>
 
         @auth
-          @role('admin')
+          @can('view-reports') {{-- Assuming a Gate for admin dashboard access --}}
             <li class="nav-item ms-lg-2">
               <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-accent">Admin</a>
             </li>
-          @endrole
+          @endcan
           <li class="nav-item ms-lg-2">
             <a class="btn btn-light btn-sm" href="{{ route('dashboard') }}">Dashboard</a>
           </li>
@@ -71,7 +71,7 @@
       <div class="col-lg-6">
         <div class="hero-kicker mb-2">Empowering Cybersecurity Knowledge</div>
         <h1 class="display-4 hero-title">
-          Learn to spot threats. <span style="color:var(--cc-accent)">Stay safe online.</span>
+          Learn to spot threats. <span>Stay safe online.</span>
         </h1>
         <p class="lead hero-sub mt-3">
           CyberCore is a secure, user-friendly e-learning platform designed to raise cybersecurity awareness
@@ -79,7 +79,7 @@
         </p>
         <div class="d-flex gap-3 mt-4">
           <a class="btn btn-primary btn-lg" href="{{ route('register') }}">Start learning</a>
-          <a class="btn btn-light btn-lg" href="#topics">Browse topics</a>
+          <a class="btn btn-outline-primary btn-lg" href="#topics">Browse topics</a>
         </div>
         <div class="d-flex align-items-center gap-3 mt-4">
           <span class="badge-pill">Phishing</span>
@@ -91,19 +91,19 @@
 
       <div class="col-lg-6">
         {{-- Accessible illustrative panel (SVG, no external images) --}}
-        <div class="p-4 p-lg-5 border rounded-4 shadow-sm bg-white">
+        <div class="p-4 p-lg-5 border rounded-4 shadow-sm bg-surface">
           <svg role="img" aria-label="Illustration of secure learning" width="100%" height="260" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="700" height="260" rx="18" fill="#f8fafc"/>
-            <rect x="28" y="24" width="300" height="210" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
-            <rect x="52" y="56" width="252" height="16" rx="8" fill="#dbeafe"/>
-            <rect x="52" y="84" width="180" height="12" rx="6" fill="#bfdbfe"/>
-            <rect x="52" y="108" width="220" height="12" rx="6" fill="#bfdbfe"/>
-            <rect x="52" y="156" width="120" height="32" rx="8" fill="#2b6cb0"/>
-            <rect x="360" y="24" width="312" height="210" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
-            <circle cx="516" cy="100" r="48" fill="#8b0000" opacity=".12"/>
-            <path d="M488 112 l24 24 l40 -56" stroke="#8b0000" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="420" y="156" width="180" height="12" rx="6" fill="#e5e7eb"/>
-            <rect x="420" y="176" width="160" height="12" rx="6" fill="#e5e7eb"/>
+            <rect x="0" y="0" width="700" height="260" rx="18" fill="var(--cc-surface)"/>
+            <rect x="28" y="24" width="300" height="210" rx="12" fill="#ffffff" stroke="var(--cc-border)"/>
+            <rect x="52" y="56" width="252" height="16" rx="8" fill="var(--cc-border)"/>
+            <rect x="52" y="84" width="180" height="12" rx="6" fill="var(--cc-accent)"/>
+            <rect x="52" y="108" width="220" height="12" rx="6" fill="var(--cc-accent)"/>
+            <rect x="52" y="156" width="120" height="32" rx="8" fill="var(--cc-primary)"/>
+            <rect x="360" y="24" width="312" height="210" rx="12" fill="#ffffff" stroke="var(--cc-border)"/>
+            <circle cx="516" cy="100" r="48" fill="var(--cc-primary)" opacity=".12"/>
+            <path d="M488 112 l24 24 l40 -56" stroke="var(--cc-primary)" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="420" y="156" width="180" height="12" rx="6" fill="var(--cc-border)"/>
+            <rect x="420" y="176" width="160" height="12" rx="6" fill="var(--cc-border)"/>
           </svg>
           <div class="mt-3 small text-secondary">No downloads required • Web-based • Works on desktop & mobile</div>
         </div>
@@ -113,7 +113,7 @@
 </header>
 
 {{-- HOW IT WORKS --}}
-<section id="how" class="py-5 bg-hint">
+<section id="how" class="py-5 bg-surface">
   <div class="container">
     <div class="text-center mb-4">
       <h2 class="fw-bold">How CyberCore works</h2>
