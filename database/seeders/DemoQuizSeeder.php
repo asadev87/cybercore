@@ -117,5 +117,89 @@ class DemoQuizSeeder extends Seeder
                     ]
             );
         }
+        $this->seedMalwareQuestions();
+        $this->seedPasswordQuestions();
+        $this->seedBrowsingQuestions();
+    }
+
+    private function seedMalwareQuestions(): void
+    {
+        $module = Module::firstOrCreate(['slug' => 'malware-101']);
+        $questions = [
+            [
+                'type' => 'mcq',
+                'stem' => 'What is the primary purpose of ransomware?',
+                'options' => ['Steal data', 'Encrypt files for a ransom', 'Crash computer', 'Show ads'],
+                'answer'  => ['Encrypt files for a ransom'],
+                'explanation' => 'Ransomware holds files hostage until a payment is made.',
+                'difficulty'  => 1,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'Keeping your software updated is a key defense against malware.',
+                'options' => null,
+                'answer'  => ['true'],
+                'explanation' => 'Updates often patch security holes that malware exploits.',
+                'difficulty'  => 1,
+            ],
+        ];
+
+        foreach ($questions as $q) {
+            Question::updateOrCreate(['module_id' => $module->id, 'stem' => $q['stem']], $q);
+        }
+    }
+
+    private function seedPasswordQuestions(): void
+    {
+        $module = Module::firstOrCreate(['slug' => 'password-hygiene']);
+        $questions = [
+            [
+                'type' => 'mcq',
+                'stem' => 'What is a key feature of a strong password?',
+                'options' => ['Short and easy to remember', 'A mix of letters, numbers, and symbols', 'A common dictionary word', 'Your pet\'s name'],
+                'answer'  => ['A mix of letters, numbers, and symbols'],
+                'explanation' => 'Complexity makes passwords harder to guess or crack.',
+                'difficulty'  => 1,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'The practice of using a different password for every online service is crucial for security. This can be managed with a password ________.',
+                'options' => null,
+                'answer'  => ['manager'],
+                'explanation' => 'Password managers help create and store unique, complex passwords.',
+                'difficulty'  => 2,
+            ],
+        ];
+
+        foreach ($questions as $q) {
+            Question::updateOrCreate(['module_id' => $module->id, 'stem' => $q['stem']], $q);
+        }
+    }
+
+    private function seedBrowsingQuestions(): void
+    {
+        $module = Module::firstOrCreate(['slug' => 'safe-browsing']);
+        $questions = [
+            [
+                'type' => 'truefalse',
+                'stem' => 'Using public Wi-Fi for sensitive transactions (like banking) is safe as long as the website has HTTPS.',
+                'options' => null,
+                'answer'  => ['true'],
+                'explanation' => 'HTTPS encrypts the connection, making it secure even on public networks.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What does the "S" in HTTPS stand for?',
+                'options' => ['Secure', 'Standard', 'Safe', 'Special'],
+                'answer'  => ['Secure'],
+                'explanation' => 'HTTPS stands for Hypertext Transfer Protocol Secure.',
+                'difficulty'  => 1,
+            ],
+        ];
+
+        foreach ($questions as $q) {
+            Question::updateOrCreate(['module_id' => $module->id, 'stem' => $q['stem']], $q);
+        }
     }
 }
