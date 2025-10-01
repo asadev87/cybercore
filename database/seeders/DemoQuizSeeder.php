@@ -142,6 +142,30 @@ class DemoQuizSeeder extends Seeder
                 'explanation' => 'Updates often patch security holes that malware exploits.',
                 'difficulty'  => 1,
             ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What is the most common way malware is spread?',
+                'options' => ['Through infected USB drives', 'Through phishing emails and malicious downloads', 'Through outdated operating systems', 'Through slow internet connections'],
+                'answer' => ['Through phishing emails and malicious downloads'],
+                'explanation' => 'Phishing emails and malicious downloads are the most common vectors for malware.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'A firewall is sufficient to protect you from all types of malware.',
+                'options' => null,
+                'answer' => ['false'],
+                'explanation' => 'A firewall is an important layer, but not a complete solution.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'A type of malware that disguises itself as legitimate software is called a ________.',
+                'options' => null,
+                'answer' => ['trojan'],
+                'explanation' => 'A Trojan horse or Trojan is a type of malware that is often disguised as legitimate software.',
+                'difficulty' => 3,
+            ],
         ];
 
         foreach ($questions as $q) {
@@ -169,6 +193,30 @@ class DemoQuizSeeder extends Seeder
                 'explanation' => 'Password managers help create and store unique, complex passwords.',
                 'difficulty'  => 2,
             ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What does "MFA" stand for in the context of cybersecurity?',
+                'options' => ['Malicious File Attack', 'My First Account', 'Multi-Factor Authentication', 'Master File Access'],
+                'answer' => ['Multi-Factor Authentication'],
+                'explanation' => 'MFA adds a layer of protection to the sign-in process.',
+                'difficulty' => 1,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'You should change your passwords every 30 days, even if there\'s no sign of a breach.',
+                'options' => null,
+                'answer' => ['false'],
+                'explanation' => 'Modern guidance suggests using a very strong, unique password is more important than changing it frequently without cause.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'A ________ ________ is a secure application for storing and managing all your unique passwords.',
+                'options' => null,
+                'answer' => ['password manager'],
+                'explanation' => 'Password managers are essential tools for password hygiene.',
+                'difficulty' => 2,
+            ],
         ];
 
         foreach ($questions as $q) {
@@ -195,6 +243,30 @@ class DemoQuizSeeder extends Seeder
                 'answer'  => ['Secure'],
                 'explanation' => 'HTTPS stands for Hypertext Transfer Protocol Secure.',
                 'difficulty'  => 1,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'When a website\'s URL starts with "HTTPS", what does the \'S\' signify?',
+                'options' => ['The site is "Standard"', 'The site is "Simple"', 'The connection is "Secure"', 'The site is for "Shopping"'],
+                'answer' => ['The connection is "Secure"'],
+                'explanation' => 'The \'S\' in HTTPS stands for Secure.',
+                'difficulty' => 1,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'If a website has a padlock icon next to its URL, it means the website is legitimate and can be trusted completely.',
+                'options' => null,
+                'answer' => ['false'],
+                'explanation' => 'It only means the connection is encrypted. Phishing sites can also have valid HTTPS certificates.',
+                'difficulty' => 3,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'Clearing your browser\'s ________ can help protect your privacy by removing stored data from websites you\'ve visited.',
+                'options' => null,
+                'answer' => ['cache', 'cookies'],
+                'explanation' => 'Clearing your cache and cookies can help protect your privacy.',
+                'difficulty' => 2,
             ],
         ];
 
