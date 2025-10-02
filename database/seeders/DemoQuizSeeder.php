@@ -10,116 +10,62 @@ class DemoQuizSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1) Create a demo module
-        $module = Module::firstOrCreate(
-            ['slug' => 'phishing-basics'],
-            [
-                'title'       => 'Phishing Basics',
-                'description' => 'Learn to spot common phishing tactics in emails and websites.',
-                'is_active'   => true,
-                'pass_score'  => 70,
-            ]
-        );
-
-        // 2) Seed some questions (mix of types & difficulties)
-        $questions = [
-            [
-                'type' => 'mcq',
-                'stem' => 'Which is a common sign of a phishing email?',
-                'options' => ['Generic greeting', 'Proper corporate domain', 'No links', 'Encrypted attachment from IT'],
-                'answer'  => ['Generic greeting'],
-                'explanation' => 'Phish often use generic greetings like “Dear user”.',
-                'difficulty'  => 1,
-            ],
-            [
-                'type' => 'truefalse',
-                'stem' => 'Shortened URLs (bit.ly) can hide the real destination and should be treated with caution.',
-                'options' => null,
-                'answer'  => ['true'],
-                'explanation' => 'Shorteners can mask malicious destinations; preview or avoid.',
-                'difficulty'  => 1,
-            ],
-            [
-                'type' => 'mcq',
-                'stem' => 'Best immediate action when you suspect a phishing email?',
-                'options' => ['Click to see where it goes', 'Reply asking to verify', 'Report using the company phish button', 'Forward to colleagues'],
-                'answer'  => ['Report using the company phish button'],
-                'explanation' => 'Reporting helps security block similar messages.',
-                'difficulty'  => 2,
-            ],
-            [
-                'type' => 'fib',
-                'stem' => 'Type the browser feature that blocks known malicious sites: _______ browsing.',
-                'options' => null,
-                'answer'  => ['safe', 'safebrowsing', 'safe browsing'],
-                'explanation' => '“Safe Browsing” lists are used by modern browsers.',
-                'difficulty'  => 2,
-            ],
-            [
-                'type' => 'truefalse',
-                'stem' => 'A domain like acme-support.secure-mail.example.co is the same as example.co.',
-                'options' => null,
-                'answer'  => ['false'],
-                'explanation' => 'Real domain is the right-most registered domain (example.co); the rest are subdomains.',
-                'difficulty'  => 2,
-            ],
-            [
-                'type' => 'mcq',
-                'stem' => 'Which padlock statement is most accurate?',
-                'options' => ['Padlock means safe site guaranteed', 'Padlock only means the connection is encrypted', 'No padlock means site is malware', 'Padlock verifies the site owner is trustworthy'],
-                'answer'  => ['Padlock only means the connection is encrypted'],
-                'explanation' => 'TLS = encryption in transit; it does not vouch for content.',
-                'difficulty'  => 3,
-            ],
-            [
-                'type' => 'mcq',
-                'stem' => 'Which header is often spoofed in phishing?',
-                'options' => ['From', 'Date', 'Message-ID', 'All of the above'],
-                'answer'  => ['All of the above'],
-                'explanation' => 'Multiple headers can be forged to appear legitimate.',
-                'difficulty'  => 3,
-            ],
-            [
-                'type' => 'fib',
-                'stem' => 'Enter the 2FA method that uses 6-digit rotating codes: _______ app.',
-                'options' => null,
-                'answer'  => ['authenticator', 'otp', 'totp'],
-                'explanation' => 'Authenticator apps generate TOTP codes.',
-                'difficulty'  => 3,
-            ],
-            [
-                'type' => 'truefalse',
-                'stem' => 'Hovering a link to preview its real destination is a safe first step.',
-                'options' => null,
-                'answer'  => ['true'],
-                'explanation' => 'Preview before clicking, especially on suspicious emails.',
-                'difficulty'  => 1,
-            ],
-            [
-                'type' => 'mcq',
-                'stem' => 'Which is the best password hygiene practice?',
-                'options' => ['Use same strong password everywhere', 'Use a manager & unique passwords', 'Change password daily', 'Share password with manager'],
-                'answer'  => ['Use a manager & unique passwords'],
-                'explanation' => 'Password managers enable unique, strong passwords across sites.',
-                'difficulty'  => 2,
-            ],
-        ];
-
-       foreach ($questions as $q) {
-            Question::updateOrCreate(
-                ['module_id' => $module->id, 'stem' => $q['stem']],
-              [     'type'        => $q['type'],
-                    'options'     => $q['options'],
-                    'answer'      => $q['answer'],
-                    'explanation' => $q['explanation'] ?? '',
-                    'difficulty'  => $q['difficulty'] ?? 2,
-                    'is_active'   => true,
-                    ]
-            );
-        }
+        $this->seedPhishingQuestions();
         $this->seedMalwareQuestions();
         $this->seedPasswordQuestions();
         $this->seedBrowsingQuestions();
+        $this->seedCybersecurityFundamentalsQuestions();
+    }
+
+    private function seedCybersecurityFundamentalsQuestions(): void
+    {
+        $module = Module::firstOrCreate(['slug' => 'cybersecurity-fundamentals']);
+        $questions = [
+            [
+                'type' => 'mcq',
+                'stem' => 'What does the "CIA Triad" stand for in cybersecurity?',
+                'options' => ['Central Intelligence Agency', 'Confidentiality, Integrity, Availability', 'Cyber Investigation Authority', 'Computer, Internet, Authentication'],
+                'answer'  => ['Confidentiality, Integrity, Availability'],
+                'explanation' => 'The CIA Triad is a model designed to guide policies for information security within an organization.',
+                'difficulty'  => 1,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'Which principle of the CIA Triad ensures that data is not altered by unauthorized parties?',
+                'options' => ['Confidentiality', 'Integrity', 'Availability', 'Authentication'],
+                'answer'  => ['Integrity'],
+                'explanation' => 'Integrity involves maintaining the consistency, accuracy, and trustworthiness of data over its entire life cycle.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'A ransomware attack that encrypts your files and demands payment primarily violates which part of the CIA Triad?',
+                'options' => ['Confidentiality', 'Integrity', 'Availability', 'All of the above'],
+                'answer'  => ['Availability'],
+                'explanation' => 'By encrypting files, ransomware makes them unavailable to the user.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'Why is cybersecurity important for everyday internet users?',
+                'options' => ['To prevent identity theft and financial loss', 'Only large companies are at risk', 'It’s only needed for government workers', 'Antivirus software makes it unnecessary'],
+                'answer'  => ['To prevent identity theft and financial loss'],
+                'explanation' => 'Cybersecurity is important for everyone to protect their personal and financial information.',
+                'difficulty'  => 1,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'Which of the following is a *vulnerability*?',
+                'options' => ['A hacker trying to guess your password', 'An unpatched software bug', 'Losing your laptop', 'Receiving a phishing email'],
+                'answer'  => ['An unpatched software bug'],
+                'explanation' => 'A vulnerability is a weakness which can be exploited by a threat actor.',
+                'difficulty'  => 3,
+            ],
+        ];
+
+        foreach ($questions as $q) {
+            Question::updateOrCreate(['module_id' => $module->id, 'stem' => $q['stem']], $q);
+        }
     }
 
     private function seedMalwareQuestions(): void
@@ -128,43 +74,94 @@ class DemoQuizSeeder extends Seeder
         $questions = [
             [
                 'type' => 'mcq',
-                'stem' => 'What is the primary purpose of ransomware?',
-                'options' => ['Steal data', 'Encrypt files for a ransom', 'Crash computer', 'Show ads'],
-                'answer'  => ['Encrypt files for a ransom'],
-                'explanation' => 'Ransomware holds files hostage until a payment is made.',
-                'difficulty'  => 1,
-            ],
-            [
-                'type' => 'truefalse',
-                'stem' => 'Keeping your software updated is a key defense against malware.',
-                'options' => null,
-                'answer'  => ['true'],
-                'explanation' => 'Updates often patch security holes that malware exploits.',
+                'stem' => 'Which type of malware locks your files and demands payment to unlock them?',
+                'options' => ['Adware', 'Spyware', 'Ransomware', 'Worm'],
+                'answer'  => ['Ransomware'],
+                'explanation' => 'Ransomware is a type of malware that threatens to publish the victim\'s data or perpetually block access to it unless a ransom is paid.',
                 'difficulty'  => 1,
             ],
             [
                 'type' => 'mcq',
-                'stem' => 'What is the most common way malware is spread?',
-                'options' => ['Through infected USB drives', 'Through phishing emails and malicious downloads', 'Through outdated operating systems', 'Through slow internet connections'],
-                'answer' => ['Through phishing emails and malicious downloads'],
-                'explanation' => 'Phishing emails and malicious downloads are the most common vectors for malware.',
-                'difficulty' => 2,
+                'stem' => 'What is the main difference between a virus and a worm?',
+                'options' => ['Viruses are harmless; worms are dangerous', 'Worms can spread without user action; viruses need a host file', 'Viruses only affect phones', 'Worms require payment to remove'],
+                'answer'  => ['Worms can spread without user action; viruses need a host file'],
+                'explanation' => 'A computer worm is a standalone malware computer program that replicates itself in order to spread to other computers.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'Which malware secretly records your keystrokes to steal passwords?',
+                'options' => ['Trojan', 'Keylogger', 'Botnet', 'Adware'],
+                'answer'  => ['Keylogger'],
+                'explanation' => 'Keystroke logging, often referred to as keylogging or keyboard capturing, is the action of recording the keys struck on a keyboard.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'How can you help prevent malware infections?',
+                'options' => ['Click all pop-up offers for “free” software', 'Keep your operating system and apps updated', 'Disable your firewall for faster internet', 'Use the same password everywhere'],
+                'answer'  => ['Keep your operating system and apps updated'],
+                'explanation' => 'Software updates are important because they often include critical patches to security holes.',
+                'difficulty'  => 1,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'A program that appears useful but secretly installs malicious code is called a:',
+                'options' => ['Virus', 'Worm', 'Trojan horse', 'Ransomware'],
+                'answer'  => ['Trojan horse'],
+                'explanation' => 'In computing, a Trojan horse is any malware which misleads users of its true intent.',
+                'difficulty'  => 2,
+            ],
+        ];
+
+        foreach ($questions as $q) {
+            Question::updateOrCreate(['module_id' => $module->id, 'stem' => $q['stem']], $q);
+        }
+    }
+
+    private function seedPhishingQuestions(): void
+    {
+        $module = Module::firstOrCreate(['slug' => 'phishing-basics']);
+        $questions = [
+            [
+                'type' => 'mcq',
+                'stem' => 'Which of the following is a red flag for a phishing email?',
+                'options' => ['It uses your correct name', 'It includes your company logo', 'The sender’s email is “support@amaz0n-deals.com”', 'It arrives during business hours'],
+                'answer'  => ['The sender’s email is “support@amaz0n-deals.com”'],
+                'explanation' => 'Look for subtle misspellings in domain names, which is a common phishing tactic.',
+                'difficulty'  => 1,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What is “smishing”?',
+                'options' => ['Phishing via email', 'Phishing via social media', 'Phishing via text message', 'A type of malware'],
+                'answer'  => ['Phishing via text message'],
+                'explanation' => 'Smishing is a form of phishing that uses mobile phones as the attack platform.',
+                'difficulty'  => 1,
             ],
             [
                 'type' => 'truefalse',
-                'stem' => 'A firewall is sufficient to protect you from all types of malware.',
+                'stem' => 'Legitimate companies will often ask for your password via email for “verification.”',
                 'options' => null,
-                'answer' => ['false'],
-                'explanation' => 'A firewall is an important layer, but not a complete solution.',
-                'difficulty' => 2,
+                'answer'  => ['false'],
+                'explanation' => 'Legitimate companies will never ask for your password or other sensitive information via email.',
+                'difficulty'  => 1,
             ],
             [
-                'type' => 'fib',
-                'stem' => 'A type of malware that disguises itself as legitimate software is called a ________.',
-                'options' => null,
-                'answer' => ['trojan'],
-                'explanation' => 'A Trojan horse or Trojan is a type of malware that is often disguised as legitimate software.',
-                'difficulty' => 3,
+                'type' => 'mcq',
+                'stem' => 'What should you do if you accidentally click a suspicious link?',
+                'options' => ['Ignore it—nothing will happen', 'Immediately run a security scan and change related passwords', 'Forward the email to friends as a warning', 'Reply asking them to stop'],
+                'answer'  => ['Immediately run a security scan and change related passwords'],
+                'explanation' => 'It is important to take immediate action to secure your accounts and devices.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'Which technique relies on tricking people rather than exploiting software?',
+                'options' => ['SQL injection', 'DDoS attack', 'Social engineering', 'Encryption'],
+                'answer'  => ['Social engineering'],
+                'explanation' => 'Social engineering is the use of deception to manipulate individuals into divulging confidential or personal information that may be used for fraudulent purposes.',
+                'difficulty'  => 2,
             ],
         ];
 
@@ -179,43 +176,43 @@ class DemoQuizSeeder extends Seeder
         $questions = [
             [
                 'type' => 'mcq',
-                'stem' => 'What is a key feature of a strong password?',
-                'options' => ['Short and easy to remember', 'A mix of letters, numbers, and symbols', 'A common dictionary word', 'Your pet\'s name'],
-                'answer'  => ['A mix of letters, numbers, and symbols'],
-                'explanation' => 'Complexity makes passwords harder to guess or crack.',
+                'stem' => 'What is the **minimum recommended length** for a strong password in 2025?',
+                'options' => ['6 characters', '8 characters', '12 characters', '4 characters'],
+                'answer'  => ['12 characters'],
+                'explanation' => 'Longer passwords are more secure and harder to crack.',
                 'difficulty'  => 1,
             ],
             [
-                'type' => 'fib',
-                'stem' => 'The practice of using a different password for every online service is crucial for security. This can be managed with a password ________.',
-                'options' => null,
-                'answer'  => ['manager'],
-                'explanation' => 'Password managers help create and store unique, complex passwords.',
+                'type' => 'mcq',
+                'stem' => 'Which of the following is a strong password?',
+                'options' => ['password123', 'iloveyou', 'Blue$ky!Rain7#Cloud', 'your pet’s name'],
+                'answer'  => ['Blue$ky!Rain7#Cloud'],
+                'explanation' => 'A strong password is long, complex, and unpredictable.',
                 'difficulty'  => 2,
             ],
             [
                 'type' => 'mcq',
-                'stem' => 'What does "MFA" stand for in the context of cybersecurity?',
-                'options' => ['Malicious File Attack', 'My First Account', 'Multi-Factor Authentication', 'Master File Access'],
-                'answer' => ['Multi-Factor Authentication'],
-                'explanation' => 'MFA adds a layer of protection to the sign-in process.',
-                'difficulty' => 1,
+                'stem' => 'Why should you use different passwords for different accounts?',
+                'options' => ['It’s easier to remember', 'If one account is breached, others stay safe', 'Websites require it by law', 'It speeds up login time'],
+                'answer'  => ['If one account is breached, others stay safe'],
+                'explanation' => 'Using unique passwords for each account limits the damage if one account is compromised.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What is the best way to manage multiple strong passwords?',
+                'options' => ['Write them on a sticky note', 'Use a reputable password manager', 'Save them in a Word document', 'Reuse your favorite password with small changes'],
+                'answer'  => ['Use a reputable password manager'],
+                'explanation' => 'A password manager is a software application that is used to store and manage passwords.',
+                'difficulty'  => 1,
             ],
             [
                 'type' => 'truefalse',
-                'stem' => 'You should change your passwords every 30 days, even if there\'s no sign of a breach.',
+                'stem' => 'Multi-factor authentication (MFA) adds an extra layer of security even if your password is stolen.',
                 'options' => null,
-                'answer' => ['false'],
-                'explanation' => 'Modern guidance suggests using a very strong, unique password is more important than changing it frequently without cause.',
-                'difficulty' => 2,
-            ],
-            [
-                'type' => 'fib',
-                'stem' => 'A ________ ________ is a secure application for storing and managing all your unique passwords.',
-                'options' => null,
-                'answer' => ['password manager'],
-                'explanation' => 'Password managers are essential tools for password hygiene.',
-                'difficulty' => 2,
+                'answer'  => ['true'],
+                'explanation' => 'MFA is a security enhancement that requires for two or more pieces of evidence to an authentication mechanism.',
+                'difficulty'  => 2,
             ],
         ];
 

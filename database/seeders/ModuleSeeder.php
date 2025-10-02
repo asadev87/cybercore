@@ -22,6 +22,9 @@ class ModuleSeeder extends Seeder
             ['slug'=>'safe-browsing', 'title'=>'Safe Browsing',
              'description'=>'Public Wi-Fi, HTTPS, trackers.',
              'is_active'=>true, 'pass_score'=>70],
+            ['slug'=>'cybersecurity-fundamentals', 'title'=>'Introduction to Cybersecurity',
+             'description'=>'Understand core principles and why cybersecurity matters.',
+             'is_active'=>true, 'pass_score'=>70],
         ];
 
         foreach ($data as $m) {
