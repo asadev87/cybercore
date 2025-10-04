@@ -3,99 +3,113 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-  <h1 class="h3 mb-4">Welcome, {{ auth()->user()->name ?? 'Learner' }}</h1>
+<div class="space-y-8">
+  <header class="flex flex-col gap-2">
+    <p class="text-sm font-medium text-muted-foreground">Welcome back</p>
+    <h1 class="text-3xl font-semibold tracking-tight">{{ auth()->user()->name ?? 'Learner' }}</h1>
+  </header>
 
-  {{-- Quick stats (optional) --}}
-  {{-- <div class="alert alert-info">You have completed 2 modules this month.</div> --}}
-
-  <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-lg-3">
-    {{-- Learn --}}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-2">
-            <i class="bi bi-journal-text fs-3 me-2 text-primary"></i>
-            <h5 class="card-title mb-0">Start Learning</h5>
-          </div>
-          <p class="text-secondary flex-grow-1">Browse modules and continue where you left off.</p>
-          <a href="{{ route('learn.index') }}" class="btn btn-primary mt-auto">Go to Learn</a>
-        </div>
+  <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <article class="card-surface flex h-full flex-col gap-4 p-6">
+      <div class="flex items-start justify-between">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 19h16M7 10h10M5 5h14" />
+          </svg>
+        </span>
+        <span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">Modules</span>
       </div>
-    </div>
-
-    {{-- Performance --}}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-2">
-            <i class="bi bi-graph-up fs-3 me-2 text-primary"></i>
-            <h5 class="card-title mb-0">Performance</h5>
-          </div>
-          <p class="text-secondary flex-grow-1">View progress, history and analytics.</p>
-          <a href="{{ route('performance.index') }}" class="btn btn-primary mt-auto">Open Performance</a>
-        </div>
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold">Start learning</h2>
+        <p class="text-sm text-muted-foreground">Browse curated modules and continue where you left off.</p>
       </div>
-    </div>
+      <a href="{{ route('learn.index') }}" class="btn btn-primary mt-auto">Go to Learn</a>
+    </article>
 
-    {{-- Leaderboard --}}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-2">
-            <i class="bi bi-trophy fs-3 me-2 text-primary"></i>
-            <h5 class="card-title mb-0">Leaderboard</h5>
-          </div>
-          <p class="text-secondary flex-grow-1">See top scores and your rank.</p>
-          <a href="{{ route('leaderboard.index') }}" class="btn btn-primary mt-auto">View Leaderboard</a>
-        </div>
+    <article class="card-surface flex h-full flex-col gap-4 p-6">
+      <div class="flex items-start justify-between">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16M4 16h16M4 8h16" />
+          </svg>
+        </span>
+        <span class="rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">Insights</span>
       </div>
-    </div>
-
-    {{-- Badges --}}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-2">
-            <i class="bi bi-patch-check fs-3 me-2 text-primary"></i>
-            <h5 class="card-title mb-0">Badges</h5>
-          </div>
-          <p class="text-secondary flex-grow-1">Collect badges for finished modules.</p>
-          <a href="{{ url('/badges') }}" class="btn btn-primary mt-auto">My Badges</a>
-        </div>
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold">Performance</h2>
+        <p class="text-sm text-muted-foreground">Review your progress, scores, and personal recommendations.</p>
       </div>
-    </div>
+      <a href="{{ route('performance.index') }}" class="btn btn-outline mt-auto">Open Performance</a>
+    </article>
 
-    {{-- Account --}}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-2">
-            <i class="bi bi-person-gear fs-3 me-2 text-primary"></i>
-            <h5 class="card-title mb-0">Account</h5>
-          </div>
-          <p class="text-secondary flex-grow-1">Update your name, email, or password.</p>
-          <a href="{{ route('account.index') }}" class="btn btn-primary mt-auto">Account Settings</a>
-        </div>
+    <article class="card-surface flex h-full flex-col gap-4 p-6">
+      <div class="flex items-start justify-between">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+          </svg>
+        </span>
+        <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">Motivation</span>
       </div>
-    </div>
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold">Leaderboard</h2>
+        <p class="text-sm text-muted-foreground">See how you compare with peers and stay motivated.</p>
+      </div>
+      <a href="{{ route('leaderboard.index') }}" class="btn btn-outline mt-auto">View Leaderboard</a>
+    </article>
 
-    {{-- Admin (visible only to admins) --}}
+    <article class="card-surface flex h-full flex-col gap-4 p-6">
+      <div class="flex items-start justify-between">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h10v10H7z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="m9.5 13 1.5 1.5L14.5 11" />
+          </svg>
+        </span>
+        <span class="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-success">Achievements</span>
+      </div>
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold">Badges</h2>
+        <p class="text-sm text-muted-foreground">Collect and showcase progress for completed modules.</p>
+      </div>
+      <a href="{{ url('/badges') }}" class="btn btn-outline mt-auto">My Badges</a>
+    </article>
+
+    <article class="card-surface flex h-full flex-col gap-4 p-6">
+      <div class="flex items-start justify-between">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12c2.485 0 4.5-2.015 4.5-4.5S14.485 3 12 3 7.5 5.015 7.5 7.5 9.515 12 12 12ZM5.25 21a6.75 6.75 0 0 1 13.5 0" />
+          </svg>
+        </span>
+        <span class="rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">Profile</span>
+      </div>
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold">Account</h2>
+        <p class="text-sm text-muted-foreground">Manage your profile, security, and notification preferences.</p>
+      </div>
+      <a href="{{ route('account.index') }}" class="btn btn-outline mt-auto">Account Settings</a>
+    </article>
+
     @role('admin')
-    <div class="col">
-      <div class="card h-100 shadow-sm border-danger">
-        <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-2">
-            <i class="bi bi-shield-lock fs-3 me-2 text-danger"></i>
-            <h5 class="card-title mb-0">Admin</h5>
-          </div>
-          <p class="text-secondary flex-grow-1">Manage modules, questions and reports.</p>
-          <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-danger mt-auto">Open Admin</a>
-        </div>
+    <article class="card-surface flex h-full flex-col gap-4 border border-destructive/30 p-6">
+      <div class="flex items-start justify-between">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-destructive/10 text-destructive">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4 6 8-3 8 3v4c0 5.25-3.5 10-8 11-4.5-1-8-5.75-8-11V6Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v4" />
+            <circle cx="12" cy="17" r="0.75" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="rounded-full bg-destructive/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-destructive">Admin</span>
       </div>
-    </div>
+      <div class="space-y-3">
+        <h2 class="text-xl font-semibold">Admin tools</h2>
+        <p class="text-sm text-muted-foreground">Publish modules, manage content, and review reports.</p>
+      </div>
+      <a href="{{ route('admin.dashboard') }}" class="btn btn-destructive mt-auto">Open Admin</a>
+    </article>
     @endrole
   </div>
 </div>
 @endsection
-

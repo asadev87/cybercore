@@ -1,93 +1,123 @@
 {{-- resources/views/admin/reports/index.blade.php --}}
 
 @extends('admin.layout')
+
 @section('content')
-<div class="d-flex justify-content-between align-items-end mb-3">
-  <h4 class="mb-0">Analytics & Reports</h4>
-  <div class="d-flex gap-2">
-    <a class="btn btn-outline-primary btn-sm"
-       href="{{ route('admin.reports.export.excel', request()->only('from','to','module_id')) }}">Export Excel</a>
-    <a class="btn btn-outline-danger btn-sm"
-       href="{{ route('admin.reports.export.pdf',   request()->only('from','to','module_id')) }}">Export PDF</a>
-  </div>
-</div>
+<section class="space-y-8">
+  <header class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight">Analytics &amp; reports</h1>
+      <p class="text-sm text-muted-foreground">Filter and export learner performance across modules.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <a class="btn btn-outline text-xs" href="{{ route('admin.reports.export.excel', request()->only('from','to','module_id')) }}">Export Excel</a>
+      <a class="btn btn-outline text-xs" href="{{ route('admin.reports.export.pdf', request()->only('from','to','module_id')) }}">Export PDF</a>
+    </div>
+  </header>
 
-<form method="GET" class="row g-2 align-items-end mb-3">
-  <div class="col-auto">
-    <label class="form-label">From</label>
-    <input type="date" name="from" class="form-control" value="{{ optional($from)->toDateString() }}">
-  </div>
-  <div class="col-auto">
-    <label class="form-label">To</label>
-    <input type="date" name="to" class="form-control" value="{{ optional($to)->toDateString() }}">
-  </div>
-  <div class="col-auto">
-    <label class="form-label">Module</label>
-    <select name="module_id" class="form-select">
-      <option value="">All modules</option>
-      @foreach($modules as $m)
-        <option value="{{ $m->id }}" @selected($moduleId==$m->id)>{{ $m->title }}</option>
-      @endforeach
-    </select>
-  </div>
-  <div class="col-auto"><button class="btn btn-primary">Apply</button></div>
-</form>
+  <form method="GET" class="card-surface grid gap-6 md:grid-cols-4">
+    <div class="grid gap-2">
+      <label for="from" class="input-label">From</label>
+      <input type="date" id="from" name="from" value="{{ optional($from)->toDateString() }}" class="input-field">
+    </div>
+    <div class="grid gap-2">
+      <label for="to" class="input-label">To</label>
+      <input type="date" id="to" name="to" value="{{ optional($to)->toDateString() }}" class="input-field">
+    </div>
+    <div class="grid gap-2 md:col-span-2">
+      <label for="module_id" class="input-label">Module</label>
+      <select id="module_id" name="module_id" class="input-field">
+        <option value="">All modules</option>
+        @foreach($modules as $m)
+          <option value="{{ $m->id }}" @selected($moduleId == $m->id)>{{ $m->title }}</option>
+        @endforeach
+      </select>
+    </div>
+    <div class="md:col-span-4 flex justify-end">
+      <button class="btn btn-primary">Apply filters</button>
+    </div>
+  </form>
 
-<div class="row g-3 mb-4">
-  <div class="col-md-4"><div class="card"><div class="card-body">
-    <div class="small text-muted">Attempts</div>
-    <div class="h4 mb-0">{{ number_format($summary->attempts ?? 0) }}</div>
-  </div></div></div>
-  <div class="col-md-4"><div class="card"><div class="card-body">
-    <div class="small text-muted">Average score</div>
-    <div class="h4 mb-0">{{ isset($summary->avg_score) ? number_format($summary->avg_score,1).'%' : '—' }}</div>
-  </div></div></div>
-  <div class="col-md-4"><div class="card"><div class="card-body">
-    <div class="small text-muted">Passes</div>
-    <div class="h4 mb-0">{{ number_format($summary->passes ?? 0) }}</div>
-  </div></div></div>
-</div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card-surface">
+      <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Attempts</p>
+      <p class="mt-3 text-3xl font-semibold">{{ number_format($summary->attempts ?? 0) }}</p>
+    </div>
+    <div class="card-surface">
+      <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Average score</p>
+      <p class="mt-3 text-3xl font-semibold">{{ isset($summary->avg_score) ? number_format($summary->avg_score,1).'%' : '—' }}</p>
+    </div>
+    <div class="card-surface">
+      <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Passes</p>
+      <p class="mt-3 text-3xl font-semibold">{{ number_format($summary->passes ?? 0) }}</p>
+    </div>
+  </div>
 
-<div class="card mb-4">
-  <div class="card-header">Ranking by module (avg score)</div>
-  <div class="card-body p-0">
-    <table class="table mb-0 align-middle">
-      <thead><tr><th>#</th><th>Module</th><th>Attempts</th><th>Passes</th><th>Avg score</th></tr></thead>
-      <tbody>
-        @forelse($ranking as $i=>$r)
+  <div class="card-surface overflow-hidden">
+    <div class="border-b border-border/60 px-6 py-4">
+      <h2 class="text-lg font-semibold">Ranking by module</h2>
+      <p class="text-sm text-muted-foreground">Sorted by average score</p>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-border/60 text-sm">
+        <thead class="bg-secondary/60 text-secondary-foreground">
           <tr>
-            <td>{{ $i+1 }}</td>
-            <td>{{ $r->title }}</td>
-            <td>{{ $r->attempts }}</td>
-            <td>{{ $r->passes }}</td>
-            <td>{{ number_format($r->avg_score,1) }}%</td>
+            <th class="px-4 py-3 font-semibold">#</th>
+            <th class="px-4 py-3 font-semibold">Module</th>
+            <th class="px-4 py-3 font-semibold">Attempts</th>
+            <th class="px-4 py-3 font-semibold">Passes</th>
+            <th class="px-4 py-3 font-semibold">Avg score</th>
           </tr>
-        @empty
-          <tr><td colspan="5" class="text-center text-muted py-3">No data.</td></tr>
-        @endforelse
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="divide-y divide-border/60">
+          @forelse($ranking as $i => $r)
+            <tr class="transition hover:bg-secondary/40">
+              <td class="px-4 py-3 text-sm font-semibold text-muted-foreground">{{ $i + 1 }}</td>
+              <td class="px-4 py-3 text-sm text-foreground">{{ $r->title }}</td>
+              <td class="px-4 py-3 text-sm text-muted-foreground">{{ $r->attempts }}</td>
+              <td class="px-4 py-3 text-sm text-muted-foreground">{{ $r->passes }}</td>
+              <td class="px-4 py-3 text-sm text-muted-foreground">{{ number_format($r->avg_score, 1) }}%</td>
+            </tr>
+          @empty
+            <tr>
+              <td colspan="5" class="px-6 py-8 text-center text-sm text-muted-foreground">No data.</td>
+            </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<div class="card">
-  <div class="card-header">Recent attempts</div>
-  <div class="card-body p-0">
-    <table class="table mb-0 align-middle">
-      <thead><tr><th>When</th><th>User</th><th>Module</th><th>Score</th></tr></thead>
-      <tbody>
-        @forelse($rows as $a)
+  <div class="card-surface overflow-hidden">
+    <div class="border-b border-border/60 px-6 py-4">
+      <h2 class="text-lg font-semibold">Recent attempts</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-border/60 text-sm">
+        <thead class="bg-secondary/60 text-secondary-foreground">
           <tr>
-            <td>{{ $a->completed_at?->format('Y-m-d H:i') }}</td>
-            <td>{{ $a->user->name ?? $a->user->email }}</td>
-            <td>{{ $a->module->title }}</td>
-            <td>{{ $a->score }}%</td>
+            <th class="px-4 py-3 font-semibold">When</th>
+            <th class="px-4 py-3 font-semibold">User</th>
+            <th class="px-4 py-3 font-semibold">Module</th>
+            <th class="px-4 py-3 font-semibold">Score</th>
           </tr>
-        @empty
-          <tr><td colspan="4" class="text-center text-muted py-3">No attempts in range.</td></tr>
-        @endforelse
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="divide-y divide-border/60">
+          @forelse($rows as $a)
+            <tr class="transition hover:bg-secondary/40">
+              <td class="px-4 py-3 text-sm text-muted-foreground">{{ $a->completed_at?->format('Y-m-d H:i') }}</td>
+              <td class="px-4 py-3 text-sm text-foreground">{{ $a->user->name ?? $a->user->email }}</td>
+              <td class="px-4 py-3 text-sm text-muted-foreground">{{ $a->module->title }}</td>
+              <td class="px-4 py-3 text-sm text-muted-foreground">{{ $a->score }}%</td>
+            </tr>
+          @empty
+            <tr>
+              <td colspan="4" class="px-6 py-8 text-center text-sm text-muted-foreground">No attempts in range.</td>
+            </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+</section>
 @endsection

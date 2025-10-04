@@ -1,217 +1,375 @@
 {{-- resources/views/landing.blade.php --}}
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CyberCore — Cybersecurity E-Learning for Everyone</title>
-  <meta name="description" content="CyberCore is a secure, user-friendly e-learning platform to raise cybersecurity awareness for students, educators, and non-technical audiences.">
+  <meta name="description" content="CyberCore is a secure, user-friendly e-learning platform designed to raise cybersecurity awareness for students, educators, and non-technical audiences.">
   <link rel="icon" href="/assets/img/favicon.svg">
-
-  {{-- Bootstrap 5.3 CSS (CDN) --}}
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  {{-- CyberCore theme (load AFTER Bootstrap) --}}
-  <link rel="stylesheet" href="{{ asset('assets/css/cybercore.css') }}?v={{ filemtime(public_path('assets/css/cybercore.css')) }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="bg-background text-foreground antialiased">
+<div class="flex min-h-screen flex-col">
+  <header
+    x-data="(() => { const storageKey = 'cybercore-theme'; const prefersDark = window.matchMedia('(prefers-color-scheme: dark)'); let stored = null; try { stored = localStorage.getItem(storageKey); } catch (error) {} const applyTheme = value => { document.documentElement.classList.toggle('dark', value === 'dark'); document.documentElement.dataset.theme = value; }; const initial = stored ?? (prefersDark.matches ? 'dark' : 'light'); applyTheme(initial); prefersDark.addEventListener?.('change', event => { try { if (!localStorage.getItem(storageKey)) { const nextTheme = event.matches ? 'dark' : 'light'; applyTheme(nextTheme); } } catch (error) { const nextTheme = event.matches ? 'dark' : 'light'; applyTheme(nextTheme); } }); return { open: false, scrolled: false, theme: initial, toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; try { localStorage.setItem(storageKey, this.theme); } catch (error) {} applyTheme(this.theme); } }; })()"
+    x-init="scrolled = window.scrollY > 12; window.addEventListener('scroll', () => scrolled = window.scrollY > 12);"
+    :class="{ 'shadow-[0_20px_60px_-35px_rgba(14,165,233,0.45)] bg-background/80 dark:bg-slate-950/90 border-border dark:border-white/10': scrolled }"
+    class="sticky top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-xl transition duration-200"
+  >
+    <div class="container flex items-center justify-between py-5">
+      <a href="#" class="flex items-center gap-3 text-sm font-semibold tracking-tight">
+        <span class="relative grid h-11 w-11 place-content-center overflow-hidden rounded-2xl border border-border dark:border-white/10 bg-secondary/80 dark:bg-slate-900/80 shadow-[0_15px_40px_-25px_rgba(56,189,248,0.65)]">
+          <span class="h-6 w-6 rounded-lg bg-gradient-to-br from-sky-400 via-cyan-300 to-blue-500"></span>
+        </span>
+        <div class="flex flex-col">
+          <span class="text-base font-semibold text-foreground dark:text-white">CyberCore</span>
+          <span class="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Stay Vigilant</span>
+        </div>
+      </a>
 
-{{-- NAVBAR --}}
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <span class="brand-mark"></span>
-      <span class="fw-bold">CyberCore</span>
-    </a>
+      <nav class="hidden items-center gap-8 text-sm font-medium text-muted-foreground dark:text-white/70 lg:flex">
+        <a href="#how" class="transition hover:text-foreground dark:text-white">How it works</a>
+        <a href="#topics" class="transition hover:text-foreground dark:text-white">Topics</a>
+        <a href="#security" class="transition hover:text-foreground dark:text-white">Security</a>
+        <a href="#stories" class="transition hover:text-foreground dark:text-white">Stories</a>
+      </nav>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ccNav" aria-controls="ccNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="ccNav">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-        <li class="nav-item"><a class="nav-link" href="#how">How it works</a></li>
-        <li class="nav-item"><a class="nav-link" href="#topics">Topics</a></li>
-        <li class="nav-item"><a class="nav-link" href="#security">Security</a></li>
-
+      <div class="hidden items-center gap-3 lg:flex">
+        <button type="button" @click="toggleTheme()" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-white/80 text-foreground shadow-sm transition hover:border-border hover:bg-white dark:border-white/10 dark:bg-white/10 dark:text-white" aria-label="Toggle theme">
+          <svg x-show="theme === 'dark'" x-cloak xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5m0 15V21m9-9h-1.5M4.5 12H3m15.364-6.364-1.06 1.06M6.697 17.303l-1.06 1.06M18 18l-1.06-1.06M7.757 7.757 6.697 6.697M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+          </svg>
+          <svg x-show="theme === 'light'" x-cloak xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3a7.5 7.5 0 009.79 9.79z" />
+          </svg>
+        </button>
         @auth
-          @can('view-reports') {{-- Assuming a Gate for admin dashboard access --}}
-            <li class="nav-item ms-lg-2">
-              <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-accent">Admin</a>
-            </li>
+          @can('view-reports')
+            <a href="{{ route('admin.dashboard') }}" class="sera-btn">Admin</a>
           @endcan
-          <li class="nav-item ms-lg-2">
-            <a class="btn btn-light btn-sm" href="{{ route('dashboard') }}">Dashboard</a>
-          </li>
-          <li class="nav-item ms-lg-2">
-            <form method="POST" action="{{ route('logout') }}" class="d-inline">
-              @csrf
-              <button type="submit" class="btn btn-danger btn-sm">Logout</button>
-            </form>
-          </li>
+          <a href="{{ route('dashboard') }}" class="sera-btn">Dashboard</a>
+          <form method="POST" action="{{ route('logout') }}" class="inline-flex">
+            @csrf
+            <button type="submit" class="sera-btn-ghost">Logout</button>
+          </form>
         @endauth
 
         @guest
-          <li class="nav-item ms-lg-2">
-            <a class="btn btn-outline-primary" href="{{ route('login') }}">Sign in</a>
-          </li>
-          <li class="nav-item ms-lg-2">
-            <a class="btn btn-accent btn-lg" href="{{ route('register') }}">Get started</a>
-          </li>
+          <a href="{{ route('login') }}" class="sera-btn">Sign in</a>
+          <a href="{{ route('register') }}" class="sera-btn-primary">Get started</a>
         @endguest
-      </ul>
-    </div>
-  </div>
-</nav>
-
-{{-- HERO --}}
-<header class="hero-wrap py-5 py-lg-5">
-  <div class="container py-4">
-    <div class="row align-items-center gy-4">
-      <div class="col-lg-6">
-        <div class="hero-kicker mb-2">Empowering Cybersecurity Knowledge</div>
-        <h1 class="display-4 hero-title">
-          Learn to spot threats. <span>Stay safe online.</span>
-        </h1>
-        <p class="lead hero-sub mt-3">
-          CyberCore is a secure, user-friendly e-learning platform designed to raise cybersecurity awareness
-          for students, educators, and non-technical users through interactive modules and quizzes.
-        </p>
-        <div class="d-flex gap-3 mt-4">
-          <a class="btn btn-primary btn-lg" href="{{ route('register') }}">Start learning</a>
-          <a class="btn btn-outline-primary btn-lg" href="#topics">Browse topics</a>
-        </div>
-        <div class="d-flex align-items-center gap-3 mt-4">
-          <span class="badge-pill">Phishing</span>
-          <span class="badge-pill">Malware</span>
-          <span class="badge-pill">Password Hygiene</span>
-          <span class="badge-pill">Safe Browsing</span>
-        </div>
       </div>
 
-      <div class="col-lg-6">
-        {{-- Accessible illustrative panel (SVG, no external images) --}}
-        <div class="p-4 p-lg-5 border rounded-4 shadow-sm bg-surface">
-          <svg role="img" aria-label="Illustration of secure learning" width="100%" height="260" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="700" height="260" rx="18" fill="var(--cc-surface)"/>
-            <rect x="28" y="24" width="300" height="210" rx="12" fill="#ffffff" stroke="var(--cc-border)"/>
-            <rect x="52" y="56" width="252" height="16" rx="8" fill="var(--cc-border)"/>
-            <rect x="52" y="84" width="180" height="12" rx="6" fill="var(--cc-accent)"/>
-            <rect x="52" y="108" width="220" height="12" rx="6" fill="var(--cc-accent)"/>
-            <rect x="52" y="156" width="120" height="32" rx="8" fill="var(--cc-primary)"/>
-            <rect x="360" y="24" width="312" height="210" rx="12" fill="#ffffff" stroke="var(--cc-border)"/>
-            <circle cx="516" cy="100" r="48" fill="var(--cc-primary)" opacity=".12"/>
-            <path d="M488 112 l24 24 l40 -56" stroke="var(--cc-primary)" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="420" y="156" width="180" height="12" rx="6" fill="var(--cc-border)"/>
-            <rect x="420" y="176" width="160" height="12" rx="6" fill="var(--cc-border)"/>
-          </svg>
-          <div class="mt-3 small text-secondary">No downloads required • Web-based • Works on desktop & mobile</div>
+      <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-border dark:border-white/10 bg-white/80 dark:bg-white/10 text-foreground dark:text-white shadow-[0_10px_30px_-20px_rgba(56,189,248,0.55)] transition hover:border-white/20 hover:bg-white/90 dark:bg-white/10 lg:hidden" @click="open = !open" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="sr-only">Toggle navigation</span>
+        <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6h16.5M3.75 12h16.5M3.75 18h16.5" />
+        </svg>
+        <svg x-show="open" x-cloak xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div
+      id="mobile-nav"
+      x-show="open"
+      x-cloak
+      x-transition:enter="transition ease-out duration-150"
+      x-transition:enter-start="opacity-0 -translate-y-2"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in duration-100"
+      x-transition:leave-start="opacity-100 translate-y-0"
+      x-transition:leave-end="opacity-0 -translate-y-2"
+      class="border-t border-border/60 dark:border-white/5 bg-background/95 dark:bg-slate-950/95 px-4 pb-6 pt-4 shadow-[0_25px_60px_-40px_rgba(14,165,233,0.45)] lg:hidden"
+    >
+      <nav class="flex flex-col gap-4 text-sm text-muted-foreground dark:text-white/70">
+        <a href="#how" class="transition hover:text-foreground dark:text-white" @click="open = false">How it works</a>
+        <a href="#topics" class="transition hover:text-foreground dark:text-white" @click="open = false">Topics</a>
+        <a href="#security" class="transition hover:text-foreground dark:text-white" @click="open = false">Security</a>
+        <a href="#stories" class="transition hover:text-foreground dark:text-white" @click="open = false">Stories</a>
+      </nav>
+      <div class="mt-6 flex flex-col gap-3">
+        <button type="button" @click="toggleTheme()" class="sera-btn w-full justify-center">
+          <span x-show="theme === 'dark'" x-cloak>Switch to light mode</span>
+          <span x-show="theme === 'light'" x-cloak>Switch to dark mode</span>
+        </button>
+        @auth
+          @can('view-reports')
+            <a href="{{ route('admin.dashboard') }}" class="sera-btn" @click="open = false">Admin</a>
+          @endcan
+          <a href="{{ route('dashboard') }}" class="sera-btn" @click="open = false">Dashboard</a>
+          <form method="POST" action="{{ route('logout') }}" class="w-full" @submit="open = false">
+            @csrf
+            <button type="submit" class="sera-btn-ghost w-full">Logout</button>
+          </form>
+        @endauth
+
+        @guest
+          <a href="{{ route('login') }}" class="sera-btn" @click="open = false">Sign in</a>
+          <a href="{{ route('register') }}" class="sera-btn-primary w-full" @click="open = false">Get started</a>
+        @endguest
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    {{-- Hero --}}
+    <section id="hero" class="relative overflow-hidden">
+      <div class="absolute inset-0 -z-10 sera-hero-bg" aria-hidden="true"></div>
+      <div class="absolute -left-40 top-1/4 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl"></div>
+      <div class="absolute -right-24 top-10 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-sky-400/10 blur-3xl"></div>
+
+      <div class="container grid gap-16 py-20 lg:grid-cols-[1fr,minmax(0,0.85fr)] lg:py-28">
+        <div class="space-y-8">
+          <span class="sera-pill w-fit">Empowering Cybersecurity Knowledge</span>
+          <h1 class="text-balance text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            Learn to spot threats.
+            <span class="bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">Stay safe online.</span>
+          </h1>
+          <p class="max-w-xl text-base text-muted-foreground dark:text-white/70 sm:text-lg">
+            CyberCore combines motion-rich learning moments from Sera UI with proven awareness curriculum so every learner can practice, retain, and apply cyber safety habits in minutes a day.
+          </p>
+          <div class="flex flex-wrap items-center gap-4">
+            <a href="{{ route('register') }}" class="sera-btn-primary">Start learning</a>
+            <a href="#topics" class="sera-btn">Browse topics</a>
+            <a href="{{ route('login') }}" class="sera-btn-ghost">Already have an account?</a>
+          </div>
+
+          <dl class="grid gap-6 sm:grid-cols-3">
+            <div class="sera-card px-5 py-4">
+              <dt class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Active learners</dt>
+              <dd class="mt-3 text-2xl font-semibold">8,200+</dd>
+            </div>
+            <div class="sera-card px-5 py-4">
+              <dt class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Modules shipped</dt>
+              <dd class="mt-3 text-2xl font-semibold">45 curated</dd>
+            </div>
+            <div class="sera-card px-5 py-4">
+              <dt class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Avg. completion</dt>
+              <dd class="mt-3 text-2xl font-semibold">92%</dd>
+            </div>
+          </dl>
         </div>
-      </div>
-    </div>
-  </div>
-</header>
 
-{{-- HOW IT WORKS --}}
-<section id="how" class="py-5 bg-surface">
-  <div class="container">
-    <div class="text-center mb-4">
-      <h2 class="fw-bold">How CyberCore works</h2>
-      <p class="text-secondary mb-0">Learn → Take quizzes → Earn certificates</p>
-    </div>
-    <div class="row g-4">
-      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
-        <h5 class="card-title">1. Learn</h5>
-        <p class="text-secondary mb-0">Short modules that respect your time.</p>
-      </div></div></div>
-      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
-        <h5 class="card-title">2. Quiz</h5>
-        <p class="text-secondary mb-0">Adaptive questions with instant feedback.</p>
-      </div></div></div>
-      <div class="col-md-4"><div class="card h-100 module-card"><div class="card-body">
-        <h5 class="card-title">3. Certificate</h5>
-        <p class="text-secondary mb-0">View-only certificate upon passing.</p>
-      </div></div></div>
-    </div>
-  </div>
-</section>
+        <div class="relative isolate flex h-full items-center justify-center">
+          <div class="absolute inset-6 rounded-[3rem] bg-gradient-to-br from-sky-500/20 via-cyan-300/10 to-blue-500/20 blur-3xl" aria-hidden="true"></div>
+          <div class="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-border dark:border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/70 to-slate-900/50 p-8 shadow-[0_30px_80px_-40px_rgba(14,116,233,0.55)] backdrop-blur-3xl">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Live module</p>
+                <p class="mt-3 text-lg font-semibold">Threat Detection 101</p>
+              </div>
+              <span class="rounded-full border border-emerald-400/70 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-200">In progress</span>
+            </div>
+            <div class="mt-6 space-y-4">
+              <div>
+                <p class="text-sm font-medium text-muted-foreground dark:text-white/70">Progress</p>
+                <div class="mt-2 h-2 rounded-full bg-white/90 dark:bg-white/10">
+                  <div class="h-2 w-3/4 rounded-full bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-500"></div>
+                </div>
+              </div>
 
-{{-- TOPICS (Modules) --}}
-<section id="topics" class="py-5">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-end mb-4">
-      <div>
-        <h2 class="fw-bold mb-0">Core topics</h2>
-        <p class="text-secondary mb-0">Start with these essentials—designed for all learners.</p>
-      </div>
-      <a class="btn btn-outline-primary" href="{{ route('register') }}">Enroll free</a>
-    </div>
-
-    @php($modules = \App\Models\Module::where('is_active',true)->orderBy('title')->limit(4)->get())
-    <div class="row g-4">
-      @forelse($modules as $m)
-        <div class="col-md-6 col-lg-3">
-          <div class="card h-100 module-card">
-            <div class="card-body">
-              <h5 class="card-title">{{ $m->title }}</h5>
-              <p class="card-text text-secondary">{{ \Illuminate\Support\Str::limit($m->description, 90) }}</p>
-              @auth
-                <a href="{{ route('learn.start',$m) }}" class="btn btn-sm btn-primary">Begin</a>
-              @else
-                <a href="{{ route('register') }}" class="btn btn-sm btn-primary">Begin</a>
-              @endauth
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="rounded-2xl border border-border dark:border-white/10 bg-white/90 dark:bg-white/10 p-4">
+                  <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Up next</p>
+                  <p class="mt-2 text-sm font-medium">Social engineering tactics</p>
+                  <p class="mt-1 text-xs text-muted-foreground dark:text-white/60">Interactive scenario training with instant feedback.</p>
+                </div>
+                <div class="rounded-2xl border border-border dark:border-white/10 bg-white/90 dark:bg-white/10 p-4">
+                  <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Certificate</p>
+                  <p class="mt-2 text-sm font-medium">Shareable badge</p>
+                  <p class="mt-1 text-xs text-muted-foreground dark:text-white/60">Download proof for LMS or LinkedIn profiles.</p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 rounded-2xl border border-border/60 dark:border-white/5 bg-white/90 dark:bg-white/10 p-4 text-xs text-muted-foreground dark:text-white/60">
+              Works on any device • Keyboard-friendly navigation • Privacy-first analytics
             </div>
           </div>
         </div>
-      @empty
-        {{-- Fallback tiles if no DB modules yet --}}
-        <div class="col-12">
-          <div class="alert alert-info mb-0">Modules will appear here once published by Admin.</div>
-        </div>
-      @endforelse
-    </div>
-  </div>
-</section>
-
-{{-- SECURITY --}}
-<section id="security" class="py-5">
-  <div class="container">
-    <div class="row align-items-center gy-4">
-      <div class="col-lg-6">
-        <h2 class="fw-bold"></h2>
-        <ul class="text-secondary mb-0">
-        </ul>
       </div>
-      <div class="col-lg-6">
-        <div class="cta rounded-4 p-4 p-lg-5">
-          <h5 class="mb-3">Learners first, always.</h5>
-          <p class="text-secondary mb-4">We combine engaging content with learning science so anyone can develop real-world cyber safety skills.</p>
-          <a href="{{ route('register') }}" class="btn btn-danger">Create your free account</a>
+    </section>
+
+    {{-- How it works --}}
+    <section id="how" class="relative overflow-hidden py-20">
+      <div class="absolute inset-0 -z-10 bg-[linear-gradient(140deg,_rgba(12,74,110,0.35),_rgba(8,47,73,0.6))]"></div>
+      <div class="container">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="sera-pill mx-auto">Guided Journey</p>
+          <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">How CyberCore works</h2>
+          <p class="mt-3 text-base text-muted-foreground dark:text-white/70">Blend micro-lessons, adaptive quizzes, and certificate-ready milestones to deliver lasting retention.</p>
+        </div>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-3">
+          <article class="sera-card">
+            <div class="flex h-full flex-col gap-4">
+              <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">1</div>
+              <h3 class="text-xl font-semibold">Learn with motion</h3>
+              <p class="text-sm text-muted-foreground dark:text-white/70">Immersive explainer videos and interactive `Sera`-style cards give every concept visual context in under 5 minutes.</p>
+            </div>
+          </article>
+          <article class="sera-card">
+            <div class="flex h-full flex-col gap-4">
+              <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">2</div>
+              <h3 class="text-xl font-semibold">Quiz with confidence</h3>
+              <p class="text-sm text-muted-foreground dark:text-white/70">Adaptive questions calibrate difficulty on the fly so teams stay challenged without feeling overwhelmed.</p>
+            </div>
+          </article>
+          <article class="sera-card">
+            <div class="flex h-full flex-col gap-4">
+              <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">3</div>
+              <h3 class="text-xl font-semibold">Show what you know</h3>
+              <p class="text-sm text-muted-foreground dark:text-white/70">Unlock verifiable certificates, leaderboard shoutouts, and shareable badges the moment you pass.</p>
+            </div>
+          </article>
         </div>
       </div>
+    </section>
+
+    {{-- Core topics --}}
+    <section id="topics" class="relative overflow-hidden py-20">
+      <div class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+      <div class="container space-y-10">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p class="sera-pill w-fit">Curated curriculum</p>
+            <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Core topics</h2>
+            <p class="mt-2 max-w-xl text-sm text-muted-foreground dark:text-white/70">Start with the essentials or let your security office assign learning paths tailored to your role.</p>
+          </div>
+          <a class="sera-btn" href="{{ route('register') }}">Enroll free</a>
+        </div>
+
+        @php($modules = \App\Models\Module::where('is_active', true)->orderBy('title')->limit(4)->get())
+        <div class="sera-grid">
+          @forelse($modules as $m)
+            <article class="sera-card flex h-full flex-col gap-6 p-6">
+              <div class="space-y-3">
+                <span class="inline-flex items-center gap-2 rounded-full border border-border dark:border-white/10 bg-white/80 dark:bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Module</span>
+                <h3 class="text-lg font-semibold">{{ $m->title }}</h3>
+                <p class="text-sm text-muted-foreground dark:text-white/70">{{ \Illuminate\Support\Str::limit($m->description, 110) }}</p>
+              </div>
+              <div class="mt-auto">
+                @auth
+                  <a href="{{ route('learn.start', $m) }}" class="sera-btn-primary w-full justify-center">Begin</a>
+                @else
+                  <a href="{{ route('register') }}" class="sera-btn-primary w-full justify-center">Begin</a>
+                @endauth
+              </div>
+            </article>
+          @empty
+            <div class="sera-card col-span-full flex items-center justify-center p-10 text-sm text-muted-foreground dark:text-white/70">
+              Modules will appear here once published by Admin.
+            </div>
+          @endforelse
+        </div>
+      </div>
+    </section>
+
+    {{-- Security section --}}
+    <section id="security" class="relative overflow-hidden py-20">
+      <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.25),transparent_65%),radial-gradient(circle_at_bottom,_rgba(14,165,233,0.2),transparent_70%)]"></div>
+      <div class="container grid gap-12 lg:grid-cols-[1.1fr_minmax(0,0.95fr)]">
+        <div class="space-y-6">
+          <p class="sera-pill w-fit">Security first</p>
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Enterprise-grade protection with human-friendly design</h2>
+          <p class="text-base text-muted-foreground dark:text-white/70">CyberCore mirrors the defense-in-depth posture we teach. Infrastructure, data handling, and accessibility all follow strict guardrails.</p>
+          <ul class="space-y-4 text-sm text-muted-foreground dark:text-white/70">
+            <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-sky-300/40 bg-sky-500/10 text-xs font-semibold text-sky-200">01</span> SOC 2-aligned controls, with continuous monitoring and automated alerts.</li>
+            <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-sky-300/40 bg-sky-500/10 text-xs font-semibold text-sky-200">02</span> WCAG 2.2 AA tested: keyboard-first flows, focus-visible states, and transcripts for every media asset.</li>
+            <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-sky-300/40 bg-sky-500/10 text-xs font-semibold text-sky-200">03</span> Privacy by design with zero third-party trackers and region-aware data residency.</li>
+          </ul>
+        </div>
+        <aside class="sera-section space-y-6">
+          <h3 class="text-xl font-semibold">Learners first, always.</h3>
+          <p class="text-sm text-muted-foreground dark:text-white/70">Personalized nudges, bite-sized briefings, and shareable wins keep momentum high without blowing up calendars.</p>
+          <div class="grid gap-4 md:grid-cols-2">
+            <div class="rounded-2xl border border-border dark:border-white/10 bg-white/80 dark:bg-white/10 p-4">
+              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Pulse checks</p>
+              <p class="mt-2 text-sm">Gauge confidence before and after each lesson to chart real behavior change.</p>
+            </div>
+            <div class="rounded-2xl border border-border dark:border-white/10 bg-white/80 dark:bg-white/10 p-4">
+              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Leaderboard</p>
+              <p class="mt-2 text-sm">Friendly competition keeps teams engaged—without penalizing late starters.</p>
+            </div>
+          </div>
+          <a href="{{ route('register') }}" class="sera-btn-primary w-full justify-center sm:w-auto">Create your free account</a>
+        </aside>
+      </div>
+    </section>
+
+    {{-- Stories / Testimonials --}}
+    <section id="stories" class="relative overflow-hidden py-20">
+      <div class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-950 via-slate-900/95 to-slate-950"></div>
+      <div class="container space-y-12">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="sera-pill mx-auto">Trusted by teams</p>
+          <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Stories from the CyberCore community</h2>
+          <p class="mt-3 text-base text-muted-foreground dark:text-white/70">Program leads and educators share how they roll out awareness training with style and measurable outcomes.</p>
+        </div>
+        <div class="grid gap-6 md:grid-cols-3">
+          <article class="sera-card space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-500"></div>
+              <div>
+                <p class="text-sm font-semibold">Amelia Rhodes</p>
+                <p class="text-xs text-muted-foreground dark:text-white/60">Director of IT Training, Horizon College</p>
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground dark:text-white/70">“Within two weeks, completion jumped 60%. The cinematic backgrounds and animated cards from Sera UI made our people forget this was ‘mandatory’ training.”</p>
+          </article>
+          <article class="sera-card space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400"></div>
+              <div>
+                <p class="text-sm font-semibold">Raj Patel</p>
+                <p class="text-xs text-muted-foreground dark:text-white/60">Security Enablement, Northwind Bank</p>
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground dark:text-white/70">“Adaptive quizzes with progress chips give us real-time insight. The admin dashboards remain simple, yet pair perfectly with our compliance reporting.”</p>
+          </article>
+          <article class="sera-card space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-fuchsia-400 to-sky-500"></div>
+              <div>
+                <p class="text-sm font-semibold">Noah Bennett</p>
+                <p class="text-xs text-muted-foreground dark:text-white/60">STEM Educator, Brightside Academy</p>
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground dark:text-white/70">“Students finally see cyber literacy as creative. The motion cards, glitch accents, and micro-animations keep them exploring far beyond the lesson plan.”</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-border/60 dark:border-white/5 bg-background/80 dark:bg-slate-950/80 py-10 backdrop-blur-xl">
+    <div class="container flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div class="text-sm text-muted-foreground dark:text-white/60">&copy; <span x-data="{ year: new Date().getFullYear() }" x-text="year"></span> CyberCore. All rights reserved.</div>
+      <nav class="flex flex-wrap gap-4 text-sm text-muted-foreground dark:text-white/60">
+        <a href="#" class="transition hover:text-foreground dark:text-white">Privacy</a>
+        <a href="#" class="transition hover:text-foreground dark:text-white">Terms</a>
+        <a href="#how" class="transition hover:text-foreground dark:text-white">How</a>
+        <a href="#topics" class="transition hover:text-foreground dark:text-white">Topics</a>
+        <a href="#security" class="transition hover:text-foreground dark:text-white">Security</a>
+        <a href="#stories" class="transition hover:text-foreground dark:text-white">Stories</a>
+      </nav>
     </div>
-  </div>
-</section>
-
-{{-- FOOTER --}}
-<footer class="py-4 footer-dark">
-  <div class="container d-flex flex-column flex-lg-row justify-content-between align-items-center gap-3">
-    <div class="text-secondary">&copy; <span id="year"></span> CyberCore. All rights reserved.</div>
-    <div class="d-flex gap-3">
-      <a class="footer-link" href="#">Privacy</a>
-      <a class="footer-link" href="#">Terms</a>
-      <a class="footer-link" href="#how">How</a>
-      <a class="footer-link" href="#topics">Topics</a>
-      <a class="footer-link" href="#security">Security</a>
-    </div>
-  </div>
-</footer>
-
-{{-- Bootstrap JS bundle --}}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-{{-- Custom JS --}}
-<script src="/assets/js/cybercore.js"></script>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  </footer>
+</div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+

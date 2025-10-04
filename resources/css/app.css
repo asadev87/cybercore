@@ -1,3 +1,220 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222 47% 4%;
+        --card: 0 0% 100%;
+        --card-foreground: 222 47% 4%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222 47% 4%;
+        --primary: 211 100% 50%;
+        --primary-foreground: 210 40% 12%;
+        --secondary: 210 40% 96%;
+        --secondary-foreground: 222 47% 25%;
+        --accent: 197 100% 46%;
+        --accent-foreground: 210 40% 12%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --muted: 214 32% 92%;
+        --muted-foreground: 215 19% 35%;
+        --success: 150 70% 40%;
+        --success-foreground: 144 51% 90%;
+        --border: 214 32% 88%;
+        --input: 214 32% 82%;
+        --ring: 211 100% 50%;
+        --radius: 1.1rem;
+    }
+
+    .dark {
+        --background: 217 45% 5%;
+        --foreground: 210 40% 96%;
+        --card: 222 47% 9%;
+        --card-foreground: 210 40% 96%;
+        --popover: 220 40% 8%;
+        --popover-foreground: 210 40% 96%;
+        --primary: 210 92% 60%;
+        --primary-foreground: 210 40% 10%;
+        --secondary: 220 40% 12%;
+        --secondary-foreground: 210 40% 96%;
+        --accent: 197 100% 46%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 359 92% 64%;
+        --destructive-foreground: 0 0% 100%;
+        --muted: 220 20% 16%;
+        --muted-foreground: 220 17% 70%;
+        --success: 150 60% 45%;
+        --success-foreground: 150 70% 92%;
+        --border: 220 26% 24%;
+        --input: 220 24% 30%;
+        --ring: 210 92% 60%;
+        --radius: 1.1rem;
+    }
+
+    body {
+        @apply bg-background text-foreground antialiased font-sans;
+    }
+
+    * {
+        @apply border-border;
+    }
+
+    ::selection {
+        @apply bg-primary/80 text-primary-foreground;
+    }
+
+    :focus-visible {
+        @apply outline-none ring-2 ring-offset-2 ring-primary/70 ring-offset-background;
+    }
+}
+
+@layer components {\n    .answer-option {
+        @apply relative flex items-center gap-4 rounded-2xl border border-border/70 bg-white px-5 py-4 text-left text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-primary/50 hover:bg-primary/5 focus-within:ring-2 focus-within:ring-primary/60 focus-within:ring-offset-2 focus-within:ring-offset-background dark:border-white/10 dark:bg-white/5 dark:text-white;
+    }
+    .answer-bullet {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border/60 bg-secondary text-sm font-semibold text-muted-foreground transition-all duration-200 dark:border-white/10 dark:bg-white/10 dark:text-white/70;
+    }
+    .answer-helper {
+        @apply flex-1 text-left text-sm leading-snug text-muted-foreground transition-colors duration-200 dark:text-white/70;
+    }
+    .answer-helper strong {
+        @apply text-foreground dark:text-white;
+    }
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60;
+    }
+    .btn-primary {
+        @apply btn bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:opacity-95;
+    }
+    .btn-outline {
+        @apply btn border border-border/70 bg-white/80 text-foreground hover:border-border hover:bg-white;
+    }
+    .btn-muted {
+        @apply btn bg-secondary text-secondary-foreground hover:bg-secondary/80;
+    }
+    .btn-destructive {
+        @apply btn bg-destructive text-destructive-foreground hover:bg-destructive/90;
+    }
+    .dark .btn-outline {
+        @apply border-white/10 bg-white/10 text-white hover:border-white/20 hover:bg-white/15;
+    }
+
+    .card-surface {
+        @apply relative overflow-hidden rounded-3xl border border-border bg-card p-6 text-card-foreground shadow-[0_20px_45px_-20px_rgba(15,23,42,0.25)];
+    }
+    .card-muted {
+        @apply rounded-3xl border border-border/60 bg-secondary p-6 text-secondary-foreground shadow-[0_15px_40px_-30px_rgba(15,23,42,0.2)];
+    }
+    .dark .card-surface {
+        @apply border-white/10 bg-white/5 text-white shadow-[0_30px_80px_-40px_rgba(15,23,42,0.8)];
+        backdrop-filter: blur(18px);
+    }
+    .dark .card-muted {
+        @apply border-white/10 bg-white/5 text-white/90;
+        backdrop-filter: blur(14px);
+    }
+
+    .input-field {
+        @apply block w-full rounded-xl border border-input bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-ring focus:ring-2 focus:ring-ring/80 placeholder:text-muted-foreground;
+    }
+    .input-label {
+        @apply text-sm font-medium text-secondary-foreground;
+    }
+    .input-hint {
+        @apply mt-1 text-xs text-muted-foreground;
+    }
+    .answer-option {
+        @apply relative flex items-center gap-4 rounded-2xl border border-border/70 bg-white px-5 py-4 text-left text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-primary/50 hover:bg-primary/5 focus-within:ring-2 focus-within:ring-primary/60 focus-within:ring-offset-2 focus-within:ring-offset-background dark:border-white/10 dark:bg-white/5 dark:text-white;
+    }
+    .answer-bullet {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border/60 bg-secondary text-sm font-semibold text-muted-foreground transition-all duration-200 dark:border-white/10 dark:bg-white/10 dark:text-white/70;
+    }
+    .answer-helper {
+        @apply flex-1 text-left text-sm leading-snug text-muted-foreground transition-colors duration-200 dark:text-white/70;
+    }
+    .answer-helper strong {
+        @apply text-foreground dark:text-white;
+    }    .dark .input-field {
+        @apply border-input bg-slate-900/60 text-foreground;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Sera-inspired helpers */
+    .sera-btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/70 bg-white/90 px-5 py-2 text-sm font-semibold text-slate-900 shadow-sm transition duration-200 ease-out hover:border-slate-300 hover:bg-white hover:shadow-[0_18px_38px_-24px_rgba(30,64,175,0.25)];
+        backdrop-filter: blur(12px);
+    }
+    .dark .sera-btn {
+        @apply border-white/10 bg-white/10 text-white shadow-[0_0_0_1px_rgba(148,163,184,0.2)] hover:border-white/20 hover:bg-white/20 hover:shadow-[0_20px_40px_-20px_rgba(56,189,248,0.45)];
+    }
+
+    .sera-btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-full border border-sky-400/50 bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-500 px-6 py-2 text-sm font-semibold text-slate-900 shadow-[0_22px_45px_-25px_rgba(56,189,248,0.55)] transition duration-200 ease-out hover:shadow-[0_24px_60px_-24px_rgba(56,189,248,0.65)] focus-visible:ring-2 focus-visible:ring-sky-200 focus-visible:ring-offset-4;
+    }
+    .dark .sera-btn-primary {
+        @apply text-slate-900 shadow-[0_20px_40px_-20px_rgba(56,189,248,0.65)] focus-visible:ring-offset-slate-950;
+    }
+
+    .sera-btn-ghost {
+        @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/60 bg-transparent px-5 py-2 text-sm font-semibold text-slate-700 transition duration-200 ease-out hover:border-slate-300 hover:bg-slate-100;
+    }
+    .dark .sera-btn-ghost {
+        @apply border-white/5 text-white hover:border-white/15 hover:bg-white/10;
+    }
+
+    .sera-card {
+        @apply relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 text-slate-900 shadow-[0_35px_90px_-45px_rgba(15,23,42,0.25)];
+    }
+    .sera-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top left, rgba(56,189,248,0.25), transparent 55%), radial-gradient(circle at bottom right, rgba(14,165,233,0.15), transparent 60%);
+        opacity: 0.8;
+        pointer-events: none;
+    }
+    .sera-card > * {
+        position: relative;
+    }
+    .dark .sera-card {
+        @apply border-white/10 bg-white/5 text-white shadow-[0_30px_80px_-40px_rgba(15,23,42,0.85)];
+        backdrop-filter: blur(20px);
+    }
+
+    .sera-pill {
+        @apply inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/90 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600;
+        backdrop-filter: blur(10px);
+    }
+    .dark .sera-pill {
+        @apply border-white/10 bg-white/10 text-white/70;
+    }
+
+    .sera-section {
+        @apply relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white p-10 text-slate-900 shadow-[0_35px_90px_-45px_rgba(15,23,42,0.2)];
+    }
+    .dark .sera-section {
+        @apply border-white/10 bg-slate-900/50 text-white shadow-[0_25px_80px_-40px_rgba(15,23,42,0.85)];
+        backdrop-filter: blur(18px);
+    }
+
+    .sera-grid {
+        @apply grid gap-6 md:grid-cols-2 xl:grid-cols-4;
+    }
+
+    .sera-hero-bg {
+        background-image: radial-gradient(160px circle at top left, rgba(56,189,248,0.18), transparent), radial-gradient(220px circle at 85% 0%, rgba(129,140,248,0.18), transparent 60%), radial-gradient(320px circle at center bottom, rgba(6,182,212,0.12), transparent 70%);
+    }
+    .dark .sera-hero-bg {
+        background-image: radial-gradient(160px circle at top left, rgba(56,189,248,0.28), transparent), radial-gradient(220px circle at 85% 0%, rgba(129,140,248,0.32), transparent 60%), radial-gradient(320px circle at center bottom, rgba(6,182,212,0.18), transparent 65%);
+    }
+}
+
+
+
+
+
+
+
+

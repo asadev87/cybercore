@@ -2,37 +2,67 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4">
-  <h3 class="mb-3">Available modules</h3>
+@php
+  $moduleCount = $modules->count();
+  $moduleLabel = $moduleCount === 1 ? 'module' : 'modules';
+@endphp
 
-  <div class="row g-3">
+<section class="space-y-8">
+  <header class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div class="space-y-1">
+      <p class="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">Module catalog</p>
+      <h1 class="text-3xl font-semibold tracking-tight">Available modules</h1>
+      <p class="max-w-2xl text-sm text-muted-foreground">Continue exploring cybersecurity skills. Your progress persists across devices so you can resume instantly.</p>
+    </div>
+    <div class="rounded-2xl border border-border/60 bg-secondary/40 px-4 py-3 text-sm text-muted-foreground shadow-sm">
+      {{ $moduleCount }} {{ $moduleLabel }} available
+    </div>
+  </header>
+
+  <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
     @forelse ($modules as $m)
-      <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">{{ $m->title }}</h5>
-            <p class="text-secondary small mb-3">
-              {{ \Illuminate\Support\Str::limit($m->description, 140) }}
-            </p>
+      @php
+        $pct = (int) ($progress[$m->id] ?? 0);
+        $description = (string) $m->description;
+        $summary = mb_strlen($description) > 140 ? rtrim(mb_substr($description, 0, 137)) . '…' : $description;
+      @endphp
+      <article class="card-surface flex h-full flex-col gap-6 p-6">
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold">{{ $m->title }}</h2>
+            <span class="rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">{{ $pct >= 100 ? 'Complete' : 'In progress' }}</span>
+          </div>
+          <p class="text-sm text-muted-foreground">{{ $summary }}</p>
+        </div>
 
-            @php $pct = (int) ($progress[$m->id] ?? 0); @endphp
-            <div class="progress mb-3" style="height:10px">
-              <div class="progress-bar" role="progressbar" style="width: {{ $pct }}%"></div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="text-muted small">Progress: {{ $pct }}%</div>
-              <form action="{{ route('quiz.start', $m) }}" method="POST" class="m-0">
-                @csrf
-                <button class="btn btn-primary btn-sm">Start / Resume</button>
-              </form>
-            </div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs font-medium text-muted-foreground">
+            <span>Progress</span>
+            <span>{{ $pct }}%</span>
+          </div>
+          <div class="h-2 w-full rounded-full bg-secondary">
+            <div
+              class="h-2 rounded-full bg-primary transition-all duration-300"
+              style="width: {{ $pct }}%"
+              role="progressbar"
+              aria-valuenow="{{ $pct }}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-label="Module progress"
+            ></div>
           </div>
         </div>
-      </div>
+
+        <form action="{{ route('quiz.start', $m) }}" method="POST" class="mt-auto">
+          @csrf
+          <button class="btn btn-primary w-full">{{ $pct > 0 ? 'Start / Resume' : 'Begin module' }}</button>
+        </form>
+      </article>
     @empty
-      <div class="col-12 text-muted">No modules yet.</div>
+      <div class="card-muted col-span-full flex items-center justify-center p-10 text-sm text-muted-foreground">
+        No modules yet.
+      </div>
     @endforelse
   </div>
-</div>
+</section>
 @endsection
