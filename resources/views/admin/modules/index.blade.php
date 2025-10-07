@@ -50,6 +50,7 @@
             <td class="px-6 py-4">
               <div class="flex flex-wrap items-center justify-end gap-2">
                 @can('update', $m)
+                  <a class="btn btn-primary text-xs" href="{{ route('admin.modules.builder', $m) }}">Builder</a>
                   <a class="btn btn-muted text-xs" href="{{ route('admin.modules.edit', $m) }}">Edit</a>
                   <a class="btn btn-outline text-xs" href="{{ route('admin.modules.sections.index', $m) }}">Sections</a>
                   <a class="btn btn-outline text-xs" href="{{ route('admin.modules.questions.index', $m) }}">Questions</a>

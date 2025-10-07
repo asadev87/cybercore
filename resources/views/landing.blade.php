@@ -120,75 +120,95 @@
   <main class="flex-1">
     {{-- Hero --}}
     <section id="hero" class="relative overflow-hidden">
-      <div class="absolute inset-0 -z-10 sera-hero-bg" aria-hidden="true"></div>
-      <div class="absolute -left-40 top-1/4 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl"></div>
-      <div class="absolute -right-24 top-10 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl"></div>
-      <div class="absolute bottom-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-sky-400/10 blur-3xl"></div>
+      <div class="absolute inset-0 -z-10 sera-hero-bg animate-hero-gradient" aria-hidden="true"></div>
+      <div class="absolute -left-40 top-1/4 h-72 w-72 rounded-full bg-primary/20 blur-3xl"></div>
+      <div class="absolute -right-24 top-10 h-64 w-64 rounded-full bg-accent/25 blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-primary/10 blur-[180px]"></div>
 
       <div class="container grid gap-16 py-20 lg:grid-cols-[1fr,minmax(0,0.85fr)] lg:py-28">
-        <div class="space-y-8">
-          <span class="sera-pill w-fit">Empowering Cybersecurity Knowledge</span>
-          <h1 class="text-balance text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-            Learn to spot threats.
-            <span class="bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">Stay safe online.</span>
-          </h1>
-          <p class="max-w-xl text-base text-muted-foreground dark:text-white/70 sm:text-lg">
-            CyberCore combines motion-rich learning moments from Sera UI with proven awareness curriculum so every learner can practice, retain, and apply cyber safety habits in minutes a day.
-          </p>
-          <div class="flex flex-wrap items-center gap-4">
-            <a href="{{ route('register') }}" class="sera-btn-primary">Start learning</a>
-            <a href="#topics" class="sera-btn">Browse topics</a>
-            <a href="{{ route('login') }}" class="sera-btn-ghost">Already have an account?</a>
+        <div class="relative z-10 space-y-10">
+          <div class="inline-flex items-center gap-3 rounded-large border border-default-200/70 bg-content1/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-default-500 shadow-small backdrop-blur-sm dark:border-default-100/40 dark:text-default-400">
+            <span class="h-2 w-2 rounded-full bg-primary shadow-[0_0_0_3px_rgba(37,99,235,0.2)]"></span>
+            Empowering Cybersecurity Knowledge
           </div>
 
-          <dl class="grid gap-6 sm:grid-cols-3">
-            <div class="sera-card px-5 py-4">
-              <dt class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Active learners</dt>
-              <dd class="mt-3 text-2xl font-semibold">8,200+</dd>
+          <div class="relative overflow-hidden rounded-large border border-default-200/80 bg-content1/90 p-8 shadow-large backdrop-blur-xl dark:border-default-100/40 dark:bg-content1/70">
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/20"></div>
+            <div class="relative flex flex-col gap-8">
+              <div class="space-y-5">
+                <h1 class="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                  Elevate your cyber instincts in weeks, not semesters.
+                </h1>
+                <p class="max-w-xl text-base text-default-600 dark:text-default-400">
+                  Short, visual lessons and hands-on labs help students build real-world cyber habits—fast, focused, and distraction-free.
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 rounded-large border border-primary/60 bg-gradient-to-r from-primary/90 via-accent to-primary px-6 py-3 text-sm font-semibold text-white shadow-large transition hover:shadow-glow">
+                  Get started free
+                  <span aria-hidden="true" class="text-base">→</span>
+                </a>
+                <a href="{{ route('login') }}" class="inline-flex items-center justify-center gap-2 rounded-large border border-default-200/80 bg-content2 px-6 py-3 text-sm font-semibold text-default-700 transition hover:border-default-300 hover:bg-content3 dark:border-default-100/40 dark:bg-content1/60 dark:text-default-200">
+                  I already have an account
+                </a>
+              </div>
+
+              <dl class="grid gap-4 sm:grid-cols-3">
+                <div class="rounded-large border border-default-200/70 bg-content2/80 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
+                  <dt class="text-xs font-semibold uppercase tracking-[0.32em]">Active learners</dt>
+                  <dd class="mt-3 text-2xl font-semibold text-foreground">8,200+</dd>
+                </div>
+                <div class="rounded-large border border-default-200/70 bg-content2/80 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
+                  <dt class="text-xs font-semibold uppercase tracking-[0.32em]">Modules shipped</dt>
+                  <dd class="mt-3 text-2xl font-semibold text-foreground">45 curated</dd>
+                </div>
+                <div class="rounded-large border border-default-200/70 bg-content2/80 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
+                  <dt class="text-xs font-semibold uppercase tracking-[0.32em]">Avg. completion</dt>
+                  <dd class="mt-3 text-2xl font-semibold text-foreground">92%</dd>
+                </div>
+              </dl>
             </div>
-            <div class="sera-card px-5 py-4">
-              <dt class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Modules shipped</dt>
-              <dd class="mt-3 text-2xl font-semibold">45 curated</dd>
-            </div>
-            <div class="sera-card px-5 py-4">
-              <dt class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Avg. completion</dt>
-              <dd class="mt-3 text-2xl font-semibold">92%</dd>
-            </div>
-          </dl>
+          </div>
         </div>
 
         <div class="relative isolate flex h-full items-center justify-center">
-          <div class="absolute inset-6 rounded-[3rem] bg-gradient-to-br from-sky-500/20 via-cyan-300/10 to-blue-500/20 blur-3xl" aria-hidden="true"></div>
-          <div class="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-border dark:border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/70 to-slate-900/50 p-8 shadow-[0_30px_80px_-40px_rgba(14,116,233,0.55)] backdrop-blur-3xl">
+          <div class="absolute inset-6 rounded-[3rem] bg-gradient-to-br from-primary/18 via-accent/14 to-primary/10 blur-3xl" aria-hidden="true"></div>
+          <div class="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-default-200/70 bg-content1/95 p-8 shadow-large backdrop-blur-3xl dark:border-default-100/30 dark:bg-content1/60">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Live module</p>
-                <p class="mt-3 text-lg font-semibold">Threat Detection 101</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-default-500 dark:text-default-400">Live module</p>
+                <p class="mt-3 text-lg font-semibold text-foreground">Threat Detection 101</p>
               </div>
-              <span class="rounded-full border border-emerald-400/70 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-200">In progress</span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-success/50 bg-success/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-success">
+                <span class="h-2 w-2 rounded-full bg-success"></span>
+                In progress
+              </span>
             </div>
+
             <div class="mt-6 space-y-4">
               <div>
-                <p class="text-sm font-medium text-muted-foreground dark:text-white/70">Progress</p>
-                <div class="mt-2 h-2 rounded-full bg-white/90 dark:bg-white/10">
-                  <div class="h-2 w-3/4 rounded-full bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-500"></div>
+                <p class="text-sm font-medium text-default-600 dark:text-default-400">Progress</p>
+                <div class="mt-2 h-2 rounded-full bg-content2 dark:bg-content2/40">
+                  <div class="h-2 w-3/4 rounded-full bg-gradient-to-r from-primary via-accent to-primary"></div>
                 </div>
               </div>
 
               <div class="grid gap-4 sm:grid-cols-2">
-                <div class="rounded-2xl border border-border dark:border-white/10 bg-white/90 dark:bg-white/10 p-4">
-                  <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Up next</p>
-                  <p class="mt-2 text-sm font-medium">Social engineering tactics</p>
-                  <p class="mt-1 text-xs text-muted-foreground dark:text-white/60">Interactive scenario training with instant feedback.</p>
+                <div class="rounded-large border border-default-200/70 bg-content2/90 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
+                  <p class="text-xs font-semibold uppercase tracking-[0.35em]">Next lesson</p>
+                  <p class="mt-2 text-sm font-medium text-foreground">Phishing simulation drill</p>
+                  <p class="mt-1 text-xs text-default-500 dark:text-default-400">Build safe-inbox instincts with live decoys and instant coaching.</p>
                 </div>
-                <div class="rounded-2xl border border-border dark:border-white/10 bg-white/90 dark:bg-white/10 p-4">
-                  <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:text-white/60">Certificate</p>
-                  <p class="mt-2 text-sm font-medium">Shareable badge</p>
-                  <p class="mt-1 text-xs text-muted-foreground dark:text-white/60">Download proof for LMS or LinkedIn profiles.</p>
+                <div class="rounded-large border border-default-200/70 bg-content2/90 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
+                  <p class="text-xs font-semibold uppercase tracking-[0.35em]">Team readiness score</p>
+                  <p class="mt-2 text-sm font-medium text-foreground">SOC 2–ready reports</p>
+                  <p class="mt-1 text-xs text-default-500 dark:text-default-400">Exportable evidence for audits and leadership updates.</p>
                 </div>
               </div>
             </div>
-            <div class="mt-6 rounded-2xl border border-border/60 dark:border-white/5 bg-white/90 dark:bg-white/10 p-4 text-xs text-muted-foreground dark:text-white/60">
+
+            <div class="mt-6 rounded-large border border-default-200/60 bg-content2/80 p-4 text-xs text-default-500 shadow-medium dark:border-default-100/30 dark:bg-content2/30 dark:text-default-400">
               Works on any device • Keyboard-friendly navigation • Privacy-first analytics
             </div>
           </div>
@@ -203,29 +223,29 @@
         <div class="mx-auto max-w-2xl text-center">
           <p class="sera-pill mx-auto">Guided Journey</p>
           <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">How CyberCore works</h2>
-          <p class="mt-3 text-base text-muted-foreground dark:text-white/70">Blend micro-lessons, adaptive quizzes, and certificate-ready milestones to deliver lasting retention.</p>
+          <p class="mt-3 text-base text-muted-foreground dark:text-white/70">CyberCore connects your human risk goals to everyday practice—onboard fast, immerse every learner, and prove the progress on demand.</p>
         </div>
 
         <div class="mt-12 grid gap-6 md:grid-cols-3">
           <article class="sera-card">
             <div class="flex h-full flex-col gap-4">
               <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">1</div>
-              <h3 class="text-xl font-semibold">Learn with motion</h3>
-              <p class="text-sm text-muted-foreground dark:text-white/70">Immersive explainer videos and interactive `Sera`-style cards give every concept visual context in under 5 minutes.</p>
+              <h3 class="text-xl font-semibold">Baseline the risk</h3>
+              <p class="text-sm text-muted-foreground dark:text-white/70">Role-based onboarding and quick pulse checks reveal the behaviours that need attention before training even begins.</p>
             </div>
           </article>
           <article class="sera-card">
             <div class="flex h-full flex-col gap-4">
               <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">2</div>
-              <h3 class="text-xl font-semibold">Quiz with confidence</h3>
-              <p class="text-sm text-muted-foreground dark:text-white/70">Adaptive questions calibrate difficulty on the fly so teams stay challenged without feeling overwhelmed.</p>
+              <h3 class="text-xl font-semibold">Guide every learner</h3>
+              <p class="text-sm text-muted-foreground dark:text-white/70">Micro-lessons, live simulations, and automated nudges keep teams engaged without adding admin overhead.</p>
             </div>
           </article>
           <article class="sera-card">
             <div class="flex h-full flex-col gap-4">
               <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">3</div>
-              <h3 class="text-xl font-semibold">Show what you know</h3>
-              <p class="text-sm text-muted-foreground dark:text-white/70">Unlock verifiable certificates, leaderboard shoutouts, and shareable badges the moment you pass.</p>
+              <h3 class="text-xl font-semibold">Measure the impact</h3>
+              <p class="text-sm text-muted-foreground dark:text-white/70">Compliance-ready dashboards, executive summaries, and auto-issued certificates show momentum the moment it happens.</p>
             </div>
           </article>
         </div>
@@ -364,6 +384,8 @@
 </div>
 </body>
 </html>
+
+
 
 
 

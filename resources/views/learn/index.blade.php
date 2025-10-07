@@ -30,7 +30,12 @@
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">{{ $m->title }}</h2>
-            <span class="rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">{{ $pct >= 100 ? 'Complete' : 'In progress' }}</span>
+            <div class="flex items-center gap-2">
+              <span class="rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">{{ $pct >= 100 ? 'Complete' : 'In progress' }}</span>
+              @can('update', $m)
+                <a href="{{ route('admin.modules.builder', $m) }}" class="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary transition hover:border-primary/60 hover:bg-primary/15">Manage</a>
+              @endcan
+            </div>
           </div>
           <p class="text-sm text-muted-foreground">{{ $summary }}</p>
         </div>

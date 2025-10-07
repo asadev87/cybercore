@@ -7,7 +7,10 @@
       <h1 class="text-2xl font-semibold tracking-tight">Edit Module</h1>
       <p class="text-sm text-muted-foreground">Update details for <span class="font-semibold text-foreground">{{ $module->title }}</span>.</p>
     </div>
-    <a href="{{ route('admin.modules.index') }}" class="btn btn-outline">Back to modules</a>
+    <div class="flex items-center gap-3">
+      <a href="{{ route('admin.modules.builder', $module) }}" class="btn btn-primary">Open builder</a>
+      <a href="{{ route('admin.modules.index') }}" class="btn btn-outline">Back to modules</a>
+    </div>
   </header>
 
   @if ($errors->any())

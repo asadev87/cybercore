@@ -53,21 +53,23 @@ Route::get('/_mail/test', function () {
 
 
 //Admin
-Route::middleware(['auth','verified','role:admin'])
-->prefix('admin')->name('admin.')
-->group(function(){
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('modules', ModuleController::class);
-    Route::resource('modules.questions', QuestionController::class); // nested
-    Route::post('modules/{module}/questions/import', [ImportController::class,'questions'])->name('modules.questions.import');
-    Route::get('modules/{module}/questions/template', [\App\Http\Controllers\Admin\ImportController::class, 'template'])->name('modules.questions.template');
-    Route::get('reports',               [ReportsController::class, 'index'])->name('reports.index');
-    Route::get('reports/export/excel',  [ReportsController::class, 'exportExcel'])->name('reports.export.excel');
-    Route::get('reports/export/pdf',    [ReportsController::class, 'exportPdf'])->name('reports.export.pdf');
-    Route::resource('modules.sections', SectionController::class);
-    Route::resource('modules.questions', \App\Http\Controllers\Admin\QuestionController::class);
-});
+Route::prefix('admin')->name('admin.')->middleware(['auth','verified'])->group(function () {
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
+        Route::get('reports/export/excel', [ReportsController::class, 'exportExcel'])->name('reports.export.excel');
+        Route::get('reports/export/pdf', [ReportsController::class, 'exportPdf'])->name('reports.export.pdf');
+    });
 
+    Route::middleware('role:admin|lecturer')->group(function () {
+        Route::resource('modules', ModuleController::class);
+        Route::get('modules/{module}/builder', [ModuleController::class, 'builder'])->name('modules.builder');
+        Route::resource('modules.sections', SectionController::class);
+        Route::resource('modules.questions', QuestionController::class);
+        Route::post('modules/{module}/questions/import', [ImportController::class, 'questions'])->name('modules.questions.import');
+        Route::get('modules/{module}/questions/template', [ImportController::class, 'template'])->name('modules.questions.template');
+    });
+});
 
 
 //Users
@@ -87,8 +89,6 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('/quiz/{attempt}/result', [QuizController::class, 'result'])->name('quiz.result');
 
     Route::get('/learn/{module:slug}', [\App\Http\Controllers\LearnController::class,'show'])->name('learn.show');
-    Route::resource('modules.questions', \App\Http\Controllers\Admin\QuestionController::class);
-
 
 });
 

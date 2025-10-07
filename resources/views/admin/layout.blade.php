@@ -51,9 +51,11 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3a7.5 7.5 0 009.79 9.79z" />
           </svg>
         </button>
+        <a class="btn btn-outline text-sm" href="{{ route('admin.dashboard') }}">Dashboard</a>
         @can('view-reports')
           <a class="btn btn-outline text-sm" href="{{ route('admin.reports.index') }}">Reports</a>
         @endcan
+        <a class="btn btn-outline text-sm" href="{{ url('/') }}">Landing</a>
         <a class="btn btn-muted text-sm" href="{{ route('dashboard') }}">Learner view</a>
       </div>
     </div>

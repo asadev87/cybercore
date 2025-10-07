@@ -10,6 +10,15 @@ use Illuminate\Validation\Rule;
 
 class QuestionController extends Controller
 {
+    private function redirectAfter(Module $module, Request $request, string $fallbackRoute, string $message)
+    {
+        $route = $request->input('redirect_to') === 'builder'
+            ? 'admin.modules.builder'
+            : $fallbackRoute;
+
+        return redirect()->route($route, $module)->with('ok', $message);
+    }
+
     // GET /admin/modules/{module}/questions
     public function index(Module $module)
     {
@@ -74,9 +83,7 @@ class QuestionController extends Controller
 
         Question::create($data);
 
-        return redirect()
-            ->route('admin.modules.questions.index', $module)
-            ->with('ok','Question created.');
+        return $this->redirectAfter($module, $request, 'admin.modules.questions.index', 'Question created.');
     }
 
     // GET /admin/modules/{module}/questions/{question}/edit
@@ -131,9 +138,7 @@ class QuestionController extends Controller
 
         $question->update($data);
 
-        return redirect()
-            ->route('admin.modules.questions.index', $module)
-            ->with('ok','Question updated.');
+        return $this->redirectAfter($module, $request, 'admin.modules.questions.index', 'Question updated.');
     }
 
     // DELETE /admin/modules/{module}/questions/{question}
@@ -141,8 +146,6 @@ class QuestionController extends Controller
     {
         $question->delete();
 
-        return redirect()
-            ->route('admin.modules.questions.index', $module)
-            ->with('ok','Question deleted.');
+        return $this->redirectAfter($module, request(), 'admin.modules.questions.index', 'Question deleted.');
     }
 }

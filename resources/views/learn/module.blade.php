@@ -15,8 +15,13 @@
         <h1 class="text-3xl font-semibold tracking-tight">{{ $module->title }}</h1>
         <p class="max-w-2xl text-sm text-muted-foreground">{{ $module->description }}</p>
       </div>
-      <div class="rounded-2xl border border-border/60 bg-secondary/50 px-4 py-3 text-sm font-medium text-secondary-foreground">
-        {{ $pct }}% overall progress
+      <div class="flex flex-col items-end gap-3">
+        <div class="rounded-2xl border border-border/60 bg-secondary/50 px-4 py-3 text-sm font-medium text-secondary-foreground">
+          {{ $pct }}% overall progress
+        </div>
+        @can('update', $module)
+          <a href="{{ route('admin.modules.builder', $module) }}" class="btn btn-outline text-xs">Manage module</a>
+        @endcan
       </div>
     </div>
 

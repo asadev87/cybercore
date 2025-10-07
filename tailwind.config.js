@@ -1,5 +1,6 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 import forms from "@tailwindcss/forms";
+import { heroui } from "@heroui/theme";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -84,15 +85,51 @@ export default {
                     "0%": { backgroundPosition: "0% 50%" },
                     "100%": { backgroundPosition: "100% 50%" },
                 },
+                "hero-gradient": {
+                    "0%": { backgroundPosition: "0% 50%" },
+                    "50%": { backgroundPosition: "50% 55%" },
+                    "100%": { backgroundPosition: "100% 50%" },
+                },
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
                 shimmer: "shimmer 3s ease-in-out infinite",
+                "hero-gradient": "hero-gradient 18s ease-in-out infinite alternate",
             },
         },
     },
     plugins: [
+        heroui({
+            themes: {
+                light: {
+                    colors: {
+                        background: "#f8fbff",
+                        foreground: "#0f172a",
+                        default: "#f4f4f5",
+                        primary: "#2563eb",
+                        secondary: "#e2e8f0",
+                        accent: "#38bdf8",
+                        content1: "#ffffff",
+                        content2: "#f1f5f9",
+                        content3: "#e2e8f0",
+                    },
+                },
+                dark: {
+                    colors: {
+                        background: "#020617",
+                        foreground: "#f8fafc",
+                        default: "#111827",
+                        primary: "#38bdf8",
+                        secondary: "#1f2937",
+                        accent: "#22d3ee",
+                        content1: "#0f172a",
+                        content2: "#1e293b",
+                        content3: "#334155",
+                    },
+                },
+            },
+        }),
         forms({
             strategy: "class",
         }),

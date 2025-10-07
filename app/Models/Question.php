@@ -31,4 +31,15 @@ class Question extends Model
             get: fn ($v) => $v ?? []
         );
     }
+    public function module()
+    {
+        return $this->belongsTo(Module::class);
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class);
+    }
+
+
 }

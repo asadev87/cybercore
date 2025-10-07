@@ -10,6 +10,15 @@ use Illuminate\Validation\Rule;
 
 class SectionController extends Controller
 {
+    private function redirectAfter(Module $module, Request $request, string $fallbackRoute, string $message)
+    {
+        $route = $request->input('redirect_to') === 'builder'
+            ? 'admin.modules.builder'
+            : $fallbackRoute;
+
+        return redirect()->route($route, $module)->with('ok', $message);
+    }
+
     public function index(Module $module){
         $sections = $module->sections()->paginate(12);
         return view('admin.sections.index', compact('module','sections'));
@@ -29,7 +38,7 @@ class SectionController extends Controller
         ]);
         $data['order'] = $data['order'] ?? ($module->sections()->max('order') + 1);
         $module->sections()->create($data);
-        return redirect()->route('admin.modules.sections.index',$module)->with('ok','Section created.');
+        return $this->redirectAfter($module, $r, 'admin.modules.sections.index', 'Section created.');
     }
 
     public function edit(Module $module, Section $section){
@@ -45,11 +54,11 @@ class SectionController extends Controller
             'is_active' => 'boolean'
         ]);
         $section->update($data);
-        return redirect()->route('admin.modules.sections.index',$module)->with('ok','Section updated.');
+        return $this->redirectAfter($module, $r, 'admin.modules.sections.index', 'Section updated.');
     }
 
     public function destroy(Module $module, Section $section){
         $section->delete();
-        return back()->with('ok','Section deleted.');
+        return $this->redirectAfter($module, request(), 'admin.modules.sections.index', 'Section deleted.');
     }
 }

@@ -84,7 +84,34 @@ class ModuleController extends Controller
 
         $module->update($data);
 
-        return redirect()->route('admin.modules.index')->with('ok', 'Module updated.');
+        $redirect = $r->input('redirect_to') === 'builder' ? 'admin.modules.builder' : 'admin.modules.index';
+
+        if ($redirect === 'admin.modules.index') {
+            return redirect()->route($redirect)->with('ok', 'Module updated.');
+        }
+
+        return redirect()->route($redirect, $module)->with('ok', 'Module updated.');
+    }
+
+    public function builder(Module $module)
+    {
+        $this->authorize('update', $module);
+
+        $module->load(['sections' => function ($query) {
+            $query->orderBy('order');
+        }, 'user']);
+
+        $questions = $module->questions()->with('section')->latest()->get();
+
+        $lecturers = Auth::user()->hasRole('admin')
+            ? User::role('lecturer')->get()
+            : collect();
+
+        return view('admin.modules.builder', [
+            'module' => $module,
+            'lecturers' => $lecturers,
+            'questions' => $questions,
+        ]);
     }
 
     public function destroy(Module $module)
