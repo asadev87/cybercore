@@ -1,0 +1,29 @@
+{
+    "folder-color.pathColors": [
+        {
+            "folderPath": "cybercore\\resources\\",
+            "color": "foldercolorizer.color_ff0066"
+        },
+        {
+            "folderPath": "cybercore\\database\\migrations\\",
+            "color": "foldercolorizer.color_00cccc"
+        },
+        {
+            "folderPath": "cybercore\\app\\Models\\",
+            "color": "foldercolorizer.color_00cc00"
+        },
+        {
+            "folderPath": "cybercore\\app\\Http\\Controllers\\",
+            "color": "foldercolorizer.color_9900ff"
+        },
+        {
+            "folderPath": "cybercore\\resources\\views\\admin\\layout.blade.php\\",
+            "color": "foldercolorizer.color_ffcc00"
+        },
+        {
+            "folderPath": "cybercore\\resources\\views\\layouts\\app.blade.php\\",
+            "color": "foldercolorizer.color_ffcc00"
+        }
+    ],
+    "editor.fontFamily": "Maple Mono, 'Courier New', monospace"
+}
