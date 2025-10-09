@@ -103,23 +103,56 @@ class DemoQuizSeeder extends Seeder
                 'explanation' => 'Password managers enable unique, strong passwords across sites.',
                 'difficulty'  => 2,
             ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What is the safest way to confirm if an email from IT asking you to reset your password is legitimate?',
+                'options' => ['Reply and ask for additional proof', 'Use the link provided in the email', 'Call the helpdesk using a known internal number', 'Forward the email to your team'],
+                'answer'  => ['Call the helpdesk using a known internal number'],
+                'explanation' => 'Verify requests with trusted contact information, not the details in the suspicious message.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'Legitimate organizations will never send password reset links by email.',
+                'options' => null,
+                'answer'  => ['false'],
+                'explanation' => 'Some legitimate services send reset links; the key is to navigate to the site directly instead of trusting the email link.',
+                'difficulty'  => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'Always inspect the sender\'s ________ to confirm it matches the organization\'s real domain.',
+                'options' => null,
+                'answer'  => ['domain', 'email domain'],
+                'explanation' => 'Typosquatted sender domains are a classic phishing tell.',
+                'difficulty'  => 2,
+            ],
         ];
 
-       foreach ($questions as $q) {
+        foreach ($questions as $q) {
+            $choices = $q['type'] === 'mcq'
+                ? array_values($q['options'] ?? $q['choices'] ?? [])
+                : null;
+
             Question::updateOrCreate(
                 ['module_id' => $module->id, 'stem' => $q['stem']],
-              [     'type'        => $q['type'],
-                    'options'     => $q['options'],
+                [
+                    'type'        => $q['type'],
+                    'choices'     => $choices,
+                    'options'     => $choices,
                     'answer'      => $q['answer'],
                     'explanation' => $q['explanation'] ?? '',
                     'difficulty'  => $q['difficulty'] ?? 2,
                     'is_active'   => true,
-                    ]
+                ]
             );
         }
         $this->seedMalwareQuestions();
         $this->seedPasswordQuestions();
         $this->seedBrowsingQuestions();
+        $this->seedPhishingAwarenessQuestions();
+        $this->seedStrongPasswordCourseQuestions();
+        $this->seedSafeBrowsingHabitsQuestions();
     }
 
     private function seedMalwareQuestions(): void
@@ -166,10 +199,46 @@ class DemoQuizSeeder extends Seeder
                 'explanation' => 'A Trojan horse or Trojan is a type of malware that is often disguised as legitimate software.',
                 'difficulty' => 3,
             ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What practice helps prevent malware infections from USB drives?',
+                'options' => ['Disable antivirus when using USBs', 'Auto-run any files found', 'Scan removable media before opening files', 'Format every USB before use'],
+                'answer' => ['Scan removable media before opening files'],
+                'explanation' => 'Scanning removable media reduces the risk of executing malicious files.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'Spyware silently collects information about a user without their knowledge.',
+                'options' => null,
+                'answer' => ['true'],
+                'explanation' => 'Spyware is designed to operate covertly and exfiltrate data.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'Malware that can copy itself and spread to other devices without user action is called a ________.',
+                'options' => null,
+                'answer' => ['worm'],
+                'explanation' => 'Worms self-propagate across networks, unlike viruses that need a host file.',
+                'difficulty' => 2,
+            ],
         ];
 
         foreach ($questions as $q) {
-            Question::updateOrCreate(['module_id' => $module->id, 'stem' => $q['stem']], $q);
+            $choices = $q['type'] === 'mcq'
+                ? array_values($q['options'] ?? $q['choices'] ?? [])
+                : null;
+
+            $payload = array_merge($q, [
+                'choices' => $choices,
+                'options' => $choices,
+            ]);
+
+            Question::updateOrCreate(
+                ['module_id' => $module->id, 'stem' => $q['stem']],
+                $payload
+            );
         }
     }
 
@@ -217,10 +286,46 @@ class DemoQuizSeeder extends Seeder
                 'explanation' => 'Password managers are essential tools for password hygiene.',
                 'difficulty' => 2,
             ],
+            [
+                'type' => 'mcq',
+                'stem' => 'After a data breach notification, what should you do first for the affected account?',
+                'options' => ['Ignore it if you do not notice suspicious activity', 'Reuse the same password with a new symbol', 'Change the password to a new, unique one', 'Delete the account immediately'],
+                'answer' => ['Change the password to a new, unique one'],
+                'explanation' => 'Updating to a new unique password reduces the risk of credential stuffing.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'Long passphrases made from random words can be stronger than short complex passwords.',
+                'options' => null,
+                'answer' => ['true'],
+                'explanation' => 'Length combined with unpredictability provides strong resistance to brute-force attacks.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'MFA combines something you know with something you ________ or are.',
+                'options' => null,
+                'answer' => ['have'],
+                'explanation' => 'Possession factors like tokens or devices complement knowledge-based passwords.',
+                'difficulty' => 2,
+            ],
         ];
 
         foreach ($questions as $q) {
-            Question::updateOrCreate(['module_id' => $module->id, 'stem' => $q['stem']], $q);
+            $choices = $q['type'] === 'mcq'
+                ? array_values($q['options'] ?? $q['choices'] ?? [])
+                : null;
+
+            $payload = array_merge($q, [
+                'choices' => $choices,
+                'options' => $choices,
+            ]);
+
+            Question::updateOrCreate(
+                ['module_id' => $module->id, 'stem' => $q['stem']],
+                $payload
+            );
         }
     }
 
@@ -268,10 +373,235 @@ class DemoQuizSeeder extends Seeder
                 'explanation' => 'Clearing your cache and cookies can help protect your privacy.',
                 'difficulty' => 2,
             ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What is the best way to verify that a URL in an email is safe before clicking?',
+                'options' => ['Open it in a private browsing window', 'Hover to preview the full address and compare against the official site', 'Copy and paste it into a search engine', 'Forward it to a colleague to test'],
+                'answer' => ['Hover to preview the full address and compare against the official site'],
+                'explanation' => 'Previewing the full URL helps spot typosquatting or malicious redirects.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'Browser extensions should only be installed from reputable sources and after reviewing requested permissions.',
+                'options' => null,
+                'answer' => ['true'],
+                'explanation' => 'Extensions can access sensitive data, so source and permissions matter.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'Always look for unexpected ________ or misspellings in a URL before entering credentials.',
+                'options' => null,
+                'answer' => ['characters'],
+                'explanation' => 'Attackers frequently use extra characters or homographs to mimic legitimate domains.',
+                'difficulty' => 2,
+            ],
         ];
 
         foreach ($questions as $q) {
-            Question::updateOrCreate(['module_id' => $module->id, 'stem' => $q['stem']], $q);
+            $choices = $q['type'] === 'mcq'
+                ? array_values($q['options'] ?? $q['choices'] ?? [])
+                : null;
+
+            $payload = array_merge($q, [
+                'choices' => $choices,
+                'options' => $choices,
+            ]);
+
+            Question::updateOrCreate(
+                ['module_id' => $module->id, 'stem' => $q['stem']],
+                $payload
+            );
+        }
+    }
+
+    private function seedPhishingAwarenessQuestions(): void
+    {
+        $module = Module::firstOrCreate(['slug' => 'phishing-awareness']);
+        $questions = [
+            [
+                'type' => 'mcq',
+                'stem' => 'Which subject line is the strongest indicator that an email might be phishing?',
+                'options' => ['Quarterly Newsletter', 'Payroll Update - Action Required in 30 Minutes', 'Project Kickoff Notes', 'Team Lunch Invitation'],
+                'answer' => ['Payroll Update - Action Required in 30 Minutes'],
+                'explanation' => 'Urgent payroll requests are a common lure; verify through trusted channels before acting.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'Phishing messages frequently ask you to provide credentials by replying directly to the email.',
+                'options' => null,
+                'answer' => ['true'],
+                'explanation' => 'Legitimate services direct you to secure portals; attackers often shortcut that process.',
+                'difficulty' => 1,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'You receive an unexpected gift card request from an executive. What is the safest first response?',
+                'options' => ['Purchase the cards immediately', 'Reply asking if it is legitimate', 'Call the executive using a known number to confirm', 'Forward the email to the whole team'],
+                'answer' => ['Call the executive using a known number to confirm'],
+                'explanation' => 'Always verify high-risk requests via trusted contact information, not the suspicious message.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'Inspecting the email header\'s ________ value can reveal the true sending address.',
+                'options' => null,
+                'answer' => ['return-path', 'return path'],
+                'explanation' => 'The return-path exposes where replies would really go and often differs in forged emails.',
+                'difficulty' => 3,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'How can you safely preview a suspicious link embedded in an email?',
+                'options' => ['Click it quickly and close the tab', 'Hover over the link to read the full URL', 'Copy it into a document to open later', 'Forward it to a coworker to test'],
+                'answer' => ['Hover over the link to read the full URL'],
+                'explanation' => 'Hovering lets you inspect the destination without visiting it.',
+                'difficulty' => 1,
+            ],
+        ];
+
+        foreach ($questions as $q) {
+            $choices = $q['type'] === 'mcq'
+                ? array_values($q['options'] ?? $q['choices'] ?? [])
+                : null;
+
+            $payload = array_merge($q, [
+                'choices' => $choices,
+                'options' => $choices,
+            ]);
+
+            Question::updateOrCreate(
+                ['module_id' => $module->id, 'stem' => $q['stem']],
+                $payload
+            );
+        }
+    }
+
+    private function seedStrongPasswordCourseQuestions(): void
+    {
+        $module = Module::firstOrCreate(['slug' => 'creating-strong-passwords']);
+        $questions = [
+            [
+                'type' => 'mcq',
+                'stem' => 'Which password offers the best protection against brute-force attacks?',
+                'options' => ['P@ssw0rd!', 'CorrectHorseBatteryStaple97', 'Summer2024!', 'FluffyCat123'],
+                'answer' => ['CorrectHorseBatteryStaple97'],
+                'explanation' => 'Length plus randomness creates far more entropy than minor symbol swaps.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'Storing unique passwords in a reputable password manager is safer than reusing a few you can memorize.',
+                'options' => null,
+                'answer' => ['true'],
+                'explanation' => 'Password managers enable unique, complex credentials without relying on memory.',
+                'difficulty' => 1,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'A long, memorable password made from random words is often called a ________.',
+                'options' => null,
+                'answer' => ['passphrase'],
+                'explanation' => 'Passphrases balance memorability with high entropy when words are unpredictable.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'Which factor most increases the entropy of a password?',
+                'options' => ['Length', 'Using only numbers', 'Replacing letters with symbols', 'Adding your birth year'],
+                'answer' => ['Length'],
+                'explanation' => 'Every additional character multiplies the possible combinations exponentially.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'Securely storing offline ________ codes ensures you can access accounts protected by MFA.',
+                'options' => null,
+                'answer' => ['backup'],
+                'explanation' => 'Backup codes are critical if you lose access to your primary second factor.',
+                'difficulty' => 3,
+            ],
+        ];
+
+        foreach ($questions as $q) {
+            $choices = $q['type'] === 'mcq'
+                ? array_values($q['options'] ?? $q['choices'] ?? [])
+                : null;
+
+            $payload = array_merge($q, [
+                'choices' => $choices,
+                'options' => $choices,
+            ]);
+
+            Question::updateOrCreate(
+                ['module_id' => $module->id, 'stem' => $q['stem']],
+                $payload
+            );
+        }
+    }
+
+    private function seedSafeBrowsingHabitsQuestions(): void
+    {
+        $module = Module::firstOrCreate(['slug' => 'safe-browsing-habits']);
+        $questions = [
+            [
+                'type' => 'mcq',
+                'stem' => 'While on public Wi-Fi, what should you do before signing into corporate resources?',
+                'options' => ['Disable your firewall', 'Connect through the company VPN', 'Turn off multi-factor authentication', 'Use any available browser extension'],
+                'answer' => ['Connect through the company VPN'],
+                'explanation' => 'A VPN encrypts your traffic end-to-end, reducing risks on untrusted networks.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'It is safe to ignore a browser warning about an invalid HTTPS certificate if you recognize the site name.',
+                'options' => null,
+                'answer' => ['false'],
+                'explanation' => 'Certificate warnings signal possible interception or misconfiguration; verify before proceeding.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'Only download software from the vendor\'s official ________ to minimize tampering risks.',
+                'options' => null,
+                'answer' => ['website', 'site'],
+                'explanation' => 'Official distribution channels reduce the chance of malicious modifications.',
+                'difficulty' => 1,
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'What should you do if a familiar website suddenly redirects to a login page on a different domain?',
+                'options' => ['Enter your credentials quickly', 'Clear your cache and try again later', 'Close the tab and manually navigate to the known address', 'Turn off your antivirus to reduce interference'],
+                'answer' => ['Close the tab and manually navigate to the known address'],
+                'explanation' => 'Redirections to unfamiliar domains can indicate hijacking; use trusted bookmarks instead.',
+                'difficulty' => 2,
+            ],
+            [
+                'type' => 'fib',
+                'stem' => 'Review browser ________ before installing extensions to understand what data they can access.',
+                'options' => null,
+                'answer' => ['permissions'],
+                'explanation' => 'Permissions reveal the scope of access an extension will have to your browsing activity.',
+                'difficulty' => 2,
+            ],
+        ];
+
+        foreach ($questions as $q) {
+            $choices = $q['type'] === 'mcq'
+                ? array_values($q['options'] ?? $q['choices'] ?? [])
+                : null;
+
+            $payload = array_merge($q, [
+                'choices' => $choices,
+                'options' => $choices,
+            ]);
+
+            Question::updateOrCreate(
+                ['module_id' => $module->id, 'stem' => $q['stem']],
+                $payload
+            );
         }
     }
 }

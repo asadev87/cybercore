@@ -60,6 +60,12 @@
       </div>
 
       <div class="grid gap-2">
+        <label for="note" class="input-label">Learner note</label>
+        <textarea id="note" name="note" rows="3" class="input-field" placeholder="Optional guidance shown to learners before they begin and during the quiz.">{{ old('note', $module->note) }}</textarea>
+        <p class="input-hint">Blank values fall back to the default message for this module.</p>
+      </div>
+
+      <div class="grid gap-2">
         <label for="pass_score" class="input-label">Pass score (%)</label>
         <input type="number" id="pass_score" name="pass_score" value="{{ old('pass_score', $module->pass_score) }}" required min="1" max="100" class="input-field">
       </div>

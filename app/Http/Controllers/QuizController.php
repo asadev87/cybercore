@@ -34,6 +34,8 @@ class QuizController extends Controller
             $attempt->save();
         }
 
+        $this->syncProgressDraft($attempt, 0);
+
         return redirect()->route('quiz.show', $attempt);
     }
 
@@ -116,6 +118,10 @@ if ($qa->wasRecentlyCreated === false) {
 
         // progress hint
         $asked = $attempt->questionAttempts()->count();
+        $target = max(1, (int) ($attempt->target_questions ?? config('quiz.questions_per_attempt', 8)));
+        $percent = (int) floor(($asked / $target) * 100);
+        $this->syncProgressDraft($attempt, $percent);
+
         if ($asked >= $attempt->target_questions) {
             return redirect()->route('quiz.result', $attempt);
         }
@@ -191,5 +197,24 @@ return redirect()->route('quiz.result', $attempt);
     private function authorizeAttempt(QuizAttempt $attempt): void
     {
         abort_unless($attempt->user_id === Auth::id(), 403); // simple ownership check. See policies/gates docs if you prefer. :contentReference[oaicite:7]{index=7}
+    }
+
+    private function syncProgressDraft(QuizAttempt $attempt, int $percent): void
+    {
+        $progress = UserProgress::firstOrNew([
+            'user_id'   => $attempt->user_id,
+            'module_id' => $attempt->module_id,
+        ]);
+
+        if (($progress->status ?? null) === 'completed') {
+            return; // never downgrade completed modules
+        }
+
+        $progress->status = 'in_progress';
+        $current = (int) ($progress->percent_complete ?? 0);
+        $next = max(0, min(99, $percent));
+        $progress->percent_complete = max($current, $next);
+        $progress->last_activity_at = now();
+        $progress->save();
     }
 }

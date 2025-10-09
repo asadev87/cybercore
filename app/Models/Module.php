@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Module extends Model {
-    protected $fillable = ['slug','title','description','pass_score','is_active','user_id'];
+    protected $fillable = ['slug','title','description','note','pass_score','is_active','user_id'];
     public function questions(){ return $this->hasMany(Question::class); }
     public function attempts(){ return $this->hasMany(QuizAttempt::class); }
     public function getRouteKeyName(): string{return 'slug';}

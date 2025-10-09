@@ -5,6 +5,7 @@
 @php
   $moduleCount = $modules->count();
   $moduleLabel = $moduleCount === 1 ? 'module' : 'modules';
+  $defaultNotes = (array) (config('module_notes.defaults') ?? []);
 @endphp
 
 <section class="space-y-8">
@@ -38,7 +39,24 @@
             </div>
           </div>
           <p class="text-sm text-muted-foreground">{{ $summary }}</p>
+          @php $diff = $difficulty[$m->id] ?? null; @endphp
+          @if($diff)
+            <div class="flex items-center gap-2 text-xs">
+              <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold uppercase tracking-wide {{ $diff['pill'] }}">
+                Difficulty: {{ $diff['label'] }}
+              </span>
+              <span class="text-muted-foreground">Avg {{ number_format($diff['average'], 1) }}/5</span>
+            </div>
+          @endif
         </div>
+
+        @php $note = $m->note ?: ($defaultNotes[$m->slug] ?? null); @endphp
+        @if($note)
+          <div class="rounded-xl border border-amber-300/40 bg-amber-100/30 px-4 py-3 text-xs text-amber-800 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-100">
+            <span class="font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-200">Prep note:</span>
+            <span class="ml-1">{{ $note }}</span>
+          </div>
+        @endif
 
         <div class="space-y-2">
           <div class="flex items-center justify-between text-xs font-medium text-muted-foreground">

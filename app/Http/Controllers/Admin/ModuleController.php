@@ -43,11 +43,13 @@ class ModuleController extends Controller
             'slug' => 'required|string|max:80|unique:modules,slug',
             'title' => 'required|string|max:150',
             'description' => 'nullable|string',
+            'note' => 'nullable|string',
             'pass_score' => 'required|integer|min:1|max:100',
             'is_active' => 'nullable|boolean',
             'user_id' => 'sometimes|exists:users,id' // Required only for admins
         ]);
         $data['is_active'] = $r->boolean('is_active');
+        $data['note'] = $r->filled('note') ? trim($r->input('note')) : null;
 
         // If the authed user is not an admin, they can only create modules for themselves.
         if (!Auth::user()->hasRole('admin')) {
@@ -71,11 +73,13 @@ class ModuleController extends Controller
             'slug' => "required|string|max:80|unique:modules,slug,{$module->id}",
             'title' => 'required|string|max:150',
             'description' => 'nullable|string',
+            'note' => 'nullable|string',
             'pass_score' => 'required|integer|min:1|max:100',
             'is_active' => 'nullable|boolean',
             'user_id' => 'sometimes|exists:users,id' // Required only for admins
         ]);
         $data['is_active'] = $r->boolean('is_active');
+        $data['note'] = $r->filled('note') ? trim($r->input('note')) : null;
 
         // If the user is not an admin, they cannot change the owner.
         if (!Auth::user()->hasRole('admin')) {

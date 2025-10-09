@@ -8,27 +8,56 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class Question extends Model
 {
     protected $fillable = [
-        'module_id','section_id','type','difficulty','stem',
-        'options','answer','is_active', 'explanation',
+        'module_id',
+        'section_id',
+        'type',
+        'difficulty',
+        'stem',
+        'choices',
+        'options',
+        'answer',
+        'is_active',
+        'explanation',
     ];
 
     // If DB stores JSON/TEXT, Laravel will cast to array automatically
     protected $casts = [
+        'choices' => 'array',
         'options' => 'array',
         'answer'  => 'array',
     ];
 
     // Optional: default to [] instead of null for robustness
-    protected function options(): \Illuminate\Database\Eloquent\Casts\Attribute
+    protected function choices(): Attribute
     {
-        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
-            get: fn ($v) => $v ?? []
+        return Attribute::make(
+            get: function ($value, array $attributes) {
+                if (is_array($value)) {
+                    return array_values($value);
+                }
+                $fallback = $attributes['options'] ?? null;
+                return is_array($fallback) ? array_values($fallback) : [];
+            }
         );
     }
-    protected function answer(): \Illuminate\Database\Eloquent\Casts\Attribute
+
+    protected function options(): Attribute
     {
-        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
-            get: fn ($v) => $v ?? []
+        return Attribute::make(
+            get: function ($value, array $attributes) {
+                if (is_array($value)) {
+                    return array_values($value);
+                }
+                $fallback = $attributes['choices'] ?? null;
+                return is_array($fallback) ? array_values($fallback) : [];
+            }
+        );
+    }
+
+    protected function answer(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ?? []
         );
     }
     public function module()

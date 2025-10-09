@@ -6,8 +6,9 @@
   <meta charset="utf-8">
   <style>
     @page { size: A4 landscape; margin: 32px; }
-    body { font-family: DejaVu Sans, sans-serif; color:#111; }
-    .wrap { border:6px solid #8b0000; border-radius:16px; padding:32px; }
+    html, body { font-family: DejaVu Sans, sans-serif; color:#111; background:#ffffff !important; }
+    body { margin:0; }
+    .wrap { border:6px solid #8b0000; border-radius:16px; padding:32px; background:#ffffff; }
     .title { font-size: 28px; letter-spacing: .06em; color:#8b0000; margin-bottom: 8px; }
     .big { font-size: 42px; font-weight: 700; margin: 8px 0 2px; }
     .muted { color:#6b7280; }

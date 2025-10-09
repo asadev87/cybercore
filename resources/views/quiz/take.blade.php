@@ -35,6 +35,17 @@
 
   <div class="mx-auto max-w-3xl space-y-4">
     <article class="card-surface p-6">
+      @php
+        $defaultNotes = (array) (config('module_notes.defaults') ?? []);
+        $moduleNote = optional($attempt->module)->note;
+        $note = $moduleNote ?: ($defaultNotes[$attempt->module->slug] ?? null);
+      @endphp
+      @if($note)
+        <div class="mb-4 rounded-xl border border-amber-300/40 bg-amber-100/30 px-4 py-3 text-xs text-amber-800 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-100">
+          <span class="font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-200">Reminder:</span>
+          <span class="ml-1">{{ $note }}</span>
+        </div>
+      @endif
       <h1 class="text-lg font-semibold leading-snug text-foreground">{{ $question->stem }}</h1>
 
       <form method="POST" action="{{ route('quiz.answer', $attempt) }}" aria-labelledby="qlegend" class="mt-6 space-y-5">
