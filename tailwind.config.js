@@ -73,6 +73,11 @@ export default {
                 glow: "0 8px 30px rgba(59, 130, 246, 0.35)",
             },
             keyframes: {
+
+                'glow-complete': {
+                    '0%, 100%': { boxShadow: '0 0 0 rgba(52, 211, 153, 0.0)' },
+                    '50%': { boxShadow: '0 0 25px rgba(52, 211, 153, 0.55)' }
+                },
                 "accordion-down": {
                     from: { height: "0" },
                     to: { height: "var(--radix-accordion-content-height)" },
@@ -92,6 +97,7 @@ export default {
                 },
             },
             animation: {
+                'glow-complete': 'glow-complete 1.8s ease-in-out infinite',
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
                 shimmer: "shimmer 3s ease-in-out infinite",
@@ -135,3 +141,10 @@ export default {
         }),
     ],
 };
+
+
+
+
+
+
+

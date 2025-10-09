@@ -94,9 +94,9 @@
                 <span>Overall completion</span>
                 <span>{{ $pct }}%</span>
               </div>
-              <div class="h-2 w-full rounded-full bg-secondary">
+              <div class="relative h-2 w-full overflow-hidden rounded-full bg-secondary">
                 <div
-                  class="h-2 rounded-full {{ $pct >= 100 ? 'bg-emerald-500' : 'bg-primary' }} transition-all duration-500"
+                  class="h-2 rounded-full transition-all duration-500 {{ $pct >= 100 ? 'bg-emerald-500 animate-glow-complete' : 'bg-primary' }}"
                   style="width: {{ $pct }}%"
                   role="progressbar"
                   aria-valuenow="{{ $pct }}"
@@ -104,18 +104,21 @@
                   aria-valuemax="100"
                   aria-label="Module progress"
                 ></div>
+                @if($pct >= 100)
+                  <span class="pointer-events-none absolute inset-0 rounded-full bg-emerald-400/40 blur-md animate-glow-complete"></span>
+                @endif
               </div>
             </div>
-          </div>
 
-          <div class="flex w-full flex-col gap-3 md:w-56">
-            <form action="{{ route('quiz.start', $m) }}" method="POST">
-              @csrf
-              <button class="btn btn-primary w-full">{{ $pct > 0 ? 'Resume module' : 'Begin module' }}</button>
-            </form>
-            @can('update', $m)
-              <a href="{{ route('admin.modules.builder', $m) }}" class="btn btn-muted w-full text-sm">Manage content</a>
-            @endcan
+            <div class="grid w-full gap-3 sm:grid-cols-2 pt-3">
+              <form action="{{ route('quiz.start', $m) }}" method="POST">
+                @csrf
+                <button class="btn btn-primary w-full">{{ $pct > 0 ? 'Resume module' : 'Begin module' }}</button>
+              </form>
+              @can('update', $m)
+                <a href="{{ route('admin.modules.builder', $m) }}" class="btn btn-muted w-full text-sm">Manage content</a>
+              @endcan
+            </div>
           </div>
         </div>
       </article>
@@ -128,3 +131,5 @@
   </div>
 </section>
 @endsection
+
+

@@ -4,38 +4,51 @@ namespace App\Services;
 
 use App\Models\Badge;
 use App\Models\QuizAttempt;
+use App\Models\UserProgress;
 
 class BadgeService
 {
     public function checkAndAward(QuizAttempt $attempt): void
     {
-        $user = $attempt->user;
-        $score = (int)$attempt->score;
+        $user  = $attempt->user;
+        $score = (int) $attempt->score;
 
-        // First completion
-        $firstCompletion = !$user->userBadges()->exists()
-            && $user->progress()->where('status','completed')->exists();
-
-        if ($firstCompletion) {
-            $this->award($user, 'first-completion');
+        if (!$user) {
+            return;
         }
 
-        // High Scorer (>=90 on any attempt)
+        // First completion badge
+        $hasFirstBadge = $user->badges()
+            ->where('badges.slug', 'first-completion')
+            ->exists();
+
+        $hasCompletedModule = UserProgress::where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->exists();
+
+        if (!$hasFirstBadge && $hasCompletedModule) {
+            $this->award($user->id, 'first-completion');
+        }
+
+        // High scorer badge
         if ($score >= 90) {
-            $this->award($user, 'high-scorer-90');
+            $this->award($user->id, 'high-scorer-90');
         }
     }
 
-    private function award($user, string $slug): void
+    private function award(int $userId, string $slug): void
     {
-        $badge = Badge::where('slug',$slug)->where('is_active',true)->first();
-        if (!$badge) return;
+        $badge = Badge::where('slug', $slug)
+            ->where('is_active', true)
+            ->first();
 
-        $user->badges()->syncWithoutDetaching([
-            $badge->id => ['awarded_at' => now()]
+        if (!$badge) {
+            return;
+        }
+
+        $badge->users()->syncWithoutDetaching([
+            $userId => ['awarded_at' => now()],
         ]);
     }
-    public function userBadges() { return $this->hasMany(\Illuminate\Database\Eloquent\Relations\Pivot::class, 'user_id'); }
-public function progress()   { return $this->hasMany(\App\Models\UserProgress::class); }
-
 }
+

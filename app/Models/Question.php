@@ -61,7 +61,7 @@ class Question extends Model
     protected function answer(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ?? []
+            get: fn ($value) => $this->normalizeJsonValue($value) ?? []
         );
     }
     public function module()
@@ -81,10 +81,20 @@ class Question extends Model
             return array_values($value);
         }
 
-        if (is_string($value) && $value !== '') {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (is_string($value)) {
             $decoded = json_decode($value, true);
-            if (is_array($decoded)) {
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                 return array_values($decoded);
+            }
+
+            // Fallback: treat plain strings as single-value arrays
+            $trimmed = trim($value);
+            if ($trimmed !== '') {
+                return [$trimmed];
             }
         }
 

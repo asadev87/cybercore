@@ -47,14 +47,14 @@ class QuizController extends Controller
         // if we already reached target, finish
         $asked = $attempt->questionAttempts()->count();
         if ($asked >= $attempt->target_questions) {
-            return redirect()->route('quiz.result', $attempt);
+            return $this->finish(request(), $attempt);
         }
 
         // pick next question
         $question = $selector->nextQuestion($attempt);
         if (!$question) {
             // nothing left to ask -> finish
-            return redirect()->route('quiz.result', $attempt);
+            return $this->finish(request(), $attempt);
         }
         $certificate = Certificate::where('user_id', Auth::id())
     ->where('module_id', $attempt->module_id)
@@ -89,15 +89,20 @@ class QuizController extends Controller
             $userAns = [ trim((string) $request->input('answer')) ];
         }
 
-        // compute correctness (string compare, case-insensitive for fib)
-        $correctArr = array_map('strval', (array) ($question->answer ?? []));
-        $isCorrect = false;
-        if ($question->type === 'fib') {
-            $canon = array_map(fn($s) => mb_strtolower(trim($s)), $correctArr);
-            $isCorrect = in_array(mb_strtolower(trim($userAns[0] ?? '')), $canon, true);
-        } else {
-            sort($correctArr); $ua = $userAns; sort($ua);
-            $isCorrect = $ua === $correctArr;
+        // compute correctness with normalized comparisons
+        $correctArr = array_map(fn($s) => mb_strtolower(trim((string) $s)), (array) ($question->answer ?? []));
+        $userNormalized = array_map(fn($s) => mb_strtolower(trim((string) $s)), $userAns);
+
+        if ($question->type === 'mcq') {
+            sort($correctArr);
+            $sortedUser = $userNormalized;
+            sort($sortedUser);
+            $isCorrect = $sortedUser === $correctArr;
+        } elseif ($question->type === 'truefalse') {
+            $expected = $correctArr[0] ?? null;
+            $isCorrect = isset($expected) && ($userNormalized[0] ?? null) === $expected;
+        } else { // fib
+            $isCorrect = in_array($userNormalized[0] ?? '', $correctArr, true);
         }
 
         // upsert QA (avoid dupes if user refreshes)
@@ -123,7 +128,7 @@ if ($qa->wasRecentlyCreated === false) {
         $this->syncProgressDraft($attempt, $percent);
 
         if ($asked >= $attempt->target_questions) {
-            return redirect()->route('quiz.result', $attempt);
+            return $this->finish($request, $attempt);
         }
         return redirect()->route('quiz.show', $attempt);
     }

@@ -43,12 +43,13 @@ class CertificateService {
 
     // 4) Create record
     return Certificate::create([
-      'user_id' => $user->id,
-      'module_id' => $module->id,
-      'quiz_attempt_id' => $attempt->id,
-      'serial' => $serial,
-      'issued_at' => $issuedAt,
-      'pdf_path' => $path,
+      'user_id'        => $user->id,
+      'module_id'      => $module->id,
+      'quiz_attempt_id'=> $attempt->id,
+      'serial'         => $serial,
+      'code'           => $serial,
+      'issued_at'      => $issuedAt,
+      'pdf_path'       => $path,
     ]);
   }
 }
