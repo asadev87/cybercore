@@ -1,0 +1,11 @@
+<?php
+require __DIR__.'/vendor/autoload.php';
+$app = require __DIR__.'/bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel->bootstrap();
+
+$q = App\Models\Question::where('type','mcq')->first();
+var_dump($q->choices);
+var_dump(is_array($q->choices));
+var_dump($q->choices === []);
+?>

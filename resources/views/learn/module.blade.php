@@ -13,8 +13,13 @@
       <div class="space-y-2">
         <p class="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">Learning path</p>
         <h1 class="text-3xl font-semibold tracking-tight">{{ $module->title }}</h1>
-        <p class="max-w-2xl text-sm text-muted-foreground">{{ $module->description }}</p>
-        @php $defaultNotes = (array) (config('module_notes.defaults') ?? []); $note = $module->note ?: ($defaultNotes[$module->slug] ?? null); @endphp
+        @php
+          $defaultNotes = (array) (config('module_notes.defaults') ?? []);
+          $descriptionCopy = (array) (config('module_notes.descriptions') ?? []);
+          $description = $descriptionCopy[$module->slug] ?? $module->description;
+          $note = $module->note ?: ($defaultNotes[$module->slug] ?? null);
+        @endphp
+        <p class="max-w-2xl text-sm text-muted-foreground">{{ $description }}</p>
         @if($note)
           <div class="rounded-xl border border-amber-300/40 bg-amber-100/30 px-4 py-3 text-xs text-amber-800 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-100">
             <span class="font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-200">Prep note:</span>

@@ -105,7 +105,7 @@
               <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">{{ strtoupper($question->type) }} • {{ ucfirst($question->difficulty ?? 'medium') }}</p>
-                  <h3 class="mt-2 font-medium text-foreground">{{ \\\\Illuminate\\\\Support\\\\Str::limit($question->stem, 160) }}</h3>
+                  <h3 class="mt-2 font-medium text-foreground">{{ \Illuminate\Support\Str::limit($question->stem, 160) }}</h3>
                   @if($question->section)
                     <p class="mt-2 text-xs text-muted-foreground">Section: {{ $question->section->title }}</p>
                   @endif

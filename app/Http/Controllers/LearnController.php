@@ -19,7 +19,7 @@ class LearnController extends Controller
         $progress = UserProgress::where('user_id', Auth::id())
             ->pluck('percent_complete', 'module_id');
 
-        $difficulty = $modules->mapWithKeys(function (Module $module) {
+        $difficultyLabels = $modules->mapWithKeys(function (Module $module) {
             $avg = (float) ($module->questions_avg_difficulty ?? 0);
 
             if ($avg >= 3.5) {
@@ -29,16 +29,16 @@ class LearnController extends Controller
             } elseif ($avg > 0) {
                 $label = 'Beginner';
             } else {
-                $label = null;
+                $label = 'Unrated';
             }
 
             return [$module->id => $label];
         });
 
         return view('learn.index', [
-            'modules'     => $modules,
-            'progress'    => $progress,
-            'difficulty'  => $difficulty,
+            'modules'           => $modules,
+            'progress'          => $progress,
+            'difficultyLabels'  => $difficultyLabels,
         ]);
     }
 

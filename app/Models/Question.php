@@ -32,11 +32,13 @@ class Question extends Model
     {
         return Attribute::make(
             get: function ($value, array $attributes) {
-                if (is_array($value)) {
-                    return array_values($value);
+                $resolved = $this->normalizeJsonValue($value);
+                if ($resolved !== null) {
+                    return $resolved;
                 }
-                $fallback = $attributes['options'] ?? null;
-                return is_array($fallback) ? array_values($fallback) : [];
+
+                $fallback = $this->normalizeJsonValue($attributes['options'] ?? null);
+                return $fallback ?? [];
             }
         );
     }
@@ -45,11 +47,13 @@ class Question extends Model
     {
         return Attribute::make(
             get: function ($value, array $attributes) {
-                if (is_array($value)) {
-                    return array_values($value);
+                $resolved = $this->normalizeJsonValue($value);
+                if ($resolved !== null) {
+                    return $resolved;
                 }
-                $fallback = $attributes['choices'] ?? null;
-                return is_array($fallback) ? array_values($fallback) : [];
+
+                $fallback = $this->normalizeJsonValue($attributes['choices'] ?? null);
+                return $fallback ?? [];
             }
         );
     }
@@ -71,4 +75,19 @@ class Question extends Model
     }
 
 
+    private function normalizeJsonValue($value): ?array
+    {
+        if (is_array($value)) {
+            return array_values($value);
+        }
+
+        if (is_string($value) && $value !== '') {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                return array_values($decoded);
+            }
+        }
+
+        return null;
+    }
 }
