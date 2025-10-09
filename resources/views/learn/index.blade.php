@@ -41,12 +41,7 @@
           <p class="text-sm text-muted-foreground">{{ $summary }}</p>
           @php $diff = $difficulty[$m->id] ?? null; @endphp
           @if($diff)
-            <div class="flex items-center gap-2 text-xs">
-              <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold uppercase tracking-wide {{ $diff['pill'] }}">
-                Difficulty: {{ $diff['label'] }}
-              </span>
-              <span class="text-muted-foreground">Avg {{ number_format($diff['average'], 1) }}/5</span>
-            </div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Difficulty: {{ $diff }}</p>
           @endif
         </div>
 
