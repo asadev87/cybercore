@@ -7,10 +7,19 @@
   <div class="absolute -left-32 top-10 h-72 w-72 rounded-full bg-primary/15 blur-3xl"></div>
   <div class="absolute -right-20 bottom-16 h-64 w-64 rounded-full bg-accent/15 blur-3xl"></div>
 
+  @php
+    $logoExists = file_exists(public_path('images/logo.png'));
+    $signatureExists = file_exists(public_path('images/signature.png'));
+  @endphp
+
   <div class="container">
     <div class="mx-auto max-w-4xl">
       <div class="sera-card p-10 lg:p-14">
         <div class="flex flex-col items-center gap-6 text-center">
+          @if($logoExists)
+            <img src="{{ asset('images/logo.png') }}" alt="Organization Logo" class="h-16 w-auto">
+          @endif
+
           <div class="rounded-3xl border border-border/60 bg-secondary px-5 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:border-white/15 dark:bg-white/10 dark:text-white/80">Certificate of achievement</div>
 
           <div class="flex items-center gap-4 text-sm text-muted-foreground">
@@ -30,8 +39,9 @@
           </div>
 
           <div class="rounded-2xl border border-border/60 bg-secondary px-4 py-2 text-sm text-muted-foreground dark:border-white/10 dark:bg-white/10 dark:text-white/80">
-            @if($certificate->quiz_attempt && isset($certificate->quiz_attempt->score))
-              Final score: <span class="font-semibold text-white">{{ $certificate->quiz_attempt->score }}%</span>
+            @php($attempt = $certificate->attempt)
+            @if($attempt && isset($attempt->score))
+              Final score: <span class="font-semibold text-white">{{ $attempt->score }}%</span>
             @else
               Score not recorded for this attempt
             @endif
@@ -43,15 +53,20 @@
               <p class="mt-2 font-medium text-foreground dark:text-white">{{ $certificate->user->email }}</p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/5 p-4 dark:bg-white/10">
-              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Certificate ID</p>
-              <p class="mt-2 font-medium text-foreground dark:text-white">{{ $certificate->uuid }}</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Certificate No.</p>
+              <p class="mt-2 font-medium text-foreground dark:text-white">{{ $certificate->serial }}</p>
             </div>
           </div>
 
           <div class="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-col items-center gap-2 text-sm text-muted-foreground">
               <div class="h-14 w-36 border-b border-border dark:border-white/40"></div>
-              <p class="tracking-[0.28em] uppercase">Course Lead</p>
+              @if($signatureExists)
+                <img src="{{ asset('images/signature.png') }}" alt="Authorized Signature" class="h-12 w-auto">
+              @else
+                <span class="text-xs uppercase tracking-[0.3em]">Authorized Signature</span>
+              @endif
+              <p class="tracking-[0.28em] uppercase">Authorized Signatory</p>
             </div>
             <div class="flex flex-col items-center gap-2 text-sm text-muted-foreground">
               <div class="h-14 w-36 border-b border-border dark:border-white/40"></div>
@@ -62,11 +77,15 @@
       </div>
 
       <div class="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm text-muted-foreground">
-        <div>Verified by CyberCore. View only certificate &mdash; downloads are disabled.</div>
-        <a href="{{ route('certificates.view', $certificate) }}" class="sera-btn text-xs">Open share view</a>
+        <div>Verified by CyberCore. Keep your certificate number for record verification.</div>
+        <div class="flex flex-wrap items-center gap-3">
+          <a href="{{ route('certificates.download', $certificate) }}" class="sera-btn-primary text-xs">Download PDF</a>
+          <a href="{{ route('certificates.view', $certificate) }}" class="sera-btn text-xs">Open share view</a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 @endsection
+
 

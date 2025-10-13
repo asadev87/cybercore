@@ -36,6 +36,13 @@ class QuizController extends Controller
 
         $this->syncProgressDraft($attempt, 0);
 
+        if (!$attempt->instructions_acknowledged) {
+            return view('quiz.instructions', [
+                'module'  => $module,
+                'attempt' => $attempt,
+            ]);
+        }
+
         return redirect()->route('quiz.show', $attempt);
     }
 
@@ -43,6 +50,13 @@ class QuizController extends Controller
     {
         
         $this->authorizeAttempt($attempt);
+
+        if (!$attempt->instructions_acknowledged) {
+            return view('quiz.instructions', [
+                'module'  => $attempt->module,
+                'attempt' => $attempt,
+            ]);
+        }
 
         // if we already reached target, finish
         $asked = $attempt->questionAttempts()->count();
@@ -180,6 +194,18 @@ app(\App\Services\BadgeService::class)->checkAndAward($attempt);
 return redirect()->route('quiz.result', $attempt);
   
         return redirect()->route('quiz.result', $attempt);
+    }
+
+    public function acknowledgeInstructions(Request $request, QuizAttempt $attempt)
+    {
+        $this->authorizeAttempt($attempt);
+
+        if (!$attempt->instructions_acknowledged) {
+            $attempt->instructions_acknowledged = true;
+            $attempt->save();
+        }
+
+        return redirect()->route('quiz.show', $attempt);
     }
 
     public function result(QuizAttempt $attempt)

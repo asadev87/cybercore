@@ -1,62 +1,105 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CyberCore – Cybersecurity Learning Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+CyberCore is a Laravel-based e-learning platform that delivers cybersecurity awareness training through adaptive quizzes, rich module content, and certificate generation. The project provides an end-to-end learner journey—from module discovery, to quiz completion, to certificate download—with an administration area for curating content.
 
-## About Laravel
+## Key Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Adaptive quizzes** with multiple question types (MCQ, true/false, fill-in-the-blank) and difficulty tracking.
+- **Instruction Gate** – learners must read module guidance before the first question, ensuring compliance with exam instructions.
+- **Dynamic certificates**  
+  - Auto-generated certificate number (`CERT-YYYYMMDD-XXXX`) stored in the database.  
+  - PDF includes organization logo and authorized signature image (configurable via `public/images/logo.png` and `public/images/signature.png`).  
+  - Download and embed views available after a successful pass.  
+- **Module catalog** with real-time progress tracking, difficulty indicators, and prep notes.
+- **Admin tooling** for managing modules, questions, and sections.
+- **Role-based access** (admin, lecturer, learner) powered by Spatie Permissions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+ / Laravel 11
+- SQLite (default) – switchable to MySQL/PostgreSQL
+- Tailwind CSS + Vite build pipeline
+- Alpine.js for lightweight interactivity
+- Barryvdh DomPDF for certificate rendering
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.2 or newer with required extensions
+- Composer
+- Node.js 18+ & npm
+- SQLite (bundled) or an alternative database driver
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Getting Started
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone & Install**
+   ```bash
+   git clone https://github.com/your-org/cybercore.git
+   cd cybercore
+   composer install
+   npm install
+   ```
 
-## Laravel Sponsors
+2. **Environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   Update `.env` database settings if you prefer MySQL/PostgreSQL. By default the project uses `database/database.sqlite` (created automatically after migrations).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. **Database & Seed**
+   ```bash
+   php artisan migrate --seed
+   ```
+   Seeder summary:
+   - `RoleAndAdminSeeder` – creates `admin@cybercore.test` with password `password`
+   - `LecturerSeeder`, `CourseSeeder`, `DemoQuizSeeder` – sample users, modules, and questions
 
-### Premium Partners
+4. **Assets**
+   ```bash
+   npm run dev          # or npm run build for production
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+5. **Run the app**
+   ```bash
+   php artisan serve
+   ```
+   Visit `http://localhost:8000`
+
+## Branding Assets
+
+- Replace the site logo by updating `public/images/logo.png` (used across the app, including the certificate PDF).
+- Replace the authorized signature graphic in `public/images/signature.png`.
+
+If these files are missing, the certificate templates will fall back to textual placeholders.
+
+## Default Credentials
+
+| Role  | Email                  | Password |
+|-------|------------------------|----------|
+| Admin | `admin@cybercore.test` | `password` |
+
+Run `php artisan db:seed` again after refreshing the database to recreate demo accounts and content.
+
+## Common Commands
+
+```bash
+php artisan migrate:fresh --seed   # Rebuild the database with seed data
+php artisan tinker                 # Inspect models / run quick scripts
+npm run lint && npm run build      # Frontend quality + production build
+```
+
+## Testing Checklist
+
+- Quiz flow with instruction acknowledgment
+- Certificate issue + download after passing a module
+- Admin module/question CRUD
+- Learn catalog progress updates
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Pull requests are welcome! Please open an issue first to discuss major changes. Follow PSR-12 for PHP and the Tailwind/Alpine conventions already present in the codebase.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# cybercore
+This project is open-sourced under the [MIT License](LICENSE).  
+© {{ date('Y') }} CyberCore Security Training.

@@ -8,20 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 class CertificateController extends Controller
 {
-    /**
-     * Stream the certificate PDF inline.
-     */
     public function show(Certificate $certificate)
     {
-        abort_unless($certificate->user_id === Auth::id(), 403);
+        $this->authorizeCertificate($certificate);
 
-        $path = $certificate->pdf_path;
-
-        if (!$path || !Storage::disk('local')->exists($path)) {
-            abort(404, 'Certificate file not found.');
-        }
-
-        $absolutePath = Storage::disk('local')->path($path);
+        $absolutePath = $this->resolvePath($certificate);
 
         return response()->file($absolutePath, [
             'Content-Type'        => 'application/pdf',
@@ -29,37 +20,46 @@ class CertificateController extends Controller
         ]);
     }
 
-    /**
-     * Show the embed (view-only) version of a certificate.
-     *
-     * @param  \App\Models\Certificate  $certificate
-     * @return \Illuminate\View\View
-     */
     public function embed(Certificate $certificate)
     {
-        // Only the owner may view
-        abort_unless($certificate->user_id === Auth::id(), 403);
+        $this->authorizeCertificate($certificate);
 
         return view('certificates.embed', compact('certificate'));
     }
 
-    /**
-     * Optionally, you could add another method to stream or download the certificate
-     *
-     * @param  \App\Models\Certificate  $certificate
-     * @return \Illuminate\Http\Response
-     */
     public function stream(Certificate $certificate)
     {
-        abort_unless($certificate->user_id === Auth::id(), 403);
+        return $this->show($certificate);
+    }
 
-        // Example: if you store a PDF file path in certificate model
-        // Adjust according to how you’ve saved it
-        $filePath = storage_path('certificates/' . $certificate->code . '.pdf');
-        if (! file_exists($filePath)) {
+    public function download(Certificate $certificate)
+    {
+        $this->authorizeCertificate($certificate);
+
+        $path = $certificate->pdf_path;
+
+        if (!$path || !Storage::disk('local')->exists($path)) {
             abort(404, 'Certificate file not found.');
         }
 
-        return response()->file($filePath);
+        $filename = 'certificate-' . ($certificate->serial ?? $certificate->id) . '.pdf';
+
+        return Storage::disk('local')->download($path, $filename);
+    }
+
+    protected function authorizeCertificate(Certificate $certificate): void
+    {
+        abort_unless($certificate->user_id === Auth::id(), 403);
+    }
+
+    protected function resolvePath(Certificate $certificate): string
+    {
+        $path = $certificate->pdf_path;
+
+        if (!$path || !Storage::disk('local')->exists($path)) {
+            abort(404, 'Certificate file not found.');
+        }
+
+        return Storage::disk('local')->path($path);
     }
 }

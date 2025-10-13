@@ -22,9 +22,7 @@
   >
     <div class="container flex items-center justify-between py-5">
       <a href="#" class="flex items-center gap-3 text-sm font-semibold tracking-tight">
-        <span class="relative grid h-11 w-11 place-content-center overflow-hidden rounded-2xl border border-border dark:border-white/10 bg-secondary/80 dark:bg-slate-900/80 shadow-[0_15px_40px_-25px_rgba(56,189,248,0.65)]">
-          <span class="h-6 w-6 rounded-lg bg-gradient-to-br from-sky-400 via-cyan-300 to-blue-500"></span>
-        </span>
+        <img src="{{ asset('images/logo.png') }}" alt="CyberCore" class="h-11 w-auto">
         <div class="flex flex-col">
           <span class="text-base font-semibold text-foreground dark:text-white">CyberCore</span>
           <span class="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Stay Vigilant</span>

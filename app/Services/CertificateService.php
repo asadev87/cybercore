@@ -16,7 +16,7 @@ class CertificateService {
     $existing = Certificate::where('quiz_attempt_id',$attempt->id)->first();
     if ($existing) return $existing;
 
-    $serial = strtoupper(Str::random(10));
+    $serial = $this->generateCertificateNumber();
     $issuedAt = now();
     $score = (int)$attempt->score;
 
@@ -43,13 +43,22 @@ class CertificateService {
 
     // 4) Create record
     return Certificate::create([
-      'user_id'        => $user->id,
-      'module_id'      => $module->id,
-      'quiz_attempt_id'=> $attempt->id,
-      'serial'         => $serial,
-      'code'           => $serial,
-      'issued_at'      => $issuedAt,
-      'pdf_path'       => $path,
+      'user_id'         => $user->id,
+      'module_id'       => $module->id,
+      'quiz_attempt_id' => $attempt->id,
+      'serial'          => $serial,
+      'code'            => $serial,
+      'issued_at'       => $issuedAt,
+      'pdf_path'        => $path,
     ]);
+  }
+
+  protected function generateCertificateNumber(): string
+  {
+    do {
+      $candidate = 'CERT-' . now()->format('Ymd') . '-' . Str::upper(Str::random(4));
+    } while (Certificate::where('serial', $candidate)->exists());
+
+    return $candidate;
   }
 }

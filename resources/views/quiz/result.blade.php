@@ -63,6 +63,7 @@
     <div class="flex flex-wrap items-center gap-3">
       @if($certificate)
         <a href="{{ route('certificates.embed', $certificate) }}" class="btn btn-primary text-xs px-3 py-2">View certificate</a>
+        <a href="{{ route('certificates.download', $certificate) }}" class="btn btn-outline text-xs px-3 py-2">Download PDF</a>
       @elseif($passed)
         <button class="btn btn-muted text-xs px-3 py-2" disabled title="Your certificate will appear here shortly.">View certificate</button>
       @else

@@ -5,21 +5,14 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Module;
 use App\Models\Question;
+use Illuminate\Support\Str;
 
 class DemoQuizSeeder extends Seeder
 {
     public function run(): void
     {
         // 1) Create a demo module
-        $module = Module::firstOrCreate(
-            ['slug' => 'phishing-basics'],
-            [
-                'title'       => 'Phishing Basics',
-                'description' => 'Learn to spot common phishing tactics in emails and websites.',
-                'is_active'   => true,
-                'pass_score'  => 70,
-            ]
-        );
+        $module = $this->ensureModule('phishing-basics');
 
         // 2) Seed some questions (mix of types & difficulties)
         $questions = [
@@ -157,7 +150,7 @@ class DemoQuizSeeder extends Seeder
 
     private function seedMalwareQuestions(): void
     {
-        $module = Module::firstOrCreate(['slug' => 'malware-101']);
+        $module = $this->ensureModule('malware-101');
         $questions = [
             [
                 'type' => 'mcq',
@@ -244,7 +237,7 @@ class DemoQuizSeeder extends Seeder
 
     private function seedPasswordQuestions(): void
     {
-        $module = Module::firstOrCreate(['slug' => 'password-hygiene']);
+        $module = $this->ensureModule('password-hygiene');
         $questions = [
             [
                 'type' => 'mcq',
@@ -331,7 +324,7 @@ class DemoQuizSeeder extends Seeder
 
     private function seedBrowsingQuestions(): void
     {
-        $module = Module::firstOrCreate(['slug' => 'safe-browsing']);
+        $module = $this->ensureModule('safe-browsing');
         $questions = [
             [
                 'type' => 'truefalse',
@@ -418,7 +411,7 @@ class DemoQuizSeeder extends Seeder
 
     private function seedPhishingAwarenessQuestions(): void
     {
-        $module = Module::firstOrCreate(['slug' => 'phishing-awareness']);
+        $module = $this->ensureModule('phishing-awareness');
         $questions = [
             [
                 'type' => 'mcq',
@@ -481,7 +474,7 @@ class DemoQuizSeeder extends Seeder
 
     private function seedStrongPasswordCourseQuestions(): void
     {
-        $module = Module::firstOrCreate(['slug' => 'creating-strong-passwords']);
+        $module = $this->ensureModule('creating-strong-passwords');
         $questions = [
             [
                 'type' => 'mcq',
@@ -544,7 +537,7 @@ class DemoQuizSeeder extends Seeder
 
     private function seedSafeBrowsingHabitsQuestions(): void
     {
-        $module = Module::firstOrCreate(['slug' => 'safe-browsing-habits']);
+        $module = $this->ensureModule('safe-browsing-habits');
         $questions = [
             [
                 'type' => 'mcq',
@@ -603,5 +596,71 @@ class DemoQuizSeeder extends Seeder
                 $payload
             );
         }
+    }
+
+    private function ensureModule(string $slug, array $overrides = []): Module
+    {
+        $defaults = [
+            'phishing-basics' => [
+                'title' => 'Phishing Basics',
+                'description' => 'Learn to spot common phishing tactics in emails and websites.',
+                'note' => 'Skim a few recent emails so you can immediately apply the red flags covered here.',
+                'pass_score' => 70,
+                'is_active' => true,
+            ],
+            'malware-101' => [
+                'title' => 'Malware 101',
+                'description' => 'Understand ransomware, trojans, and how to install software safely.',
+                'note' => 'Have your device security checklist nearby to compare against recommended controls.',
+                'pass_score' => 70,
+                'is_active' => true,
+            ],
+            'password-hygiene' => [
+                'title' => 'Password Hygiene',
+                'description' => 'Strong, unique passwords and multi-factor authentication essentials.',
+                'note' => 'Bring a couple of accounts you plan to strengthen so you can build unique passphrases on the spot.',
+                'pass_score' => 70,
+                'is_active' => true,
+            ],
+            'safe-browsing' => [
+                'title' => 'Safe Browsing',
+                'description' => 'Learn best practices for browsing safely on any network.',
+                'note' => 'Think about the networks you use most often—public Wi-Fi examples will help the guidance stick.',
+                'pass_score' => 70,
+                'is_active' => true,
+            ],
+            'phishing-awareness' => [
+                'title' => 'Phishing Awareness',
+                'description' => 'Spot the latest phishing trends and protect your organization.',
+                'note' => 'Note suspicious messages you have received recently to test the spotting techniques.',
+                'pass_score' => 80,
+                'is_active' => true,
+            ],
+            'creating-strong-passwords' => [
+                'title' => 'Creating Strong Passwords',
+                'description' => 'Practical routines for memorable, secure passwords and backup codes.',
+                'note' => 'Prepare to audit your password manager or jot down replacement ideas as you go.',
+                'pass_score' => 80,
+                'is_active' => true,
+            ],
+            'safe-browsing-habits' => [
+                'title' => 'Safe Browsing Habits',
+                'description' => 'Secure browsing habits across devices, networks, and extensions.',
+                'note' => 'List the browser extensions you rely on so you can review their permissions during the module.',
+                'pass_score' => 80,
+                'is_active' => true,
+            ],
+        ];
+
+        $data = $defaults[$slug] ?? [
+            'title' => Str::title(str_replace('-', ' ', $slug)),
+            'description' => '',
+            'pass_score' => 70,
+            'is_active' => true,
+        ];
+
+        $data = array_merge($data, $overrides);
+
+        return Module::updateOrCreate(['slug' => $slug], $data);
     }
 }

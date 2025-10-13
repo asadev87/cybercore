@@ -84,6 +84,7 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('/quiz/{attempt}', [QuizController::class, 'show'])->name('quiz.show');
     Route::post('/quiz/{attempt}/answer', [QuizController::class, 'answer'])->name('quiz.answer');
     Route::post('/quiz/{attempt}/finish', [QuizController::class, 'finish'])->name('quiz.finish');
+    Route::post('/quiz/{attempt}/instructions', [QuizController::class, 'acknowledgeInstructions'])->name('quiz.instructions');
 
     // Result
     Route::get('/quiz/{attempt}/result', [QuizController::class, 'result'])->name('quiz.result');
@@ -97,25 +98,19 @@ Route::middleware(['auth','verified'])->group(function(){
   Route::get('/certificates/{certificate}/view', [CertificateController::class,'show'])
     ->name('certificates.view');     // raw inline stream
   Route::get('/certificates/{certificate}', [CertificateController::class,'embed'])
-    ->name('certificates.embed');    // HTML wrapper w/ hidden controls
-  Route::get('/performance', [PerformanceController::class, 'index'])
-  ->name('performance.index');
+    ->name('certificates.embed');    // HTML wrapper
+  Route::get('/certificates/{certificate}/stream', [CertificateController::class,'stream'])
+    ->name('certificates.stream');
+  Route::get('/certificates/{certificate}/download', [CertificateController::class,'download'])
+    ->name('certificates.download');
+
+  Route::get('/performance', [PerformanceController::class, 'index'])->name('performance.index');
   Route::get('/account', [AccountController::class, 'index'])->name('account.index');
-    Route::patch('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile.update');
-    Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password.update');
-    Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
-    Route::get('/attempts/{attempt}/certificate', [CertificateController::class,'show'])->name('certificates.show');
-    Route::get('/certificates/{certificate}/stream', [CertificateController::class,'stream'])->name('certificates.stream');
-    Route::get('/badges', [BadgesController::class, 'index'])->name('badges.index');
-});
-Route::middleware(['auth','verified'])
-  ->get('/certificates/{certificate}', [\App\Http\Controllers\CertificateController::class, 'embed'])
-  ->name('certificates.embed');
-  Route::middleware(['auth','verified'])->group(function(){
-    Route::get('/certificates/{certificate}', [CertificateController::class, 'embed'])
-        ->name('certificates.embed');
-    Route::get('/certificates/{certificate}/stream', [CertificateController::class, 'stream'])
-        ->name('certificates.stream');
+  Route::patch('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile.update');
+  Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password.update');
+  Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
+  Route::get('/attempts/{attempt}/certificate', [CertificateController::class,'show'])->name('certificates.show');
+  Route::get('/badges', [BadgesController::class, 'index'])->name('badges.index');
 });
 
 

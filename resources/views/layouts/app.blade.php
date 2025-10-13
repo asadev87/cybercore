@@ -48,9 +48,7 @@
   >
     <div class="container flex items-center justify-between py-4">
       <a href="{{ url('/') }}" class="group flex items-center gap-3">
-        <span class="grid h-10 w-10 place-content-center rounded-2xl bg-gradient-to-br from-primary/90 via-primary to-accent shadow-glow">
-          <span class="h-5 w-5 rounded-xl bg-white/90"></span>
-        </span>
+        <img src="{{ asset('images/logo.png') }}" alt="CyberCore Logo" class="h-10 w-auto">
         <span class="text-lg font-semibold tracking-tight">CyberCore</span>
       </a>
 
