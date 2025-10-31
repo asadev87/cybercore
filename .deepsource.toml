@@ -11,7 +11,12 @@ name = "javascript"
     "react",
     "vue"
   ]
-  environment = ["nodejs"]
+  environment = [
+    "nodejs",
+    "browser",
+    "vitest",
+    "mongo"
+  ]
 
 [[analyzers]]
 name = "php"
