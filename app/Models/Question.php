@@ -18,6 +18,7 @@ class Question extends Model
         'answer',
         'is_active',
         'explanation',
+        'notes',
     ];
 
     // If DB stores JSON/TEXT, Laravel will cast to array automatically
@@ -25,6 +26,7 @@ class Question extends Model
         'choices' => 'array',
         'options' => 'array',
         'answer'  => 'array',
+        'notes'   => 'array',
     ];
 
     // Optional: default to [] instead of null for robustness

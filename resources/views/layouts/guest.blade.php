@@ -17,17 +17,13 @@
         <div class="min-h-screen bg-gradient-to-b from-primary/5 via-background to-background/60">
             <div class="container flex min-h-screen flex-col items-center justify-center py-12">
                 <a href="/" class="mb-8 inline-flex items-center gap-3 rounded-2xl border border-border/50 bg-card/90 px-4 py-3 shadow-card">
-                    <span class="grid h-10 w-10 place-content-center rounded-2xl bg-gradient-to-br from-primary/90 via-primary to-accent shadow-glow">
-                        <span class="h-5 w-5 rounded-xl bg-white/90"></span>
-                    </span>
-                    <span class="text-lg font-semibold tracking-tight">CyberCore</span>
+                    <img src="{{ asset('images/logo.png') }}" alt="CyberCore" class="h-10 w-auto">
                 </a>
 
                 <div class="w-full max-w-md space-y-6">
                     <div class="card-surface p-6 shadow-card sm:p-8">
                         {{ $slot }}
                     </div>
-                    <p class="text-center text-xs text-muted-foreground">Secured authentication • WCAG AA compliant forms</p>
                 </div>
             </div>
         </div>

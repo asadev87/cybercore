@@ -9,20 +9,20 @@
       <h1 class="text-3xl font-semibold tracking-tight">Welcome back, {{ auth()->user()->name ?? 'Admin' }}</h1>
       <p class="max-w-2xl text-sm text-muted-foreground">Monitor learner momentum, curate content, and keep your course catalogue fresh with the tools below.</p>
     </div>
-    <div class="flex flex-wrap items-center gap-2 sm:justify-end text-base">
-      <a href="{{ route('admin.dashboard') }}" class="btn btn-muted">Admin dashboard</a>
-      <a href="{{ url('/') }}" class="btn btn-outline">View landing page</a>
+    <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+      <a href="{{ route('dashboard') }}" class="btn btn-muted text-sm">User dashboard</a>
+      <a href="{{ url('/') }}" class="btn btn-outline text-sm">View landing page</a>
     </div>
   </header>
 
   <div class="grid gap-6 lg:grid-cols-4 auto-rows-[minmax(200px,auto)]">
-    <article class="bento-card bento-card--hero lg:col-span-2">
+    <article class="bento-card bento-card--hero lg:col-span-2 text-[15px] sm:text-base">
       <div class="flex flex-col gap-6">
         <div class="flex items-center justify-between gap-4">
           <div class="space-y-2">
             <span class="bento-pill">Course authoring</span>
             <h2 class="text-2xl font-semibold tracking-tight">Build once, evolve often.</h2>
-            <p class="text-sm text-muted-foreground">You have <span class="font-semibold text-foreground">{{ $modules }}</span> modules and <span class="font-semibold text-foreground">{{ $questions }}</span> questions live in the catalogue.</p>
+            <p class="text-base text-muted-foreground">You have <span class="font-semibold text-foreground">{{ $modules }}</span> modules and <span class="font-semibold text-foreground">{{ $questions }}</span> questions live in the catalogue.</p>
           </div>
           <div class="hidden text-right text-xs font-medium text-muted-foreground sm:block">Updated {{ now()->format('M j, Y') }}</div>
         </div>
@@ -47,36 +47,36 @@
       </div>
     </article>
 
-    <article class="bento-card bento-card--metric">
+    <article class="bento-card bento-card--metric text-[15px] sm:text-base">
       <p class="bento-label">Users</p>
       <p class="bento-stat">{{ $users }}</p>
-      <p class="bento-sub">Invite learners or staff by assigning roles in the people directory.</p>
-      <a href="{{ route('account.index') }}" class="btn btn-outline text-xs">Manage profiles →</a>
+      <p class="bento-sub text-[15px] sm:text-base">Invite learners or staff by assigning roles in the people directory.</p>
+      <a href="{{ route('account.index') }}" class="btn btn-outline text-sm">Manage profiles →</a>
     </article>
 
-    <article class="bento-card bento-card--metric">
+    <article class="bento-card bento-card--metric text-[15px] sm:text-base">
       <p class="bento-label">Modules</p>
       <p class="bento-stat">{{ $modules }}</p>
-      <p class="bento-sub">Draft, publish, and retire modules as your curriculum evolves.</p>
-      <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-xs">View catalogue →</a>
+      <p class="bento-sub text-[15px] sm:text-base">Draft, publish, and retire modules as your curriculum evolves.</p>
+      <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-sm">View catalogue →</a>
     </article>
 
-    <article class="bento-card bento-card--metric">
+    <article class="bento-card bento-card--metric text-[15px] sm:text-base">
       <p class="bento-label">Questions</p>
       <p class="bento-stat">{{ $questions }}</p>
-      <p class="bento-sub">Refresh assessments with new scenarios to keep pace with emerging threats.</p>
-      <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-xs">Open question bank →</a>
+      <p class="bento-sub text-[15px] sm:text-base">Refresh assessments with new scenarios to keep pace with emerging threats.</p>
+      <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-sm">Open question bank →</a>
     </article>
 
-    <article class="bento-card bento-card--metric">
+    <article class="bento-card bento-card--metric text-[15px] sm:text-base">
       <p class="bento-label">Quiz attempts</p>
       <p class="bento-stat">{{ $attempts }}</p>
-      <p class="bento-sub">Track completions to spot momentum and identify modules that need a boost.</p>
-      <a href="{{ route('performance.index') }}" class="btn btn-outline text-xs">View performance →</a>
+      <p class="bento-sub text-[15px] sm:text-base">Track completions to spot momentum and identify modules that need a boost.</p>
+      <a href="{{ route('performance.index') }}" class="btn btn-outline text-sm">View performance →</a>
     </article>
 
     @can('viewAny', App\Models\Module::class)
-    <article class="bento-card lg:col-span-2">
+    <article class="bento-card lg:col-span-2 text-[15px] sm:text-base">
       <div class="flex items-center justify-between gap-3">
         <div>
           <p class="bento-label">Quick actions</p>
@@ -87,24 +87,24 @@
       <ul class="bento-list">
         <li>
           <span class="bento-list__title">Access the module builder</span>
-          <span class="bento-list__description">Jump into the catalogue to tweak sections, questions, and metadata.</span>
-          <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-xs">Open builder →</a>
+          <span class="bento-list__description text-[15px] sm:text-base">Jump into the catalogue to tweak sections, questions, and metadata.</span>
+          <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-sm">Open builder →</a>
         </li>
         <li>
           <span class="bento-list__title">Assign lecturers</span>
-          <span class="bento-list__description">Map each module to a subject lead to keep ownership clear.</span>
-          <a href="{{ route('admin.modules.index') }}?view=owners" class="btn btn-outline text-xs">Manage ownership →</a>
+          <span class="bento-list__description text-[15px] sm:text-base">Map each module to a subject lead to keep ownership clear.</span>
+          <a href="{{ route('admin.modules.index') }}?view=owners" class="btn btn-outline text-sm">Manage ownership →</a>
         </li>
         <li>
           <span class="bento-list__title">Celebrate wins</span>
-          <span class="bento-list__description">Recognise high scores and healthy competition on the leaderboard.</span>
-          <a href="{{ route('leaderboard.index') }}" class="btn btn-outline text-xs">Open leaderboard →</a>
+          <span class="bento-list__description text-[15px] sm:text-base">Recognise high scores and healthy competition on the leaderboard.</span>
+          <a href="{{ route('leaderboard.index') }}" class="btn btn-outline text-sm">Open leaderboard →</a>
         </li>
       </ul>
     </article>
     @endcan
 
-    <article class="bento-card lg:col-span-4 overflow-hidden">
+    <article class="bento-card lg:col-span-4 overflow-hidden text-[15px] sm:text-base">
       <div class="flex items-center justify-between border-b border-border/60 pb-4">
         <div>
           <p class="bento-label">Recent activity</p>

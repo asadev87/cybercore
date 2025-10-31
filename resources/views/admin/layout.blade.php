@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>CyberCore Admin — @yield('title','Dashboard')</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,18 +52,24 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3a7.5 7.5 0 009.79 9.79z" />
           </svg>
         </button>
-        <a class="btn btn-outline text-base" href="{{ route('admin.dashboard') }}">Dashboard</a>
+        @if (auth()->user()?->hasRole('lecturer'))
+          <a class="btn btn-outline text-sm" href="{{ route('dashboard') }}">Dashboard</a>
+        @else
+          <a class="btn btn-outline text-sm" href="{{ route('admin.dashboard') }}">Dashboard</a>
+        @endif
         @can('view-reports')
-          <a class="btn btn-outline text-base" href="{{ route('admin.reports.index') }}">Reports</a>
+          <a class="btn btn-outline text-sm" href="{{ route('admin.reports.index') }}">Reports</a>
         @endcan
-        <a class="btn btn-outline text-base" href="{{ url('/') }}">Landing</a>
-        <a class="btn btn-muted text-base" href="{{ route('dashboard') }}">Learner view</a>
+        <a class="btn btn-outline text-sm" href="{{ url('/') }}">Landing</a>
+        @unless (auth()->user()?->hasRole('lecturer'))
+          <a class="btn btn-muted text-sm" href="{{ route('dashboard') }}">Learner view</a>
+        @endunless
       </div>
     </div>
   </header>
 
   <main class="flex-1 py-10">
-    <div class="container space-y-8 text-[15px] sm:text-base md:text-[17px] leading-relaxed">
+    <div class="container space-y-8">
       @hasSection('page_header')
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           @yield('page_header')
@@ -75,5 +82,6 @@
     </div>
   </main>
 </div>
+@stack('scripts')
 </body>
 </html>

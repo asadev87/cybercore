@@ -17,22 +17,41 @@ class BadgeService
             return;
         }
 
-        // First completion badge
-        $hasFirstBadge = $user->badges()
-            ->where('badges.slug', 'first-completion')
-            ->exists();
+        $userId = $user->id;
 
-        $hasCompletedModule = UserProgress::where('user_id', $user->id)
+        // Module completion milestones
+        $completedCount = UserProgress::where('user_id', $userId)
             ->where('status', 'completed')
-            ->exists();
+            ->count();
 
-        if (!$hasFirstBadge && $hasCompletedModule) {
-            $this->award($user->id, 'first-completion');
+        if ($completedCount >= 1) {
+            $this->award($userId, 'first-completion');
         }
 
-        // High scorer badge
+        if ($completedCount >= 3) {
+            $this->award($userId, 'completion-streak-3');
+        }
+
+        if ($completedCount >= 5) {
+            $this->award($userId, 'completion-mastery-5');
+        }
+
+        // High score achievements
         if ($score >= 90) {
-            $this->award($user->id, 'high-scorer-90');
+            $this->award($userId, 'high-scorer-90');
+        }
+
+        if ($score === 100) {
+            $this->award($userId, 'perfect-score');
+        }
+
+        $highScoreCount = QuizAttempt::where('user_id', $userId)
+            ->whereNotNull('completed_at')
+            ->where('score', '>=', 90)
+            ->count();
+
+        if ($highScoreCount >= 3) {
+            $this->award($userId, 'high-scorer-streak-3');
         }
     }
 
@@ -51,4 +70,3 @@ class BadgeService
         ]);
     }
 }
-

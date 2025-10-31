@@ -7,6 +7,7 @@
 @endif
 
 @php($currentQuestion = $isEditing ? $question : null)
+@php($noteValues = $currentQuestion ? (array) $currentQuestion->notes : [])
 
 <div class="grid gap-6 lg:grid-cols-3">
   <div class="grid gap-2">
@@ -57,6 +58,25 @@
     <textarea id="answer" name="answer" rows="2" class="input-field" placeholder="Enter the correct answer(s)">{{ old('answer', $currentQuestion ? implode("\n", (array) $currentQuestion->answer) : '') }}</textarea>
     <p class="input-hint">For MCQ, list the correct option. For True/False use <code>true</code> or <code>false</code>. For fill-in, list acceptable answers on separate lines.</p>
   </div>
+
+  <fieldset class="grid gap-4 rounded-2xl border border-border/60 bg-secondary/30 p-4">
+    <legend class="px-1 text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Study notes (optional)</legend>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="grid gap-2">
+        <label for="note-core" class="input-label text-xs uppercase tracking-wide text-muted-foreground">Core concept</label>
+        <textarea id="note-core" name="notes[core_concept]" rows="4" class="input-field text-sm" placeholder="Distill the main takeaway learners should remember.">{{ old('notes.core_concept', $noteValues['core_concept'] ?? '') }}</textarea>
+      </div>
+      <div class="grid gap-2">
+        <label for="note-context" class="input-label text-xs uppercase tracking-wide text-muted-foreground">Real-world context</label>
+        <textarea id="note-context" name="notes[context]" rows="4" class="input-field text-sm" placeholder="Share a short scenario that reinforces the concept.">{{ old('notes.context', $noteValues['context'] ?? '') }}</textarea>
+      </div>
+      <div class="grid gap-2">
+        <label for="note-examples" class="input-label text-xs uppercase tracking-wide text-muted-foreground">Examples</label>
+        <textarea id="note-examples" name="notes[examples]" rows="4" class="input-field text-sm" placeholder="Bullet examples or tips (one per line).">{{ old('notes.examples', $noteValues['examples'] ?? '') }}</textarea>
+      </div>
+    </div>
+    <p class="text-xs text-muted-foreground">Learners see these notes after answering to reinforce the lesson.</p>
+  </fieldset>
 
   <label class="flex items-center gap-3 rounded-xl border border-border/60 bg-secondary px-4 py-3 text-sm text-secondary-foreground">
     <input class="h-4 w-4 rounded border-border/60 text-primary focus:ring-ring" type="checkbox" name="is_active" value="1" {{ old('is_active', $currentQuestion->is_active ?? 1) ? 'checked' : '' }}>

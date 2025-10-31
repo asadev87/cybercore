@@ -52,7 +52,7 @@
               <td class="px-6 py-4 text-sm text-muted-foreground">{{ optional($a->completed_at)->format('Y-m-d H:i') }}</td>
               <td class="px-6 py-4 text-sm font-medium text-foreground">{{ $a->module->title ?? '—' }}</td>
               <td class="px-6 py-4 text-sm text-muted-foreground">{{ $a->score }}%</td>
-              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $a->duration_sec }}s</td>
+              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $a->score >= ($a->module->pass_score ?? 70) ? "Passed" : "In progress" }}</td>
               <td class="px-6 py-4 text-right"><a class="btn btn-outline" href="{{ route('quiz.result', $a) }}">View</a></td>
             </tr>
           @empty

@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ config('app.name', 'CyberCore') }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,13 +32,15 @@
 <body class="bg-background text-foreground antialiased">
 <div class="flex min-h-screen flex-col">
   @php
-    $primaryNav = [
-      ['label' => 'Learn', 'route' => 'learn.index'],
-      ['label' => 'Performance', 'route' => 'performance.index'],
-      ['label' => 'Leaderboard', 'route' => 'leaderboard.index'],
-      ['label' => 'Badges', 'route' => 'badges'],
-      ['label' => 'Account', 'route' => 'account.index'],
-    ];
+    $isLecturer = auth()->check() && auth()->user()->hasRole('lecturer');
+    $primaryNav = array_values(array_filter([
+      ['label' => 'Learn', 'route' => 'learn.index', 'active' => 'learn.*'],
+      ['label' => 'Performance', 'route' => 'performance.index', 'active' => 'performance.*', 'hidden' => $isLecturer],
+      ['label' => 'Leaderboard', 'route' => 'leaderboard.index', 'active' => 'leaderboard.*'],
+      ['label' => 'Badges', 'url' => url('/badges'), 'path' => 'badges', 'hidden' => $isLecturer],
+      ['label' => 'Modules editor', 'route' => 'admin.modules.index', 'active' => 'admin.modules.*', 'hidden' => ! $isLecturer],
+      ['label' => 'Account', 'route' => 'account.index', 'active' => 'account.*'],
+    ], fn($item) => empty($item['hidden'])));
   @endphp
 
   <header
@@ -54,8 +57,20 @@
 
       <nav class="hidden items-center gap-3 lg:flex">
         @foreach ($primaryNav as $item)
-          @php($isRoute = $item['route'] === 'badges' ? request()->is('badges') : request()->routeIs($item['route']))
-          <x-nav-link :href="($item['route'] === 'badges') ? url('/badges') : route($item['route'])" :active="$isRoute">
+          @php
+            $routeName = $item['route'] ?? null;
+            $href = $routeName ? route($routeName) : ($item['url'] ?? '#');
+              $activePattern = $item['active'] ?? null;
+              $isActive = false;
+              if (!empty($activePattern)) {
+                $isActive = request()->routeIs($activePattern);
+              } elseif (!empty($item['path'])) {
+                $isActive = request()->is($item['path']);
+              } elseif (!empty($routeName)) {
+                $isActive = request()->routeIs($routeName);
+              }
+          @endphp
+          <x-nav-link :href="$href" :active="$isActive">
             {{ $item['label'] }}
           </x-nav-link>
         @endforeach
@@ -109,8 +124,20 @@
         </button>
         <nav class="flex flex-col gap-3 text-base">
           @foreach ($primaryNav as $item)
-            @php($isRoute = $item['route'] === 'badges' ? request()->is('badges') : request()->routeIs($item['route']))
-            <x-responsive-nav-link :href="($item['route'] === 'badges') ? url('/badges') : route($item['route'])" :active="$isRoute" @click="open = false">
+            @php
+              $routeName = $item['route'] ?? null;
+              $href = $routeName ? route($routeName) : ($item['url'] ?? '#');
+              $activePattern = $item['active'] ?? null;
+              $isActive = false;
+              if (!empty($activePattern)) {
+                $isActive = request()->routeIs($activePattern);
+              } elseif (!empty($item['path'])) {
+                $isActive = request()->is($item['path']);
+              } elseif (!empty($routeName)) {
+                $isActive = request()->routeIs($routeName);
+              }
+            @endphp
+            <x-responsive-nav-link :href="$href" :active="$isActive" @click="open = false">
               {{ $item['label'] }}
             </x-responsive-nav-link>
           @endforeach
@@ -144,5 +171,6 @@
     </div>
   </main>
 </div>
+@stack('scripts')
 </body>
 </html>

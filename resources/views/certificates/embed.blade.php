@@ -56,22 +56,17 @@
             </div>
           </div>
 
-          <div class="mt-10 flex flex-col gap-8 text-slate-700 sm:flex-row sm:items-end sm:justify-between">
+          <div class="mt-10 flex flex-col items-center gap-6 text-slate-700">
             <div class="flex flex-col items-center gap-3 text-sm text-center">
               <div class="flex h-24 w-64 items-center justify-center">
                 @if($signatureExists)
-                  <img src="{{ $signatureUrl }}" alt="Executive Signature" class="h-20 w-auto drop-shadow-md">
+                  <img src="{{ $signatureUrl }}" alt="Executive Signature" class="h-20   w-auto drop-shadow-md">
                 @else
                   <span class="text-xs uppercase tracking-[0.3em] text-blue-700">Executive Signature</span>
                 @endif
               </div>
               <div class="w-48 border-b-2 border-slate-900"></div>
-              <p class="tracking-[0.28em] uppercase text-slate-900">Executive Manager</p>
-            </div>
-
-            <div class="flex flex-col items-center gap-1 text-center text-xs uppercase tracking-[0.28em] text-blue-700">
-              <span>Verified</span>
-              <span>CyberCore</span>
+              <p class="tracking-[0.28em] uppercase text-slate-900">Executive Manager of CyberCore</p>
             </div>
           </div>
         </div>

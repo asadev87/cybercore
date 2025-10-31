@@ -12,7 +12,6 @@ class QuizAttempt extends Model {
         'target_questions',
         'started_at',
         'completed_at',
-        'duration_sec',
         'instructions_acknowledged',
     ];
 
@@ -27,4 +26,5 @@ class QuizAttempt extends Model {
     public function certificate(){return $this->hasOne(\App\Models\Certificate::class);}
 
 }
+
 

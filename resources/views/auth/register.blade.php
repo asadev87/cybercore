@@ -1,12 +1,72 @@
 <x-guest-layout>
-    <div class="space-y-6">
+    @php
+        $initialType = request('type') === 'lecturer' ? 'lecturer' : 'user';
+        $loginRoutes = [
+            'user' => route('login', ['type' => 'user']),
+            'lecturer' => route('login', ['type' => 'lecturer']),
+        ];
+    @endphp
+    <div
+        x-data="{
+            accountType: '{{ old('account_type', $initialType) }}',
+            loginRoutes: {
+                user: '{{ $loginRoutes['user'] }}',
+                lecturer: '{{ $loginRoutes['lecturer'] }}'
+            }
+        }"
+        class="space-y-6"
+    >
+        <div class="flex justify-center">
+            <div class="inline-flex rounded-full border border-border/70 bg-white/80 p-1 text-sm font-semibold dark:border-white/10 dark:bg-white/10" role="tablist" aria-label="Choose account type">
+                <a
+                    href="{{ route('register', ['type' => 'user']) }}"
+                    role="tab"
+                    @click.prevent="accountType = 'user'"
+                    :aria-selected="(accountType === 'user').toString()"
+                    class="rounded-full px-4 py-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    :class="accountType === 'user' ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:text-foreground dark:text-white/70 dark:hover:text-white'"
+                >
+                    Learner
+                </a>
+                <a
+                    href="{{ route('register', ['type' => 'lecturer']) }}"
+                    role="tab"
+                    @click.prevent="accountType = 'lecturer'"
+                    :aria-selected="(accountType === 'lecturer').toString()"
+                    class="rounded-full px-4 py-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    :class="accountType === 'lecturer' ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:text-foreground dark:text-white/70 dark:hover:text-white'"
+                >
+                    Lecturer
+                </a>
+            </div>
+        </div>
+
         <header class="space-y-2 text-center">
-            <h1 class="text-2xl font-semibold tracking-tight">Create your CyberCore account</h1>
-            <p class="text-sm text-muted-foreground">Start mastering cyber hygiene with guided modules and quizzes.</p>
+            <h1
+                class="text-2xl font-semibold tracking-tight"
+                x-text="accountType === 'lecturer' ? 'Request lecturer access' : 'Create your CyberCore account'"
+            >
+                {{ $initialType === 'lecturer' ? 'Request lecturer access' : 'Create your CyberCore account' }}
+            </h1>
+            <p
+                class="text-sm text-muted-foreground"
+                x-show="accountType === 'user'"
+                x-cloak
+            >
+                Start mastering cyber hygiene with guided modules and quizzes.
+            </p>
+            <p
+                class="text-sm text-muted-foreground"
+                x-show="accountType === 'lecturer'"
+                x-cloak
+            >
+                Submit your lecturer details below and our team will confirm access for your institution.
+            </p>
         </header>
 
         <form method="POST" action="{{ route('register') }}" class="space-y-5">
             @csrf
+            <input type="hidden" name="account_type" x-model="accountType" value="{{ old('account_type', $initialType) }}">
 
             <div class="space-y-2">
                 <x-input-label for="name" :value="__('Name')" />
@@ -35,12 +95,31 @@
 
             <div class="space-y-4">
                 <x-primary-button class="w-full justify-center">
-                    {{ __('Register') }}
+                    @if ($initialType === 'lecturer')
+                        <span x-show="accountType === 'lecturer'">Submit request</span>
+                        <span x-show="accountType !== 'lecturer'" x-cloak>{{ __('Register') }}</span>
+                    @else
+                        <span x-show="accountType !== 'lecturer'">{{ __('Register') }}</span>
+                        <span x-show="accountType === 'lecturer'" x-cloak>Submit request</span>
+                    @endif
                 </x-primary-button>
                 <p class="text-center text-xs text-muted-foreground">
                     {{ __('Already registered?') }}
-                    <a href="{{ route('login') }}" class="font-medium text-primary hover:text-primary/80">{{ __('Sign in') }}</a>
+                    <a
+                        href="{{ $loginRoutes[$initialType] }}"
+                        :href="loginRoutes[accountType]"
+                        class="font-medium text-primary hover:text-primary/80"
+                    >
+                        {{ __('Sign in') }}
+                    </a>
                 </p>
+                <div
+                    class="rounded-lg border border-border/70 bg-white/80 p-3 text-left text-xs text-muted-foreground dark:border-white/10 dark:bg-white/10"
+                    x-show="accountType === 'lecturer'"
+                    x-cloak
+                >
+                    We review lecturer requests to keep course spaces secure. You can also email <a href="mailto:support@cybercore.io" class="font-medium text-primary hover:text-primary/80">support@cybercore.io</a> for faster coordination.
+                </div>
             </div>
         </form>
     </div>

@@ -28,6 +28,10 @@
         --radius: 1.1rem;
     }
 
+    [x-cloak] {
+        display: none !important;
+    }
+
     .dark {
         --background: 217 45% 5%;
         --foreground: 210 40% 96%;

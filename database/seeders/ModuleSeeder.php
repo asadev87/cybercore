@@ -29,7 +29,10 @@ class ModuleSeeder extends Seeder
         ];
 
         foreach ($data as $m) {
-            Module::firstOrCreate(['slug'=>$m['slug']], $m);
+            Module::updateOrCreate(
+                ['slug' => $m['slug']],
+                $m
+            );
         }
     }
 }

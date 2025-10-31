@@ -43,6 +43,10 @@ class QuestionController extends Controller
             'stem'       => ['required','string'],
             'choices'    => ['nullable','string'], // textarea, will be turned to array
             'answer'     => ['nullable','string'], // textarea or single line
+            'notes'      => ['nullable','array'],
+            'notes.core_concept' => ['nullable','string'],
+            'notes.context'      => ['nullable','string'],
+            'notes.examples'     => ['nullable','string'],
             'is_active'  => ['boolean'],
         ];
 
@@ -80,6 +84,7 @@ class QuestionController extends Controller
 
         $data['is_active'] = $request->boolean('is_active');
         $data['module_id'] = $module->id;
+        $data['notes'] = $this->prepareNotes($request->input('notes', []));
 
         Question::create($data);
 
@@ -103,6 +108,10 @@ class QuestionController extends Controller
             'stem'       => ['required','string'],
             'choices'    => ['nullable','string'],
             'answer'     => ['nullable','string'],
+            'notes'      => ['nullable','array'],
+            'notes.core_concept' => ['nullable','string'],
+            'notes.context'      => ['nullable','string'],
+            'notes.examples'     => ['nullable','string'],
             'is_active'  => ['boolean'],
         ];
 
@@ -135,6 +144,7 @@ class QuestionController extends Controller
         }
 
         $data['is_active'] = $request->boolean('is_active');
+        $data['notes'] = $this->prepareNotes($request->input('notes', []));
 
         $question->update($data);
 
@@ -147,5 +157,27 @@ class QuestionController extends Controller
         $question->delete();
 
         return $this->redirectAfter($module, request(), 'admin.modules.questions.index', 'Question deleted.');
+    }
+
+    private function prepareNotes($input): ?array
+    {
+        if (!is_array($input)) {
+            return null;
+        }
+
+        $prepared = [];
+
+        foreach (['core_concept', 'context', 'examples'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                continue;
+            }
+
+            $value = trim((string) $input[$key]);
+            if ($value !== '') {
+                $prepared[$key] = $value;
+            }
+        }
+
+        return $prepared ?: null;
     }
 }

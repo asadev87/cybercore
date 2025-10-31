@@ -29,6 +29,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'account_type' => ['required', 'in:user,lecturer'],
         ];
     }
 
@@ -46,6 +47,18 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        $accountType = $this->input('account_type');
+        $user = Auth::user();
+
+        if ($accountType === 'lecturer' && ! $user?->hasRole('lecturer')) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('Only approved lecturers can use the lecturer sign in.'),
             ]);
         }
 

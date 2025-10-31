@@ -56,10 +56,12 @@ class PerformanceController extends Controller
         $modules = Module::where('is_active', true)->orderBy('title')->get();
         $progress = UserProgress::where('user_id', $userId)->pluck('percent_complete','module_id');
 
+        $totalAttempts = $attempts->count();
+
         return view('performance.index', compact(
             'weeklyLabels','weeklyAvg','weeklyCount',
             'monthlyLabels','monthlyAvg','monthlyCount',
-            'recent','modules','progress'
+            'recent','modules','progress','totalAttempts'
         ));
     }
 }

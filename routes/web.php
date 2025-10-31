@@ -20,6 +20,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\BadgesController;
 use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\NoteFeedbackController;
 
 
 Route::get('/', function () {
@@ -75,6 +76,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified'])->group(f
 //Users
 Route::middleware(['auth','verified'])->group(function () {
     Route::get('/learn', [LearnController::class, 'index'])->name('learn.index');
+    Route::post('/notes/feedback', [NoteFeedbackController::class, 'store'])->name('notes.feedback.store');
 
     // Start (or resume) a quiz attempt for a module
     Route::post('/quiz/{module}/start', [QuizController::class, 'start'])->name('quiz.start');

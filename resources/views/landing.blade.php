@@ -13,7 +13,8 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-background text-foreground antialiased">
-<div class="flex min-h-screen flex-col">
+<div class="gradient-glow pointer-events-none fixed inset-0 z-0"></div>
+<div class="flex min-h-screen flex-col relative z-10">
   <header
     x-data="(() => { const storageKey = 'cybercore-theme'; const prefersDark = window.matchMedia('(prefers-color-scheme: dark)'); let stored = null; try { stored = localStorage.getItem(storageKey); } catch (error) {} const applyTheme = value => { document.documentElement.classList.toggle('dark', value === 'dark'); document.documentElement.dataset.theme = value; }; const initial = stored ?? (prefersDark.matches ? 'dark' : 'light'); applyTheme(initial); prefersDark.addEventListener?.('change', event => { try { if (!localStorage.getItem(storageKey)) { const nextTheme = event.matches ? 'dark' : 'light'; applyTheme(nextTheme); } } catch (error) { const nextTheme = event.matches ? 'dark' : 'light'; applyTheme(nextTheme); } }); return { open: false, scrolled: false, theme: initial, toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; try { localStorage.setItem(storageKey, this.theme); } catch (error) {} applyTheme(this.theme); } }; })()"
     x-init="scrolled = window.scrollY > 12; window.addEventListener('scroll', () => scrolled = window.scrollY > 12);"
@@ -32,7 +33,7 @@
       <nav class="hidden items-center gap-8 text-sm font-medium text-muted-foreground dark:text-white/70 lg:flex">
         <a href="#how" class="transition hover:text-foreground dark:text-white">How it works</a>
         <a href="#topics" class="transition hover:text-foreground dark:text-white">Topics</a>
-        <a href="#security" class="transition hover:text-foreground dark:text-white">Security</a>
+        <a href="#lecturer" class="transition hover:text-foreground dark:text-white">Lecturers</a>
         <a href="#stories" class="transition hover:text-foreground dark:text-white">Stories</a>
       </nav>
 
@@ -88,7 +89,7 @@
       <nav class="flex flex-col gap-4 text-sm text-muted-foreground dark:text-white/70">
         <a href="#how" class="transition hover:text-foreground dark:text-white" @click="open = false">How it works</a>
         <a href="#topics" class="transition hover:text-foreground dark:text-white" @click="open = false">Topics</a>
-        <a href="#security" class="transition hover:text-foreground dark:text-white" @click="open = false">Security</a>
+        <a href="#lecturer" class="transition hover:text-foreground dark:text-white" @click="open = false">Lecturers</a>
         <a href="#stories" class="transition hover:text-foreground dark:text-white" @click="open = false">Stories</a>
       </nav>
       <div class="mt-6 flex flex-col gap-3">
@@ -117,171 +118,124 @@
 
   <main class="flex-1">
     {{-- Hero --}}
-    <section id="hero" class="relative overflow-hidden">
-      <div class="absolute inset-0 -z-10 sera-hero-bg animate-hero-gradient" aria-hidden="true"></div>
-      <div class="absolute -left-40 top-1/4 h-72 w-72 rounded-full bg-primary/20 blur-3xl"></div>
-      <div class="absolute -right-24 top-10 h-64 w-64 rounded-full bg-accent/25 blur-3xl"></div>
-      <div class="absolute bottom-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-primary/10 blur-[180px]"></div>
-
-      <div class="container grid gap-16 py-20 lg:grid-cols-[1fr,minmax(0,0.85fr)] lg:py-28">
-        <div class="relative z-10 space-y-10">
-          <div class="inline-flex items-center gap-3 rounded-large border border-default-200/70 bg-content1/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-default-500 shadow-small backdrop-blur-sm dark:border-default-100/40 dark:text-default-400">
-            <span class="h-2 w-2 rounded-full bg-primary shadow-[0_0_0_3px_rgba(37,99,235,0.2)]"></span>
-            Empowering Cybersecurity Knowledge
+    @php
+      $activeLearners = \App\Models\User::whereDoesntHave('roles', function ($query) {
+        $query->whereIn('name', ['admin', 'lecturer']);
+      })->count();
+      $activeModules = \App\Models\Module::where('is_active', true)->count();
+      $assessmentCount = \App\Models\QuizAttempt::count();
+    @endphp
+    <section id="hero" class="py-20">
+      <div class="container grid gap-12 lg:grid-cols-2 lg:items-center">
+        <div class="space-y-8">
+          <p class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+            Empowering cybersecurity knowledge
+          </p>
+          <div class="space-y-5">
+            <h1 class="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">Build confident cyber habits for every learner.</h1>
+            <p class="max-w-xl text-base text-muted-foreground dark:text-white/70">CyberCore turns complex security topics into short, outcomes-focused lessons so your cohort can stay safe without feeling overwhelmed.</p>
           </div>
-
-          <div class="relative overflow-hidden rounded-large border border-default-200/80 bg-content1/90 p-8 shadow-large backdrop-blur-xl dark:border-default-100/40 dark:bg-content1/70">
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/20"></div>
-            <div class="relative flex flex-col gap-8">
-              <div class="space-y-5">
-                <h1 class="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-                  Elevate your cyber instincts in weeks, not semesters.
-                </h1>
-                <p class="max-w-xl text-base text-default-600 dark:text-default-400">
-                  Short, visual lessons and hands-on labs help students build real-world cyber habits—fast, focused, and distraction-free.
-                </p>
-              </div>
-
-              <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 rounded-large border border-primary/60 bg-gradient-to-r from-primary/90 via-accent to-primary px-6 py-3 text-sm font-semibold text-white shadow-large transition hover:shadow-glow">
-                  Get started free
-                  <span aria-hidden="true" class="text-base">→</span>
-                </a>
-                <a href="{{ route('login') }}" class="inline-flex items-center justify-center gap-2 rounded-large border border-default-200/80 bg-content2 px-6 py-3 text-sm font-semibold text-default-700 transition hover:border-default-300 hover:bg-content3 dark:border-default-100/40 dark:bg-content1/60 dark:text-default-200">
-                  I already have an account
-                </a>
-              </div>
-
-              <dl class="grid gap-4 sm:grid-cols-3">
-                <div class="rounded-large border border-default-200/70 bg-content2/80 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
-                  <dt class="text-xs font-semibold uppercase tracking-[0.32em]">Active learners</dt>
-                  <dd class="mt-3 text-2xl font-semibold text-foreground">8,200+</dd>
-                </div>
-                <div class="rounded-large border border-default-200/70 bg-content2/80 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
-                  <dt class="text-xs font-semibold uppercase tracking-[0.32em]">Modules shipped</dt>
-                  <dd class="mt-3 text-2xl font-semibold text-foreground">45 curated</dd>
-                </div>
-                <div class="rounded-large border border-default-200/70 bg-content2/80 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
-                  <dt class="text-xs font-semibold uppercase tracking-[0.32em]">Avg. completion</dt>
-                  <dd class="mt-3 text-2xl font-semibold text-foreground">92%</dd>
-                </div>
-              </dl>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href="{{ route('register') }}" class="sera-btn-primary w-full justify-center sm:w-auto">
+              Get started free
+            </a>
+            <a href="#topics" class="sera-btn-subtle w-full justify-center sm:w-auto">
+              Browse modules
+            </a>
+          </div>
+          <dl class="grid gap-4 sm:grid-cols-3">
+            <div class="rounded-2xl border border-border/70 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-white/10">
+              <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Active learners</dt>
+              <dd class="mt-2 text-2xl font-semibold text-foreground dark:text-white">{{ number_format($activeLearners) }}</dd>
             </div>
-          </div>
+            <div class="rounded-2xl border border-border/70 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-white/10">
+              <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Active modules</dt>
+              <dd class="mt-2 text-2xl font-semibold text-foreground dark:text-white">{{ number_format($activeModules) }}</dd>
+            </div>
+            <div class="rounded-2xl border border-border/70 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-white/10">
+              <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Assessments taken</dt>
+              <dd class="mt-2 text-2xl font-semibold text-foreground dark:text-white">{{ number_format($assessmentCount) }}</dd>
+            </div>
+          </dl>
         </div>
-
-        <div class="relative isolate flex h-full items-center justify-center">
-          <div class="absolute inset-6 rounded-[3rem] bg-gradient-to-br from-primary/18 via-accent/14 to-primary/10 blur-3xl" aria-hidden="true"></div>
-          <div class="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-default-200/70 bg-content1/95 p-8 shadow-large backdrop-blur-3xl dark:border-default-100/30 dark:bg-content1/60">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-default-500 dark:text-default-400">Live module</p>
-                <p class="mt-3 text-lg font-semibold text-foreground">Threat Detection 101</p>
-              </div>
-              <span class="inline-flex items-center gap-1 rounded-full border border-success/50 bg-success/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-success">
-                <span class="h-2 w-2 rounded-full bg-success"></span>
-                In progress
-              </span>
-            </div>
-
-            <div class="mt-6 space-y-4">
-              <div>
-                <p class="text-sm font-medium text-default-600 dark:text-default-400">Progress</p>
-                <div class="mt-2 h-2 rounded-full bg-content2 dark:bg-content2/40">
-                  <div class="h-2 w-3/4 rounded-full bg-gradient-to-r from-primary via-accent to-primary"></div>
-                </div>
-              </div>
-
-              <div class="grid gap-4 sm:grid-cols-2">
-                <div class="rounded-large border border-default-200/70 bg-content2/90 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
-                  <p class="text-xs font-semibold uppercase tracking-[0.35em]">Next lesson</p>
-                  <p class="mt-2 text-sm font-medium text-foreground">Phishing simulation drill</p>
-                  <p class="mt-1 text-xs text-default-500 dark:text-default-400">Build safe-inbox instincts with live decoys and instant coaching.</p>
-                </div>
-                <div class="rounded-large border border-default-200/70 bg-content2/90 p-4 text-default-600 shadow-medium dark:border-default-100/30 dark:bg-content2/40 dark:text-default-300">
-                  <p class="text-xs font-semibold uppercase tracking-[0.35em]">Team readiness score</p>
-                  <p class="mt-2 text-sm font-medium text-foreground">SOC 2–ready reports</p>
-                  <p class="mt-1 text-xs text-default-500 dark:text-default-400">Exportable evidence for audits and leadership updates.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-6 rounded-large border border-default-200/60 bg-content2/80 p-4 text-xs text-default-500 shadow-medium dark:border-default-100/30 dark:bg-content2/30 dark:text-default-400">
-              Works on any device • Keyboard-friendly navigation • Privacy-first analytics
-            </div>
-          </div>
+        <div class="rounded-3xl border border-border/70 bg-white/80 p-8 shadow-sm dark:border-white/10 dark:bg-white/10">
+          <h2 class="text-2xl font-semibold text-foreground dark:text-white">A focused learning experience</h2>
+          <p class="mt-3 text-sm text-muted-foreground dark:text-white/70">Each pathway blends concise explanations, quick activities, and reflection prompts so learners always know what to do next.</p>
+          <ul class="mt-6 space-y-3 text-sm text-muted-foreground dark:text-white/70">
+            <li class="flex items-start gap-2">
+              <span class="mt-1 h-2 w-2 rounded-full bg-sky-400"></span>
+              Short modules designed to fit into busy timetables.
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
+              Practical walkthroughs that translate into real classroom examples.
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="mt-1 h-2 w-2 rounded-full bg-blue-400"></span>
+              Instant feedback so learners can celebrate progress right away.
+            </li>
+          </ul>
+          <p class="mt-6 text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60"></p>
         </div>
       </div>
     </section>
 
     {{-- How it works --}}
-    <section id="how" class="relative overflow-hidden py-20">
-      <div class="absolute inset-0 -z-10 bg-[linear-gradient(140deg,_rgba(12,74,110,0.35),_rgba(8,47,73,0.6))]"></div>
-      <div class="container">
+    <section id="how" class="py-20">
+      <div class="container space-y-12">
         <div class="mx-auto max-w-2xl text-center">
-          <p class="sera-pill mx-auto">Guided Journey</p>
-          <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">How CyberCore works</h2>
-          <p class="mt-3 text-base text-muted-foreground dark:text-white/70">CyberCore connects your human risk goals to everyday practice—onboard fast, immerse every learner, and prove the progress on demand.</p>
+          <p class="sera-pill mx-auto">Benefits &amp; outcomes</p>
+          <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">What your community gains</h2>
+          <p class="mt-3 text-base text-muted-foreground dark:text-white/70">CyberCore keeps focus on the momentum learners, lecturers, and programme leads feel from the very first module.</p>
         </div>
-
-        <div class="mt-12 grid gap-6 md:grid-cols-3">
-          <article class="sera-card">
-            <div class="flex h-full flex-col gap-4">
-              <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">1</div>
-              <h3 class="text-xl font-semibold">Baseline the risk</h3>
-              <p class="text-sm text-muted-foreground dark:text-white/70">Role-based onboarding and quick pulse checks reveal the behaviours that need attention before training even begins.</p>
-            </div>
+        <div class="grid gap-6 md:grid-cols-3">
+          <article class="rounded-3xl border border-border/60 bg-white/80 p-6 shadow-sm dark:border-white/10 dark:bg-white/10">
+            <h3 class="text-xl font-semibold text-foreground dark:text-white">Faster awareness gains</h3>
+            <p class="mt-2 text-sm text-muted-foreground dark:text-white/70">Micro lessons and recap quizzes deliver quick wins that reinforce safer digital behaviour from day one.</p>
           </article>
-          <article class="sera-card">
-            <div class="flex h-full flex-col gap-4">
-              <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">2</div>
-              <h3 class="text-xl font-semibold">Guide every learner</h3>
-              <p class="text-sm text-muted-foreground dark:text-white/70">Micro-lessons, live simulations, and automated nudges keep teams engaged without adding admin overhead.</p>
-            </div>
+          <article class="rounded-3xl border border-border/60 bg-white/80 p-6 shadow-sm dark:border-white/10 dark:bg-white/10">
+            <h3 class="text-xl font-semibold text-foreground dark:text-white">Confident classrooms</h3>
+            <p class="mt-2 text-sm text-muted-foreground dark:text-white/70">Facilitator notes and ready prompts make it simple for lecturers to guide discussions without extra prep.</p>
           </article>
-          <article class="sera-card">
-            <div class="flex h-full flex-col gap-4">
-              <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/40 to-blue-500/60 text-lg font-bold">3</div>
-              <h3 class="text-xl font-semibold">Measure the impact</h3>
-              <p class="text-sm text-muted-foreground dark:text-white/70">Compliance-ready dashboards, executive summaries, and auto-issued certificates show momentum the moment it happens.</p>
-            </div>
+          <article class="rounded-3xl border border-border/60 bg-white/80 p-6 shadow-sm dark:border-white/10 dark:bg-white/10">
+            <h3 class="text-xl font-semibold text-foreground dark:text-white">Clear progress evidence</h3>
+            <p class="mt-2 text-sm text-muted-foreground dark:text-white/70">Track knowledge checks, certificates, and learner reflections so stakeholders can see impact at a glance.</p>
           </article>
         </div>
       </div>
     </section>
 
     {{-- Core topics --}}
-    <section id="topics" class="relative overflow-hidden py-20">
-      <div class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+    <section id="topics" class="py-20">
       <div class="container space-y-10">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p class="sera-pill w-fit">Curated curriculum</p>
             <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Core topics</h2>
-            <p class="mt-2 max-w-xl text-sm text-muted-foreground dark:text-white/70">Start with the essentials or let your security office assign learning paths tailored to your role.</p>
+            <p class="mt-2 max-w-xl text-sm text-muted-foreground dark:text-white/70">Explore active modules focused on the cybersecurity essentials your cohort needs.</p>
           </div>
           <a class="sera-btn" href="{{ route('register') }}">Enroll free</a>
         </div>
 
-        @php($modules = \App\Models\Module::where('is_active', true)->orderBy('title')->limit(4)->get())
-        <div class="sera-grid">
+        @php
+          $modules = \App\Models\Module::where('is_active', true)
+            ->orderBy('title')
+            ->limit(4)
+            ->get();
+        @endphp
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           @forelse($modules as $m)
-            <article class="sera-card flex h-full flex-col gap-6 p-6">
-              <div class="space-y-3">
-                <span class="inline-flex items-center gap-2 rounded-full border border-border dark:border-white/10 bg-white/80 dark:bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Module</span>
-                <h3 class="text-lg font-semibold">{{ $m->title }}</h3>
-                <p class="text-sm text-muted-foreground dark:text-white/70">{{ \Illuminate\Support\Str::limit($m->description, 110) }}</p>
-              </div>
-              <div class="mt-auto">
-                @auth
-                  <a href="{{ route('learn.start', $m) }}" class="sera-btn-primary w-full justify-center">Begin</a>
-                @else
-                  <a href="{{ route('register') }}" class="sera-btn-primary w-full justify-center">Begin</a>
-                @endauth
-              </div>
+            <article class="rounded-3xl border border-border/70 bg-white/80 p-6 shadow-sm dark:border-white/10 dark:bg-white/10">
+              <h3 class="text-lg font-semibold text-foreground dark:text-white">{{ $m->title }}</h3>
+              <p class="mt-3 text-sm text-muted-foreground dark:text-white/70">{{ \Illuminate\Support\Str::limit($m->description, 120) }}</p>
+              @auth
+                <a href="{{ route('learn.start', $m) }}" class="sera-btn-subtle mt-6 inline-flex w-full justify-center sm:w-auto">Open module</a>
+              @else
+                <a href="{{ route('register') }}" class="sera-btn-subtle mt-6 inline-flex w-full justify-center sm:w-auto">Preview module</a>
+              @endauth
             </article>
           @empty
-            <div class="sera-card col-span-full flex items-center justify-center p-10 text-sm text-muted-foreground dark:text-white/70">
+            <div class="rounded-3xl border border-border/70 bg-white/80 p-10 text-center text-sm text-muted-foreground shadow-sm dark:border-white/10 dark:bg-white/10 dark:text-white/70">
               Modules will appear here once published by Admin.
             </div>
           @endforelse
@@ -289,34 +243,22 @@
       </div>
     </section>
 
-    {{-- Security section --}}
-    <section id="security" class="relative overflow-hidden py-20">
-      <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.25),transparent_65%),radial-gradient(circle_at_bottom,_rgba(14,165,233,0.2),transparent_70%)]"></div>
-      <div class="container grid gap-12 lg:grid-cols-[1.1fr_minmax(0,0.95fr)]">
+    {{-- Lecturer section --}}
+    <section id="lecturer" class="py-20">
+      <div class="container grid gap-12 lg:grid-cols-2 lg:items-start">
         <div class="space-y-6">
-          <p class="sera-pill w-fit">Security first</p>
-          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Enterprise-grade protection with human-friendly design</h2>
-          <p class="text-base text-muted-foreground dark:text-white/70">CyberCore mirrors the defense-in-depth posture we teach. Infrastructure, data handling, and accessibility all follow strict guardrails.</p>
-          <ul class="space-y-4 text-sm text-muted-foreground dark:text-white/70">
-            <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-sky-300/40 bg-sky-500/10 text-xs font-semibold text-sky-200">01</span> SOC 2-aligned controls, with continuous monitoring and automated alerts.</li>
-            <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-sky-300/40 bg-sky-500/10 text-xs font-semibold text-sky-200">02</span> WCAG 2.2 AA tested: keyboard-first flows, focus-visible states, and transcripts for every media asset.</li>
-            <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-sky-300/40 bg-sky-500/10 text-xs font-semibold text-sky-200">03</span> Privacy by design with zero third-party trackers and region-aware data residency.</li>
-          </ul>
+          <p class="sera-pill w-fit">For lecturers</p>
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Partner with CyberCore in your classroom</h2>
+          <p class="text-base text-muted-foreground dark:text-white/70">We're welcoming lecturers who want to embed CyberCore modules into their lessons. Register today and we'll activate dedicated lecturer tools for your institution.</p>
         </div>
-        <aside class="sera-section space-y-6">
-          <h3 class="text-xl font-semibold">Learners first, always.</h3>
-          <p class="text-sm text-muted-foreground dark:text-white/70">Personalized nudges, bite-sized briefings, and shareable wins keep momentum high without blowing up calendars.</p>
-          <div class="grid gap-4 md:grid-cols-2">
-            <div class="rounded-2xl border border-border dark:border-white/10 bg-white/80 dark:bg-white/10 p-4">
-              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Pulse checks</p>
-              <p class="mt-2 text-sm">Gauge confidence before and after each lesson to chart real behavior change.</p>
-            </div>
-            <div class="rounded-2xl border border-border dark:border-white/10 bg-white/80 dark:bg-white/10 p-4">
-              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Leaderboard</p>
-              <p class="mt-2 text-sm">Friendly competition keeps teams engaged—without penalizing late starters.</p>
-            </div>
+        <aside class="space-y-6 rounded-3xl border border-border/70 bg-white/80 p-8 shadow-sm dark:border-white/10 dark:bg-white/10">
+          <h3 class="text-xl font-semibold text-foreground dark:text-white">Lecturer registration</h3>
+          <p class="text-sm text-muted-foreground dark:text-white/70">Complete the short lecturer sign-up form and you'll receive confirmation as soon as your account is approved.</p>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href="{{ route('register', ['type' => 'lecturer']) }}" class="sera-btn-primary w-full justify-center sm:flex-1">Register as lecturer</a>
+            <a href="{{ route('login', ['type' => 'lecturer']) }}" class="sera-btn-subtle w-full justify-center sm:flex-1">Lecturer sign in</a>
           </div>
-          <a href="{{ route('register') }}" class="sera-btn-primary w-full justify-center sm:w-auto">Create your free account</a>
+          <p class="text-xs text-muted-foreground dark:text-white/60">Need help? Reach us at <a href="mailto:support@cybercore.io" class="font-medium text-primary hover:text-primary/80">support@cybercore.io</a>.</p>
         </aside>
       </div>
     </section>
@@ -336,30 +278,30 @@
               <div class="h-10 w-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-500"></div>
               <div>
                 <p class="text-sm font-semibold">Amelia Rhodes</p>
-                <p class="text-xs text-muted-foreground dark:text-white/60">Director of IT Training, Horizon College</p>
+                <p class="text-xs text-muted-foreground dark:text-white/60">Director of IT Training, </p>
               </div>
             </div>
-            <p class="text-sm text-muted-foreground dark:text-white/70">“Within two weeks, completion jumped 60%. The cinematic backgrounds and animated cards from Sera UI made our people forget this was ‘mandatory’ training.”</p>
+            <p class="text-sm text-muted-foreground dark:text-white/70">“CyberCore solved our biggest hurdle: getting non-technical staff to care. We set up five tailored modules and watched completion rise from 38% to 86% in a single term. The built-in lecturer notes let us adapt lessons for classroom discussion without extra prep.”</p>
           </article>
           <article class="sera-card space-y-4">
             <div class="flex items-center gap-3">
               <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400"></div>
               <div>
                 <p class="text-sm font-semibold">Raj Patel</p>
-                <p class="text-xs text-muted-foreground dark:text-white/60">Security Enablement, Northwind Bank</p>
+                <p class="text-xs text-muted-foreground dark:text-white/60">Security Enablement Lead, </p>
               </div>
             </div>
-            <p class="text-sm text-muted-foreground dark:text-white/70">“Adaptive quizzes with progress chips give us real-time insight. The admin dashboards remain simple, yet pair perfectly with our compliance reporting.”</p>
+            <p class="text-sm text-muted-foreground dark:text-white/70">“We run quarterly simulations across 1,200 employees. CyberCore’s assessment data plugs straight into our compliance dashboards, so auditors see evidence within minutes. After the first quarter, phishing click rates dropped by 41% and we highlighted those results in our board report.”</p>
           </article>
           <article class="sera-card space-y-4">
             <div class="flex items-center gap-3">
               <div class="h-10 w-10 rounded-full bg-gradient-to-br from-fuchsia-400 to-sky-500"></div>
               <div>
                 <p class="text-sm font-semibold">Noah Bennett</p>
-                <p class="text-xs text-muted-foreground dark:text-white/60">STEM Educator, Brightside Academy</p>
+                <p class="text-xs text-muted-foreground dark:text-white/60">STEM Programme Coordinator, </p>
               </div>
             </div>
-            <p class="text-sm text-muted-foreground dark:text-white/70">“Students finally see cyber literacy as creative. The motion cards, glitch accents, and micro-animations keep them exploring far beyond the lesson plan.”</p>
+            <p class="text-sm text-muted-foreground dark:text-white/70">“Our sixth-form students were sceptical at first, but CyberCore’s bite-sized sections and real-world examples kept them talking after class. We now co-teach with a lecturer workspace, and students submit reflections that show they really understand the risks in their daily apps.”</p>
           </article>
         </div>
       </div>
@@ -374,12 +316,91 @@
         <a href="#" class="transition hover:text-foreground dark:text-white">Terms</a>
         <a href="#how" class="transition hover:text-foreground dark:text-white">How</a>
         <a href="#topics" class="transition hover:text-foreground dark:text-white">Topics</a>
-        <a href="#security" class="transition hover:text-foreground dark:text-white">Security</a>
+        <a href="#lecturer" class="transition hover:text-foreground dark:text-white">Lecturers</a>
         <a href="#stories" class="transition hover:text-foreground dark:text-white">Stories</a>
       </nav>
-    </div>
-  </footer>
 </div>
+</footer>
+</div>
+<style>
+  @keyframes glowPulse {
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: translate(-10%, -10%) scale(0.95);
+      filter: blur(140px);
+    }
+    50% {
+      opacity: 0.75;
+      transform: translate(10%, 5%) scale(1.05);
+      filter: blur(160px);
+    }
+  }
+
+  @keyframes glowDrift {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: translate(15%, 0%) scale(1);
+      filter: blur(120px);
+    }
+    40% {
+      opacity: 0.6;
+      transform: translate(-5%, 8%) scale(1.08);
+      filter: blur(140px);
+    }
+    70% {
+      opacity: 0.45;
+      transform: translate(-20%, -12%) scale(0.92);
+      filter: blur(110px);
+    }
+  }
+
+  .gradient-glow::before,
+  .gradient-glow::after {
+    content: '';
+    position: absolute;
+    border-radius: 9999px;
+    opacity: 0.55;
+    will-change: transform, opacity, filter;
+  }
+
+  .gradient-glow::before {
+    inset: -20% -35% auto -15%;
+    height: 70vw;
+    max-height: 620px;
+    background: radial-gradient(circle at center,
+      rgba(56, 189, 248, 0.35),
+      rgba(14, 165, 233, 0.15) 45%,
+      transparent 70%);
+    animation: glowPulse 22s ease-in-out infinite;
+  }
+
+  .gradient-glow::after {
+    inset: auto -25% -30% 35%;
+    height: 60vw;
+    max-height: 540px;
+    background: radial-gradient(circle at center,
+      rgba(168, 85, 247, 0.3),
+      rgba(99, 102, 241, 0.18) 40%,
+      transparent 72%);
+    animation: glowDrift 28s ease-in-out infinite;
+    animation-delay: -8s;
+  }
+
+  @media (max-width: 768px) {
+    .gradient-glow::before {
+      inset: -40% -60% auto -40%;
+      height: 120vw;
+      filter: blur(120px);
+    }
+    .gradient-glow::after {
+      inset: auto -50% -45% 10%;
+      height: 110vw;
+      filter: blur(120px);
+    }
+  }
+</style>
 </body>
 </html>
 

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Module;
 use App\Models\Question;
+use App\Models\Section;
 use Illuminate\Support\Str;
 
 class DemoQuizSeeder extends Seeder
@@ -412,6 +413,8 @@ class DemoQuizSeeder extends Seeder
     private function seedPhishingAwarenessQuestions(): void
     {
         $module = $this->ensureModule('phishing-awareness');
+        $sections = $this->ensurePhishingAwarenessSections($module);
+
         $questions = [
             [
                 'type' => 'mcq',
@@ -420,6 +423,7 @@ class DemoQuizSeeder extends Seeder
                 'answer' => ['Payroll Update - Action Required in 30 Minutes'],
                 'explanation' => 'Urgent payroll requests are a common lure; verify through trusted channels before acting.',
                 'difficulty' => 2,
+                'section' => 'pa-spot-hooks',
             ],
             [
                 'type' => 'truefalse',
@@ -428,6 +432,7 @@ class DemoQuizSeeder extends Seeder
                 'answer' => ['true'],
                 'explanation' => 'Legitimate services direct you to secure portals; attackers often shortcut that process.',
                 'difficulty' => 1,
+                'section' => 'pa-spot-hooks',
             ],
             [
                 'type' => 'mcq',
@@ -436,6 +441,7 @@ class DemoQuizSeeder extends Seeder
                 'answer' => ['Call the executive using a known number to confirm'],
                 'explanation' => 'Always verify high-risk requests via trusted contact information, not the suspicious message.',
                 'difficulty' => 2,
+                'section' => 'pa-verify-requests',
             ],
             [
                 'type' => 'fib',
@@ -444,6 +450,7 @@ class DemoQuizSeeder extends Seeder
                 'answer' => ['return-path', 'return path'],
                 'explanation' => 'The return-path exposes where replies would really go and often differs in forged emails.',
                 'difficulty' => 3,
+                'section' => 'pa-technical-checks',
             ],
             [
                 'type' => 'mcq',
@@ -452,6 +459,30 @@ class DemoQuizSeeder extends Seeder
                 'answer' => ['Hover over the link to read the full URL'],
                 'explanation' => 'Hovering lets you inspect the destination without visiting it.',
                 'difficulty' => 1,
+                'section' => 'pa-technical-checks',
+            ],
+            [
+                'type' => 'truefalse',
+                'stem' => 'Reporting a suspected phishing email helps the security team block similar messages for others.',
+                'options' => null,
+                'answer' => ['true'],
+                'explanation' => 'Timely reporting enables rapid blocking rules and user alerts that protect the wider organization.',
+                'difficulty' => 1,
+                'section' => 'pa-report-and-follow-up',
+            ],
+            [
+                'type' => 'mcq',
+                'stem' => 'Which follow-up action is most appropriate after you report a phishing attempt?',
+                'options' => [
+                    'Delete the message and forget it happened',
+                    'Forward the email to your personal account for a record',
+                    'Wait for confirmation and watch for similar messages in your inbox',
+                    'Reply to the attacker requesting removal from their list'
+                ],
+                'answer' => ['Wait for confirmation and watch for similar messages in your inbox'],
+                'explanation' => 'After reporting, stay alert for related lures and watch for security team updates or broader campaigns.',
+                'difficulty' => 2,
+                'section' => 'pa-report-and-follow-up',
             ],
         ];
 
@@ -460,16 +491,65 @@ class DemoQuizSeeder extends Seeder
                 ? array_values($q['options'] ?? $q['choices'] ?? [])
                 : null;
 
-            $payload = array_merge($q, [
-                'choices' => $choices,
-                'options' => $choices,
-            ]);
+            $section = $sections[$q['section']] ?? null;
+
+            $payload = [
+                'type'        => $q['type'],
+                'choices'     => $choices,
+                'options'     => $choices,
+                'answer'      => $q['answer'],
+                'explanation' => $q['explanation'] ?? '',
+                'difficulty'  => $q['difficulty'] ?? 2,
+                'is_active'   => true,
+                'section_id'  => $section?->id,
+            ];
 
             Question::updateOrCreate(
                 ['module_id' => $module->id, 'stem' => $q['stem']],
                 $payload
             );
         }
+    }
+
+    private function ensurePhishingAwarenessSections(Module $module): array
+    {
+        $definitions = [
+            'pa-spot-hooks' => [
+                'title' => 'Spot Social Engineering Hooks',
+                'description' => 'Analyze subject lines, tone, and emotional triggers that phishers use to create urgency.',
+                'order' => 1,
+            ],
+            'pa-verify-requests' => [
+                'title' => 'Verify High-Risk Requests',
+                'description' => 'Practice verifying unexpected requests, payments, and credential prompts through trusted channels.',
+                'order' => 2,
+            ],
+            'pa-technical-checks' => [
+                'title' => 'Run Technical Checks',
+                'description' => 'Inspect headers, URLs, and sender details to confirm when a message is forged.',
+                'order' => 3,
+            ],
+            'pa-report-and-follow-up' => [
+                'title' => 'Report and Follow Up',
+                'description' => 'Know how to escalate suspicious messages and monitor for related campaigns afterward.',
+                'order' => 4,
+            ],
+        ];
+
+        $sections = [];
+        foreach ($definitions as $slug => $data) {
+            $sections[$slug] = Section::updateOrCreate(
+                ['module_id' => $module->id, 'slug' => $slug],
+                [
+                    'title' => $data['title'],
+                    'description' => $data['description'],
+                    'order' => $data['order'],
+                    'is_active' => true,
+                ]
+            );
+        }
+
+        return $sections;
     }
 
     private function seedStrongPasswordCourseQuestions(): void

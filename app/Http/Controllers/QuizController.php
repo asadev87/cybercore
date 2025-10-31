@@ -167,7 +167,6 @@ $score   = (int) round(($correct / $total) * 100);
 DB::transaction(function () use ($attempt, $score) {
     $attempt->score        = $score;
     $attempt->completed_at = now();
-    $attempt->duration_sec = now()->diffInSeconds($attempt->started_at);
     $attempt->save();
 
     // update progress (simple: completed if pass)
@@ -249,3 +248,4 @@ return redirect()->route('quiz.result', $attempt);
         $progress->save();
     }
 }
+
