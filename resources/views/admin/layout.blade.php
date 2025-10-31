@@ -51,18 +51,18 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3a7.5 7.5 0 009.79 9.79z" />
           </svg>
         </button>
-        <a class="btn btn-outline text-sm" href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <a class="btn btn-outline text-base" href="{{ route('admin.dashboard') }}">Dashboard</a>
         @can('view-reports')
-          <a class="btn btn-outline text-sm" href="{{ route('admin.reports.index') }}">Reports</a>
+          <a class="btn btn-outline text-base" href="{{ route('admin.reports.index') }}">Reports</a>
         @endcan
-        <a class="btn btn-outline text-sm" href="{{ url('/') }}">Landing</a>
-        <a class="btn btn-muted text-sm" href="{{ route('dashboard') }}">Learner view</a>
+        <a class="btn btn-outline text-base" href="{{ url('/') }}">Landing</a>
+        <a class="btn btn-muted text-base" href="{{ route('dashboard') }}">Learner view</a>
       </div>
     </div>
   </header>
 
   <main class="flex-1 py-10">
-    <div class="container space-y-8">
+    <div class="container space-y-8 text-[15px] sm:text-base md:text-[17px] leading-relaxed">
       @hasSection('page_header')
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           @yield('page_header')

@@ -9,9 +9,9 @@
       <h1 class="text-3xl font-semibold tracking-tight">Welcome back, {{ auth()->user()->name ?? 'Admin' }}</h1>
       <p class="max-w-2xl text-sm text-muted-foreground">Monitor learner momentum, curate content, and keep your course catalogue fresh with the tools below.</p>
     </div>
-    <div class="flex flex-wrap items-center gap-2 sm:justify-end">
-      <a href="{{ route('admin.dashboard') }}" class="btn btn-muted text-sm">Admin dashboard</a>
-      <a href="{{ url('/') }}" class="btn btn-outline text-sm">View landing page</a>
+    <div class="flex flex-wrap items-center gap-2 sm:justify-end text-base">
+      <a href="{{ route('admin.dashboard') }}" class="btn btn-muted">Admin dashboard</a>
+      <a href="{{ url('/') }}" class="btn btn-outline">View landing page</a>
     </div>
   </header>
 

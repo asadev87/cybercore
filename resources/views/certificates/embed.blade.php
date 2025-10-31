@@ -2,90 +2,89 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="relative isolate overflow-hidden py-16">
-  <div class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-950 via-slate-900/90 to-slate-950 dark:from-slate-950 dark:via-slate-950/95 dark:to-slate-950"></div>
-  <div class="absolute -left-32 top-10 h-72 w-72 rounded-full bg-primary/15 blur-3xl"></div>
-  <div class="absolute -right-20 bottom-16 h-64 w-64 rounded-full bg-accent/15 blur-3xl"></div>
-
+<section class="bg-white py-16 text-slate-900">
   @php
     $logoExists = file_exists(public_path('images/logo.png'));
-    $signatureExists = file_exists(public_path('images/signature.png'));
+    $signaturePath = public_path('images/signature.png');
+    $signatureExists = file_exists($signaturePath);
+    $signatureUrl = $signatureExists ? asset('images/signature.png').'?v='.filemtime($signaturePath) : null;
   @endphp
 
   <div class="container">
     <div class="mx-auto max-w-4xl">
-      <div class="sera-card p-10 lg:p-14">
+      <div class="rounded-3xl border border-blue-100 bg-white p-10 shadow-[0_30px_60px_-35px_rgba(37,99,235,0.35)] lg:p-14" style="color:#0f172a;">
         <div class="flex flex-col items-center gap-6 text-center">
           @if($logoExists)
-            <img src="{{ asset('images/logo.png') }}" alt="Organization Logo" class="h-16 w-auto">
+            <img src="{{ asset('images/logo.png') }}" alt="Organization Logo" class="h-16 w-auto drop-shadow-sm">
           @endif
 
-          <div class="rounded-3xl border border-border/60 bg-secondary px-5 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground dark:border-white/15 dark:bg-white/10 dark:text-white/80">Certificate of achievement</div>
+          <div class="rounded-full border border-blue-300 bg-blue-50 px-6 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-blue-700">Certificate of Achievement</div>
 
-          <div class="flex items-center gap-4 text-sm text-muted-foreground">
-            <div class="h-px flex-1 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+          <div class="flex items-center gap-4 text-sm text-slate-600">
+            <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-300/70 to-transparent"></div>
             <span>Issued {{ $certificate->created_at->format('F j, Y') }}</span>
-            <div class="h-px flex-1 bg-gradient-to-l from-transparent via-white/30 to-transparent"></div>
+            <div class="h-px flex-1 bg-gradient-to-l from-transparent via-blue-300/70 to-transparent"></div>
           </div>
 
           <div class="space-y-3">
-            <p class="text-sm uppercase tracking-[0.35em] text-muted-foreground">This certifies that</p>
-            <h1 class="text-4xl font-semibold tracking-tight text-foreground dark:text-white">{{ $certificate->user->name }}</h1>
+            <p class="text-sm uppercase tracking-[0.35em] text-slate-600">This certifies that</p>
+            <h1 class="text-4xl font-semibold tracking-tight text-slate-900">{{ $certificate->user->name }}</h1>
           </div>
 
-          <div class="space-y-2 text-sm text-muted-foreground">
+          <div class="space-y-2 text-sm text-slate-600">
             <p>has successfully completed the module</p>
-            <p class="text-2xl font-semibold text-foreground dark:text-white">{{ $certificate->module->title }}</p>
+            <p class="text-2xl font-semibold text-slate-900">{{ $certificate->module->title }}</p>
           </div>
 
-          <div class="rounded-2xl border border-border/60 bg-secondary px-4 py-2 text-sm text-muted-foreground dark:border-white/10 dark:bg-white/10 dark:text-white/80">
+          <div class="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm text-slate-900">
             @php($attempt = $certificate->attempt)
             @if($attempt && isset($attempt->score))
-              Final score: <span class="font-semibold text-white">{{ $attempt->score }}%</span>
+              Final score: <span class="font-semibold">{{ $attempt->score }}%</span>
             @else
               Score not recorded for this attempt
             @endif
           </div>
 
-          <div class="grid gap-4 text-left text-sm text-muted-foreground sm:grid-cols-2">
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-4 dark:bg-white/10">
-              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Learner ID</p>
-              <p class="mt-2 font-medium text-foreground dark:text-white">{{ $certificate->user->email }}</p>
+          <div class="grid gap-4 text-left text-sm text-slate-700 sm:grid-cols-2">
+            <div class="rounded-2xl border border-blue-200 bg-white p-4 shadow-sm">
+              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-blue-700">Learner ID</p>
+              <p class="mt-2 font-medium text-slate-900">{{ $certificate->user->email }}</p>
             </div>
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-4 dark:bg-white/10">
-              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Certificate No.</p>
-              <p class="mt-2 font-medium text-foreground dark:text-white">{{ $certificate->serial }}</p>
+            <div class="rounded-2xl border border-blue-200 bg-white p-4 shadow-sm">
+              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-blue-700">Certificate No.</p>
+              <p class="mt-2 font-medium text-slate-900">{{ $certificate->serial }}</p>
             </div>
           </div>
 
-          <div class="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex flex-col items-center gap-2 text-sm text-muted-foreground">
-              <div class="h-14 w-36 border-b border-border dark:border-white/40"></div>
-              @if($signatureExists)
-                <img src="{{ asset('images/signature.png') }}" alt="Authorized Signature" class="h-12 w-auto">
-              @else
-                <span class="text-xs uppercase tracking-[0.3em]">Authorized Signature</span>
-              @endif
-              <p class="tracking-[0.28em] uppercase">Authorized Signatory</p>
+          <div class="mt-10 flex flex-col gap-8 text-slate-700 sm:flex-row sm:items-end sm:justify-between">
+            <div class="flex flex-col items-center gap-3 text-sm text-center">
+              <div class="flex h-24 w-64 items-center justify-center">
+                @if($signatureExists)
+                  <img src="{{ $signatureUrl }}" alt="Executive Signature" class="h-20 w-auto drop-shadow-md">
+                @else
+                  <span class="text-xs uppercase tracking-[0.3em] text-blue-700">Executive Signature</span>
+                @endif
+              </div>
+              <div class="w-48 border-b-2 border-slate-900"></div>
+              <p class="tracking-[0.28em] uppercase text-slate-900">Executive Manager</p>
             </div>
-            <div class="flex flex-col items-center gap-2 text-sm text-muted-foreground">
-              <div class="h-14 w-36 border-b border-border dark:border-white/40"></div>
-              <p class="tracking-[0.28em] uppercase">CyberCore</p>
+
+            <div class="flex flex-col items-center gap-1 text-center text-xs uppercase tracking-[0.28em] text-blue-700">
+              <span>Verified</span>
+              <span>CyberCore</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm text-muted-foreground">
-        <div>Verified by CyberCore. Keep your certificate number for record verification.</div>
-        <div class="flex flex-wrap items-center gap-3">
-          <a href="{{ route('certificates.download', $certificate) }}" class="sera-btn-primary text-xs">Download PDF</a>
-          <a href="{{ route('certificates.view', $certificate) }}" class="sera-btn text-xs">Open share view</a>
+      <div class="mt-6 flex flex-col gap-4 text-sm text-slate-700 sm:flex-row sm:items-center sm:justify-between">
+        <div>Congratulations! {{ $certificate->user->name }} has successfully completed the module {{ $certificate->module->title }}.</div>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a href="{{ route('certificates.download', $certificate) }}" class="sera-btn-primary bg-blue-500 text-xs text-black hover:bg-blue-400 hover:text-black sm:w-auto">Download PDF</a>
+          <a href="{{ route('certificates.view', $certificate) }}" class="sera-btn border border-slate-900 bg-white text-xs text-slate-900 hover:bg-slate-100 hover:border-slate-900 dark:border-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 dark:hover:border-white sm:w-auto">Open share view</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 @endsection
-
-
