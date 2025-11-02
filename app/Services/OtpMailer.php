@@ -1,27 +1,41 @@
-<?
+<?php
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
+use PHPMailer\PHPMailer\Exception as MailException;
 use PHPMailer\PHPMailer\PHPMailer;
 
-class OtpMailer {
-    public function send(string $toEmail, string $toName, string $code): bool {
+class OtpMailer
+{
+    public function send(string $toEmail, string $toName, string $code): void
+    {
         $mail = new PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = env('OTP_SMTP_HOST');
-        $mail->SMTPAuth = true;
-        $mail->Username = env('OTP_SMTP_USERNAME');
-        $mail->Password = env('OTP_SMTP_PASSWORD');
-        $mail->SMTPSecure = env('OTP_SMTP_ENCRYPTION', PHPMailer::ENCRYPTION_STARTTLS);
-        $mail->Port = (int) env('OTP_SMTP_PORT', 587);
 
-        $mail->setFrom(env('OTP_FROM_ADDRESS'), env('OTP_FROM_NAME','CyberCore'));
-        $mail->addAddress($toEmail, $toName);
+        try {
+            $mail->isSMTP();
+            $mail->Host = env('OTP_SMTP_HOST');
+            $mail->SMTPAuth = true;
+            $mail->Username = env('OTP_SMTP_USERNAME');
+            $mail->Password = env('OTP_SMTP_PASSWORD');
+            $mail->SMTPSecure = env('OTP_SMTP_ENCRYPTION', PHPMailer::ENCRYPTION_STARTTLS);
+            $mail->Port = (int) env('OTP_SMTP_PORT', 587);
 
-        $mail->isHTML(true);
-        $mail->Subject = 'Your CyberCore verification code';
-        $mail->Body = view('emails.verify-otp', ['code'=>$code])->render();
+            $mail->setFrom(env('OTP_FROM_ADDRESS'), env('OTP_FROM_NAME', 'CyberCore'));
+            $mail->addAddress($toEmail, $toName);
 
-        return $mail->send();
+            $mail->isHTML(true);
+            $mail->Subject = 'Your CyberCore verification code';
+            $mail->Body = view('emails.verify-otp', ['code' => $code])->render();
+
+            $mail->send();
+        } catch (MailException $exception) {
+            Log::error('Failed to send OTP email', [
+                'to' => $toEmail,
+                'exception' => $exception,
+            ]);
+
+            throw $exception;
+        }
     }
 }

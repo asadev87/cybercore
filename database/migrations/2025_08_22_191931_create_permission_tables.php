@@ -111,16 +111,6 @@ return new class extends Migration
             $table->primary([$pivotPermission, $pivotRole], 'role_has_permissions_permission_id_role_id_primary');
         });
 
-        Schema::create('email_otps', function (Blueprint $table) {
-      $table->id();
-      $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-      $table->string('code_hash');          // store Hash::make(OTP)
-      $table->timestamp('expires_at');      // e.g., now()+10 minutes
-      $table->unsignedTinyInteger('attempts')->default(0);
-      $table->timestamp('last_sent_at')->nullable();
-      $table->timestamps();
-        });
-
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
@@ -132,8 +122,6 @@ return new class extends Migration
     public function down(): void
     {
         $tableNames = config('permission.table_names');
-        Schema::dropIfExists('email_otps');
-
         if (empty($tableNames)) {
             throw new \Exception('Error: config/permission.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.');
         }

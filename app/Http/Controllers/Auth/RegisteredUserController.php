@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\EmailOtpService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
@@ -16,6 +16,10 @@ use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(private readonly EmailOtpService $otpService)
+    {
+    }
+
     /**
      * Display the registration view.
      */
@@ -53,9 +57,15 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        $this->otpService->begin(
+            $request,
+            $user,
+            EmailOtpService::CONTEXT_SIGNUP,
+            route('dashboard', absolute: false),
+            'email'
+        );
 
-        return redirect(route('dashboard', absolute: false));
-        return redirect()->route('verification.otp.notice');
+        return redirect()->route('verification.otp.notice')
+            ->with('status', __('We sent a verification code to your email.'));
     }
 }

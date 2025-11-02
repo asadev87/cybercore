@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Auth\EmailOtpController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -33,6 +34,17 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    Route::get('email/verify-otp', [EmailOtpController::class, 'showVerifyForm'])
+        ->name('verification.otp.notice');
+
+    Route::post('email/otp/send', [EmailOtpController::class, 'send'])
+        ->middleware('throttle:6,1')
+        ->name('verification.otp.send');
+
+    Route::post('email/otp/verify', [EmailOtpController::class, 'verify'])
+        ->middleware('throttle:6,1')
+        ->name('verification.otp.verify');
 });
 
 Route::middleware('auth')->group(function () {
@@ -56,14 +68,4 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
-});
-
-Route::middleware(['auth'])->group(function () {
-    Route::post('/email/otp/send',   [EmailOtpController::class, 'send'])
-        ->middleware('throttle:otp')
-        ->name('verification.otp.send');
-
-    Route::post('/email/otp/verify', [EmailOtpController::class, 'verify'])
-        ->middleware('throttle:otp')
-        ->name('verification.otp.verify');
 });

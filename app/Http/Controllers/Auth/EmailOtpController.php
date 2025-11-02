@@ -3,49 +3,69 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\EmailOtpService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class EmailOtpController extends Controller
 {
-    public function showVerifyForm()
+    public function __construct(private readonly EmailOtpService $service)
     {
-        // You can swap to a Blade view later: return view('auth.verify-otp');
-        return response('<form method="POST" action="/email/otp/verify">'.csrf_field().'
-            <input name="otp" placeholder="Enter OTP">
-            <button>Verify</button>
-        </form>');
     }
 
-    public function send(Request $request)
+    public function showVerifyForm(Request $request): RedirectResponse|View
     {
-        $request->validate(['email' => 'required|email']);
-        // simple throttle example – you already defined rate limiters in routes/web.php
-        if (RateLimiter::tooManyAttempts('otp:'.$request->ip(), 5)) {
-            throw ValidationException::withMessages(['email' => 'Too many attempts, try again later.']);
+        try {
+            $pending = $this->service->pending($request);
+        } catch (ValidationException) {
+            return redirect()->route('login');
         }
 
-        $otp = random_int(100000, 999999);
-        $request->session()->put('email_otp', $otp);
-
-        Mail::raw("Your CyberCore OTP is: {$otp}", function ($m) use ($request) {
-            $m->to($request->input('email'))->subject('CyberCore OTP');
-        });
-
-        return back()->with('status', 'OTP sent to your email.');
+        return view('auth.verify-otp', [
+            'pendingContext' => $pending['context'],
+        ]);
     }
 
-    public function verify(Request $request)
+    public function send(Request $request): RedirectResponse
     {
-        $request->validate(['otp' => 'required|digits:6']);
-        $ok = $request->session()->pull('email_otp');
-
-        if (!$ok || (string)$ok !== (string)$request->input('otp')) {
-            throw ValidationException::withMessages(['otp' => 'Invalid OTP']);
+        try {
+            $this->service->pending($request);
+        } catch (ValidationException) {
+            return redirect()->route('login');
         }
 
-        return redirect()->intended('/dashboard')->with('status', 'Email verified.');
+        $this->service->resend($request);
+
+        return back()->with('status', __('We sent a new verification code to your email.'));
+    }
+
+    public function verify(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'code' => ['required', 'digits:6'],
+        ]);
+
+        $result = $this->service->verify($request, $validated['code']);
+
+        $user = $result['user'];
+
+        if ($result['context'] === EmailOtpService::CONTEXT_SIGNUP && ! $user->hasVerifiedEmail()) {
+            $user->forceFill([
+                'email_verified_at' => now(),
+            ])->save();
+        }
+
+        Auth::login($user, $result['remember'] ?? false);
+        $request->session()->regenerate();
+
+        if (! empty($result['intended'])) {
+            $request->session()->put('url.intended', $result['intended']);
+        }
+
+        return redirect()->intended(route('dashboard', absolute: false))
+            ->with('status', __('Email verification successful.'));
     }
 }

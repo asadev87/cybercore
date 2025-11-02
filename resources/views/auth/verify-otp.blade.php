@@ -1,4 +1,4 @@
-{-- resources/views/auth/verify-otp.blade.php --}
+{{-- resources/views/auth/verify-otp.blade.php --}}
 
 @extends('layouts.app')
 
@@ -9,8 +9,16 @@
       <div class="card shadow-sm">
         <div class="card-body p-4">
           <h4 class="mb-2">Verify your email</h4>
-          @if (session('status')) <div class="alert alert-info">{{ session('status') }}</div> @endif
-          <p class="text-secondary">Enter the 6-digit code sent to your email.</p>
+          @if (session('status'))
+            <div class="alert alert-info">{{ session('status') }}</div>
+          @endif
+          <p class="text-secondary">
+            @if (($pendingContext ?? null) === \App\Services\EmailOtpService::CONTEXT_LOGIN)
+              Enter the 6-digit code we emailed you to finish signing in.
+            @else
+              Enter the 6-digit code we emailed you to finish creating your account.
+            @endif
+          </p>
           <form method="POST" action="{{ route('verification.otp.verify') }}" class="mb-3">
             @csrf
             <div class="mb-3">
