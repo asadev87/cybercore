@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\EmailOtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,8 +25,27 @@ class EmailOtpController extends Controller
             return redirect()->route('login');
         }
 
+        $user = User::find($pending['user_id'] ?? null);
+        if (! $user) {
+            $this->service->clear($request);
+
+            return redirect()->route('login');
+        }
+
+        $obfuscatedEmail = preg_replace_callback('/^([^@]+)@(.*)$/', function ($matches) {
+            $local = $matches[1];
+            $domain = $matches[2];
+
+            if (strlen($local) <= 2) {
+                return str_repeat('*', strlen($local)) . '@' . $domain;
+            }
+
+            return substr($local, 0, 2) . str_repeat('*', max(strlen($local) - 3, 1)) . substr($local, -1) . '@' . $domain;
+        }, $user->email);
+
         return view('auth.verify-otp', [
             'pendingContext' => $pending['context'],
+            'userEmail' => $obfuscatedEmail,
         ]);
     }
 

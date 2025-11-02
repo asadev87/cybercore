@@ -33,8 +33,14 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
+        // Capture intended destination before we alter auth state
         $intended = $request->session()->pull('url.intended', route('dashboard', absolute: false));
 
+        // Ensure the user is not left authenticated if sending the OTP fails.
+        // We already have the $user reference, so log out first to enforce OTP.
+        Auth::logout();
+
+        // Start OTP flow (may throw ValidationException if email fails to send)
         $this->otpService->begin(
             $request,
             $user,
@@ -43,8 +49,6 @@ class AuthenticatedSessionController extends Controller
             'email',
             $request->boolean('remember')
         );
-
-        Auth::logout();
 
         return redirect()->route('verification.otp.notice')
             ->with('status', __('We sent a verification code to your email.'));

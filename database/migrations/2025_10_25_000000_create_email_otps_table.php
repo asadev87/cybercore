@@ -8,15 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('email_otps', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('code_hash');
-            $table->timestamp('expires_at');
-            $table->unsignedTinyInteger('attempts')->default(0);
-            $table->timestamp('last_sent_at')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('email_otps')) {
+            Schema::create('email_otps', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+                $table->string('code_hash');
+                $table->timestamp('expires_at');
+                $table->unsignedTinyInteger('attempts')->default(0);
+                $table->timestamp('last_sent_at')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void
