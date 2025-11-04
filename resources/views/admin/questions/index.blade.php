@@ -9,12 +9,6 @@
       <p class="text-sm text-muted-foreground">{{ $module->title }} <span class="text-xs uppercase tracking-[0.28em] text-muted-foreground">/ {{ $module->slug }}</span></p>
     </div>
     <div class="flex flex-wrap items-center gap-3">
-      <a href="{{ route('admin.modules.questions.template', $module) }}" class="btn btn-outline text-xs">Download template</a>
-      <form method="POST" action="{{ route('admin.modules.questions.import', $module) }}" enctype="multipart/form-data" class="flex items-center gap-2 text-xs">
-        @csrf
-        <input type="file" name="questions_file" accept=".csv,.xlsx,.xls" required class="input-field max-w-xs file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-2 file:text-sm file:font-semibold file:text-primary-foreground">
-        <button class="btn btn-outline text-xs">Import</button>
-      </form>
       <a href="{{ route('admin.modules.questions.create', $module) }}" class="btn btn-primary text-xs">New question</a>
     </div>
   </header>

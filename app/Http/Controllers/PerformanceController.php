@@ -17,68 +17,76 @@ class PerformanceController extends Controller
         $userId = Auth::id();
 
         // Windows: last 7 days (daily) and last 30 days (daily)
-        $now = Carbon::now()->startOfDay();
-        $days7Start = $now->copy()->subDays(6);   // inclusive -> 7 total days
-        $days30Start = $now->copy()->subDays(29); // inclusive -> 30 total days
-        $period7  = CarbonPeriod::create($days7Start, '1 day', $now);
-        $period30 = CarbonPeriod::create($days30Start, '1 day', $now);
+        $now         = Carbon::now()->startOfDay();
+        $endOfDay    = $now->copy()->endOfDay();
+        $days7Start  = $now->copy()->subDays(6);   // inclusive -> 7 total days
+        $days30Start = $now->copy()->subDays(29);  // inclusive -> 30 total days
 
-        $logins = UserLogin::where('user_id', $userId)
+        $loginCounts = UserLogin::query()
+            ->where('user_id', $userId)
             ->whereNotNull('logged_in_at')
-            ->where('logged_in_at', '>=', $days30Start->copy()->startOfDay())
-            ->orderBy('logged_in_at', 'asc')
+            ->whereBetween('logged_in_at', [$days30Start, $endOfDay])
+            ->selectRaw('DATE(logged_in_at) as login_date, COUNT(*) as total')
+            ->groupBy('login_date')
+            ->pluck('total', 'login_date');
+
+        $buildSeries = function (CarbonPeriod $period) use ($loginCounts): array {
+            $labels = [];
+            $counts = [];
+
+            foreach ($period as $day) {
+                $key      = $day->toDateString();
+                $labels[] = $key;
+                $counts[] = (int) ($loginCounts[$key] ?? 0);
+            }
+
+            return [$labels, $counts];
+        };
+
+        [$login7Labels, $login7Counts]   = $buildSeries(CarbonPeriod::create($days7Start, '1 day', $now));
+        [$login30Labels, $login30Counts] = $buildSeries(CarbonPeriod::create($days30Start, '1 day', $now));
+
+        $attemptQuery = QuizAttempt::query()
+            ->where('user_id', $userId)
+            ->whereNotNull('completed_at');
+
+        $moduleStats = (clone $attemptQuery)
+            ->selectRaw('module_id, AVG(score) as avg_score')
+            ->groupBy('module_id')
             ->get();
 
-        $attempts = QuizAttempt::where('user_id', $userId)
-            ->whereNotNull('completed_at')
-            ->orderBy('completed_at', 'asc')
-            ->get();
+        $summary = (clone $attemptQuery)
+            ->selectRaw('COUNT(*) as total, AVG(score) as average')
+            ->first();
 
-        $attemptModuleIds = $attempts->pluck('module_id')->filter()->unique();
-        $moduleTitles = $attemptModuleIds->isNotEmpty()
-            ? Module::whereIn('id', $attemptModuleIds)->pluck('title', 'id')
-            : collect();
+        $overallAverageScore = $summary ? round((float) $summary->average, 1) : null;
+        $totalAttempts       = (int) ($summary->total ?? 0);
 
-        $moduleScoreLabels = [];
+        $moduleIds = $moduleStats->pluck('module_id')->filter()->unique();
+        $moduleTitles = $moduleIds->isEmpty()
+            ? collect()
+            : Module::whereIn('id', $moduleIds)->pluck('title', 'id');
+
+        $moduleScoreLabels   = [];
         $moduleScoreAverages = [];
-        foreach ($attempts->groupBy('module_id') as $moduleId => $moduleAttempts) {
-            if ($moduleId === null || $moduleAttempts->isEmpty()) {
+        foreach ($moduleStats as $stat) {
+            if (! $stat->module_id) {
                 continue;
             }
 
-            $title = $moduleTitles[$moduleId] ?? optional($moduleAttempts->first()->module)->title ?? __('Unknown module');
-            $moduleScoreLabels[] = $title;
-            $moduleScoreAverages[] = round($moduleAttempts->avg('score'), 1);
+            $title = $moduleTitles[$stat->module_id] ?? __('Unknown module');
+            $moduleScoreLabels[]   = $title;
+            $moduleScoreAverages[] = round((float) $stat->avg_score, 1);
         }
 
-        $overallAverageScore = $attempts->avg('score');
+        $recent = (clone $attemptQuery)
+            ->with('module:id,title,pass_score')
+            ->orderByDesc('completed_at')
+            ->take(10)
+            ->get();
 
-        // 7-day login series
-        $login7Labels = [];
-        $login7Counts = [];
-        foreach ($period7 as $day) {
-            $start = $day->copy()->startOfDay();
-            $end   = $day->copy()->endOfDay();
-            $login7Labels[] = $start->format('Y-m-d');
-            $login7Counts[] = $logins->whereBetween('logged_in_at', [$start, $end])->count();
-        }
-
-        // 30-day login series
-        $login30Labels = [];
-        $login30Counts = [];
-        foreach ($period30 as $day) {
-            $start = $day->copy()->startOfDay();
-            $end   = $day->copy()->endOfDay();
-            $login30Labels[] = $start->format('Y-m-d');
-            $login30Counts[] = $logins->whereBetween('logged_in_at', [$start, $end])->count();
-        }
-
-        // Recent attempts + module statuses
-        $recent = $attempts->sortByDesc('completed_at')->take(10);
-        $modules = Module::where('is_active', true)->orderBy('title')->get();
+        $modules  = Module::where('is_active', true)->orderBy('title')->get();
         $progress = UserProgress::where('user_id', $userId)->pluck('percent_complete','module_id');
-
-        $totalAttempts = $attempts->count();
 
         return view('performance.index', compact(
             'login7Labels','login7Counts',

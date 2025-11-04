@@ -8,6 +8,9 @@
     $signaturePath = public_path('images/signature.png');
     $signatureExists = file_exists($signaturePath);
     $signatureUrl = $signatureExists ? asset('images/signature.png').'?v='.filemtime($signaturePath) : null;
+    $secondarySignaturePath = public_path('images/signature2.png');
+    $secondarySignatureExists = file_exists($secondarySignaturePath);
+    $secondarySignatureUrl = $secondarySignatureExists ? asset('images/signature2.png').'?v='.filemtime($secondarySignaturePath) : null;
   @endphp
 
   <div class="container">
@@ -56,17 +59,29 @@
             </div>
           </div>
 
-          <div class="mt-10 flex flex-col items-center gap-6 text-slate-700">
-            <div class="flex flex-col items-center gap-3 text-sm text-center">
+          <div class="mt-10 flex flex-col gap-8 text-slate-700 sm:flex-row sm:justify-center sm:gap-16">
+            <div class="flex flex-col items-center gap-3 text-center uppercase tracking-[0.28em] text-slate-900">
               <div class="flex h-24 w-64 items-center justify-center">
                 @if($signatureExists)
-                  <img src="{{ $signatureUrl }}" alt="Executive Signature" class="h-20   w-auto drop-shadow-md">
+                  <img src="{{ $signatureUrl }}" alt="Executive Signature" class="h-20 w-auto drop-shadow-md">
                 @else
                   <span class="text-xs uppercase tracking-[0.3em] text-blue-700">Executive Signature</span>
                 @endif
               </div>
               <div class="w-48 border-b-2 border-slate-900"></div>
-              <p class="tracking-[0.28em] uppercase text-slate-900">Executive Manager of CyberCore</p>
+              <p class="text-xs uppercase tracking-[0.22em] text-slate-700">Executive Manager from CyberCore</p>
+            </div>
+            <div class="flex flex-col items-center gap-3 text-center uppercase tracking-[0.28em] text-slate-900">
+              <div class="flex h-24 w-64 items-center justify-center">
+                @if($secondarySignatureExists)
+                  <img src="{{ $secondarySignatureUrl }}" alt="Department Head Signature" class="h-20 w-auto drop-shadow-md">
+                @else
+                  <span class="text-xs uppercase tracking-[0.3em] text-blue-700">Signature</span>
+                @endif
+              </div>
+              <div class="w-48 border-b-2 border-slate-900"></div>
+              <p class="font-semibold tracking-[0.22em]">IDRIS BIN MOHAMED MOBIN</p>
+              <p class="text-xs tracking-[0.18em] text-slate-700">Ketua Jabatan Teknologi Maklumat dan Komunikasi</p>
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@
       @foreach($rows as $a)
         <tr>
           <td>{{ $a->completed_at?->format('Y-m-d H:i') }}</td>
-          <td>{{ $a->user->name ?? $a->user->email }}</td>
+          <td>{{ optional($a->user)->name ?? optional($a->user)->email ?? 'Unknown user' }}</td>
           <td>{{ $a->module->title }}</td>
           <td>{{ $a->score }}%</td>
         </tr>

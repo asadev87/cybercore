@@ -13,11 +13,15 @@ class AdaptiveSelector
      */
     public function nextQuestion(QuizAttempt $attempt): ?Question
     {
-        $module = $attempt->module;
+        $module   = $attempt->module;
         $askedIds = $attempt->questionAttempts()->pluck('question_id')->all();
 
-        $window = (int) config('quiz.adaptive_window', 4);
-        $recent = $attempt->questionAttempts()->latest()->take($window)->get();
+        $window = max(1, (int) config('quiz.adaptive_window', 4));
+        $recent = $attempt->questionAttempts()
+            ->with(['question:id,difficulty'])
+            ->latest()
+            ->take($window)
+            ->get();
 
         // base difficulty: 2 (easy=1 .. hard=5)
         $target = 2;

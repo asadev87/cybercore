@@ -52,7 +52,7 @@
                 @can('update', $m)
                   <a class="btn btn-primary text-xs" href="{{ route('admin.modules.builder', $m) }}">Builder</a>
                   <a class="btn btn-muted text-xs" href="{{ route('admin.modules.edit', $m) }}">Edit</a>
-                  <a class="btn btn-outline text-xs" href="{{ route('admin.modules.sections.index', $m) }}">Sections</a>
+
                   <a class="btn btn-outline text-xs" href="{{ route('admin.modules.questions.index', $m) }}">Questions</a>
                 @endcan
 
@@ -81,3 +81,4 @@
   </div>
 </section>
 @endsection
+

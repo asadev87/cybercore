@@ -39,18 +39,15 @@ class AdminPerformanceController extends Controller
             $query->whereIn('name', ['admin', 'lecturer']);
         })->count();
 
-        $loginTrendsRaw = UserLogin::selectRaw('DATE(logged_in_at) as date, COUNT(*) as total')
-            ->where('logged_in_at', '>=', $fourteenDaysAgo)
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->keyBy('date');
+        $loginTrend = collect(range(0, 13))->map(function ($offset) use ($now) {
+            $dayStart = $now->clone()->subDays(13 - $offset)->startOfDay();
+            $dayEnd = $dayStart->clone()->endOfDay();
 
-        $loginTrend = collect(range(0, 13))->map(function ($offset) use ($now, $loginTrendsRaw) {
-            $date = $now->clone()->subDays(13 - $offset)->toDateString();
+            $count = UserLogin::whereBetween('logged_in_at', [$dayStart, $dayEnd])->count();
+
             return [
-                'date' => $date,
-                'total' => (int) ($loginTrendsRaw[$date]->total ?? 0),
+                'date' => $dayStart->toDateString(),
+                'total' => $count,
             ];
         });
 

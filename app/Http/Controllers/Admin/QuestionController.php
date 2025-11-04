@@ -26,6 +26,14 @@ class QuestionController extends Controller
         return view('admin.questions.index', compact('module', 'questions'));
     }
 
+    // GET /admin/modules/{module}/questions/{question}
+    public function show(Module $module, Question $question)
+    {
+        abort_unless($question->module_id === $module->id, 404);
+
+        return redirect()->route('admin.modules.questions.edit', [$module, $question]);
+    }
+
     // GET /admin/modules/{module}/questions/create
     public function create(Module $module)
     {

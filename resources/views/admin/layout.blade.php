@@ -35,9 +35,7 @@
   <header class="border-b border-border/60 bg-background/90 backdrop-blur">
     <div class="container flex items-center justify-between py-4">
       <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-        <span class="relative grid h-10 w-10 place-content-center overflow-hidden rounded-2xl border border-border/70 bg-secondary/70 text-primary shadow-[0_12px_30px_-18px_rgba(37,99,235,0.4)] dark:border-white/10 dark:bg-white/10">
-          <span class="h-5 w-5 rounded-xl bg-gradient-to-br from-primary via-accent to-blue-500"></span>
-        </span>
+        <img src="{{ asset('images/logo.png') }}" alt="CyberCore" class="h-10 w-auto">
         <div class="flex flex-col">
           <span class="text-lg font-semibold tracking-tight">CyberCore Admin</span>
           <span class="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">Control Center</span>

@@ -6,7 +6,10 @@
   $moduleCount     = $filteredStats['count'] ?? $modules->count();
   $moduleLabel     = $moduleCount === 1 ? 'module' : 'modules';
   $completed       = $filteredStats['completed'] ?? $modules->filter(fn ($mod) => (int) ($progress[$mod->id] ?? 0) >= 100)->count();
-  $inProgress      = max($moduleCount - $completed, 0);
+  $inProgress      = $modules->filter(function ($mod) use ($progress) {
+      $percent = (int) ($progress[$mod->id] ?? 0);
+      return $percent > 0 && $percent < 100;
+  })->count();
   $totalCount      = $totalStats['count'] ?? $moduleCount;
   $totalLabel      = $totalCount === 1 ? 'module' : 'modules';
   $activeSearch    = $activeFilters['search'] ?? '';

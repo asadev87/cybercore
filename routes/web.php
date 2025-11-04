@@ -23,7 +23,6 @@ use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\BadgesController;
 use App\Http\Controllers\Admin\SectionController;
-use App\Http\Controllers\NoteFeedbackController;
 
 
 Route::get('/', function () {
@@ -85,7 +84,6 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::post('/wallet/mock-topup', [WalletController::class, 'mockTopup'])->name('wallet.mock_topup');
 
     Route::get('/learn', [LearnController::class, 'index'])->name('learn.index');
-    Route::post('/notes/feedback', [NoteFeedbackController::class, 'store'])->name('notes.feedback.store');
 
     // Start (or resume) a quiz attempt for a module
     Route::post('/quiz/{module}/start', [QuizController::class, 'start'])->name('quiz.start');

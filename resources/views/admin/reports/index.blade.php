@@ -106,7 +106,7 @@
           @forelse($rows as $a)
             <tr class="transition hover:bg-secondary/40">
               <td class="px-4 py-3 text-sm text-muted-foreground">{{ $a->completed_at?->format('Y-m-d H:i') }}</td>
-              <td class="px-4 py-3 text-sm text-foreground">{{ $a->user->name ?? $a->user->email }}</td>
+              <td class="px-4 py-3 text-sm text-foreground">{{ optional($a->user)->name ?? optional($a->user)->email ?? 'Unknown user' }}</td>
               <td class="px-4 py-3 text-sm text-muted-foreground">{{ $a->module->title }}</td>
               <td class="px-4 py-3 text-sm text-muted-foreground">{{ $a->score }}%</td>
             </tr>
@@ -121,3 +121,4 @@
   </div>
 </section>
 @endsection
+

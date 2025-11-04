@@ -21,16 +21,20 @@ class QuizController extends Controller
 {
     public function start(Request $request, Module $module)
     {
+        $userId = Auth::id();
+
         // idempotent start: resume latest incomplete attempt or create new
-        $attempt = QuizAttempt::where('user_id', Auth::id())
+        $attempt = QuizAttempt::query()
+            ->where('user_id', $userId)
             ->where('module_id', $module->id)
             ->whereNull('completed_at')
-            ->latest()->first();
+            ->latest()
+            ->first();
 
-        if (!$attempt) {
+        if (! $attempt) {
             $walletService = app(WalletService::class);
             $cost = (int) config('tokens.module_attempt_cost', 0);
-            $userId = Auth::id();
+            $targetQuestions = $this->defaultTargetQuestions();
 
             if ($cost > 0 && ! $walletService->canSpend($userId, $cost)) {
                 return redirect()
@@ -52,14 +56,12 @@ class QuizController extends Controller
                         );
                     }
 
-                    $attempt = new QuizAttempt();
-                    $attempt->user_id = $userId;
-                    $attempt->module_id = $module->id;
-                    $attempt->target_questions = (int) config('quiz.questions_per_attempt', 8);
-                    $attempt->started_at = now();
-                    $attempt->save();
-
-                    return $attempt;
+                    return QuizAttempt::create([
+                        'user_id'          => $userId,
+                        'module_id'        => $module->id,
+                        'target_questions' => $targetQuestions,
+                        'started_at'       => now(),
+                    ]);
                 });
             } catch (InsufficientTokensException) {
                 return redirect()
@@ -82,10 +84,10 @@ class QuizController extends Controller
 
     public function show(QuizAttempt $attempt, AdaptiveSelector $selector)
     {
-        
         $this->authorizeAttempt($attempt);
+        $attempt->loadMissing('module');
 
-        if (!$attempt->instructions_acknowledged) {
+        if (! $attempt->instructions_acknowledged) {
             return view('quiz.instructions', [
                 'module'  => $attempt->module,
                 'attempt' => $attempt,
@@ -94,22 +96,24 @@ class QuizController extends Controller
 
         // if we already reached target, finish
         $asked = $attempt->questionAttempts()->count();
-        if ($asked >= $attempt->target_questions) {
+        $targetQuestions = $this->resolveTargetQuestions($attempt);
+        if ($asked >= $targetQuestions) {
             return $this->finish(request(), $attempt);
         }
 
         // pick next question
         $question = $selector->nextQuestion($attempt);
-        if (!$question) {
+        if (! $question) {
             // nothing left to ask -> finish
             return $this->finish(request(), $attempt);
         }
-        $certificate = Certificate::where('user_id', Auth::id())
-    ->where('module_id', $attempt->module_id)
-    ->latest()                 // uses created_at
-    ->first();
 
-         return view('quiz.take', compact('attempt','question','asked','certificate'));
+        $certificate = Certificate::where('user_id', Auth::id())
+            ->where('module_id', $attempt->module_id)
+            ->latest('created_at')
+            ->first();
+
+        return view('quiz.take', compact('attempt', 'question', 'asked', 'certificate'));
     }
 
     public function answer(Request $request, QuizAttempt $attempt)
@@ -172,8 +176,8 @@ class QuizController extends Controller
         }
 
         // progress hint
-        $asked = $attempt->questionAttempts()->count();
-        $target = max(1, (int) ($attempt->target_questions ?? config('quiz.questions_per_attempt', 8)));
+        $asked   = $attempt->questionAttempts()->count();
+        $target  = $this->resolveTargetQuestions($attempt);
         $percent = (int) floor(($asked / $target) * 100);
         $this->syncProgressDraft($attempt, $percent);
 
@@ -189,15 +193,20 @@ class QuizController extends Controller
         if ($attempt === null) { $attempt = $request->route('attempt'); }
 
         $this->authorizeAttempt($attempt);
+        $attempt->loadMissing('module');
 
         if ($attempt->completed_at) {
             return redirect()->route('quiz.result', $attempt);
         }
 
-       // compute score
-$total   = max(1, $attempt->questionAttempts()->count());
-$correct = $attempt->questionAttempts()->where('is_correct', true)->count();
-$score   = (int) round(($correct / $total) * 100);
+        // compute score with a single aggregate query
+        $stats = $attempt->questionAttempts()
+            ->selectRaw('COUNT(*) as total, SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) as correct')
+            ->first();
+
+        $total   = max(1, (int) ($stats->total ?? 0));
+        $correct = (int) ($stats->correct ?? 0);
+        $score   = (int) round(($correct / $total) * 100);
 
 // Save attempt + progress atomically
 DB::transaction(function () use ($attempt, $score) {
@@ -227,8 +236,6 @@ if ($score >= ($attempt->module->pass_score ?? 70)) {
 app(\App\Services\BadgeService::class)->checkAndAward($attempt);
 
 return redirect()->route('quiz.result', $attempt);
-  
-        return redirect()->route('quiz.result', $attempt);
     }
 
     public function acknowledgeInstructions(Request $request, QuizAttempt $attempt)
@@ -254,7 +261,7 @@ return redirect()->route('quiz.result', $attempt);
 
     $certificate = Certificate::where('user_id', Auth::id())
     ->where('module_id', $attempt->module_id)
-    ->latest()
+    ->latest('created_at')
     ->first();
 
     return view('quiz.result', compact('attempt','qas','passed','certificate'));
@@ -263,6 +270,16 @@ return redirect()->route('quiz.result', $attempt);
     private function authorizeAttempt(QuizAttempt $attempt): void
     {
         abort_unless($attempt->user_id === Auth::id(), 403); // simple ownership check. See policies/gates docs if you prefer. :contentReference[oaicite:7]{index=7}
+    }
+
+    private function resolveTargetQuestions(QuizAttempt $attempt): int
+    {
+        return max(1, (int) ($attempt->target_questions ?: $this->defaultTargetQuestions()));
+    }
+
+    private function defaultTargetQuestions(): int
+    {
+        return max(1, (int) config('quiz.questions_per_attempt', 8));
     }
 
     private function syncProgressDraft(QuizAttempt $attempt, int $percent): void

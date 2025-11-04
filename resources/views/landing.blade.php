@@ -26,7 +26,7 @@
         <img src="{{ asset('images/logo.png') }}" alt="CyberCore" class="h-11 w-auto">
         <div class="flex flex-col">
           <span class="text-base font-semibold text-foreground dark:text-white">CyberCore</span>
-          <span class="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Stay Vigilant</span>
+          <span class="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60"></span>
         </div>
       </a>
 
@@ -35,7 +35,6 @@
         <a href="#tokens" class="transition hover:text-foreground dark:text-white">Token access</a>
         <a href="#topics" class="transition hover:text-foreground dark:text-white">Topics</a>
         <a href="#lecturer" class="transition hover:text-foreground dark:text-white">Lecturers</a>
-        <a href="#stories" class="transition hover:text-foreground dark:text-white">Stories</a>
       </nav>
 
       <div class="hidden items-center gap-3 lg:flex">
@@ -91,7 +90,6 @@
         <a href="#how" class="transition hover:text-foreground dark:text-white" @click="open = false">How it works</a>
         <a href="#topics" class="transition hover:text-foreground dark:text-white" @click="open = false">Topics</a>
         <a href="#lecturer" class="transition hover:text-foreground dark:text-white" @click="open = false">Lecturers</a>
-        <a href="#stories" class="transition hover:text-foreground dark:text-white" @click="open = false">Stories</a>
       </nav>
       <div class="mt-6 flex flex-col gap-3">
         <button type="button" @click="toggleTheme()" class="sera-btn w-full justify-center">
@@ -189,31 +187,35 @@
       <div class="container grid gap-12 lg:grid-cols-[minmax(0,1.05fr),minmax(0,0.95fr)] lg:items-center">
         <div class="space-y-6">
           <p class="sera-pill w-fit">Token-first access</p>
-          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Pay only when you launch a module.</h2>
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Use tokens to unlock modules</h2>
           <p class="text-base text-muted-foreground dark:text-white/70">
             CyberCore uses tokens instead of subscriptions so learners can dip in whenever they are ready. You start with a generous balance and only spend tokens when you begin or retake a knowledge check.
           </p>
-          <ul class="space-y-4 text-sm text-muted-foreground dark:text-white/70">
-            <li class="flex items-start gap-3">
-              <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
-              New accounts receive <strong class="text-foreground dark:text-white">{{ number_format($signupBonus) }} free tokens</strong> to explore the catalog right away.
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-sky-400"></span>
-              Each module attempt costs <strong class="text-foreground dark:text-white">{{ number_format($tokenCost) }} tokens</strong>, whether it&apos;s your first run or a retake.
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-indigo-400"></span>
-              Need more? Top up instantly with mock packs of <strong class="text-foreground dark:text-white">{{ $tokenPacks }}</strong> while we trial pricing—no real payments yet.
-            </li>
-          </ul>
+          <div class="grid gap-4 sm:grid-cols-3">
+            <div class="rounded-2xl border border-border/60 bg-background/80 p-5 text-center shadow-sm dark:border-white/10 dark:bg-white/5">
+              <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Signup bonus</p>
+              <p class="mt-2 text-2xl font-semibold text-foreground dark:text-white">{{ number_format($signupBonus) }} tokens</p>
+              <p class="mt-1 text-xs text-muted-foreground dark:text-white/70">Kick off with enough credits to explore multiple modules immediately.</p>
+            </div>
+            <div class="rounded-2xl border border-border/60 bg-background/80 p-5 text-center shadow-sm dark:border-white/10 dark:bg-white/5">
+              <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Attempt cost</p>
+              <p class="mt-2 text-2xl font-semibold text-foreground dark:text-white">{{ number_format($tokenCost) }} tokens</p>
+              <p class="mt-1 text-xs text-muted-foreground dark:text-white/70">Same price for fresh runs or retakes—no hidden fees along the way.</p>
+            </div>
+            <div class="rounded-2xl border border-border/60 bg-background/80 p-5 text-center shadow-sm dark:border-white/10 dark:bg-white/5">
+              <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Top-up packs</p>
+              <ul class="mt-2 list-none space-y-1 text-lg font-semibold text-foreground dark:text-white">
+                @foreach (explode(',', $tokenPacks) as $pack)
+                  <li>{{ trim($pack) }}</li>
+                @endforeach
+              </ul>
+              <p class="mt-1 text-xs text-muted-foreground dark:text-white/70">Flexible bundles ready for cohorts, bootcamps, or extra practice.</p>
+            </div>
+          </div>
+
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <a href="{{ route('register') }}" class="sera-btn-primary w-full justify-center sm:w-auto">
-              Claim free tokens
-            </a>
-            <a href="{{ route('login') }}" class="sera-btn-subtle w-full justify-center sm:w-auto">
-              Log in to view wallet
-            </a>
+            <a href="{{ route('register') }}" class="sera-btn-primary w-full justify-center sm:w-auto">Claim free tokens</a>
+            <a href="{{ route('login') }}" class="sera-btn-subtle w-full justify-center sm:w-auto">Log in to view wallet</a>
           </div>
           <p class="text-xs uppercase tracking-[0.28em] text-muted-foreground dark:text-white/50">
             Tokens are mock credits during beta and help us benchmark demand before enabling real MY payment rails.
@@ -322,48 +324,6 @@
       </div>
     </section>
 
-    {{-- Stories / Testimonials --}}
-    <section id="stories" class="py-20">
-      <div class="container space-y-12">
-        <div class="mx-auto max-w-2xl text-center">
-          <p class="sera-pill mx-auto">Trusted by teams</p>
-          <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Stories from the CyberCore community</h2>
-          <p class="mt-3 text-base text-muted-foreground dark:text-white/70">Program leads and educators share how they roll out awareness training with style and measurable outcomes.</p>
-        </div>
-        <div class="grid gap-6 md:grid-cols-3">
-          <article class="sera-card space-y-4">
-            <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-500"></div>
-              <div>
-                <p class="text-sm font-semibold">Amelia Rhodes</p>
-                <p class="text-xs text-muted-foreground dark:text-white/60">Director of IT Training, </p>
-              </div>
-            </div>
-            <p class="text-sm text-muted-foreground dark:text-white/70">“CyberCore solved our biggest hurdle: getting non-technical staff to care. We set up five tailored modules and watched completion rise from 38% to 86% in a single term. The built-in lecturer notes let us adapt lessons for classroom discussion without extra prep.”</p>
-          </article>
-          <article class="sera-card space-y-4">
-            <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400"></div>
-              <div>
-                <p class="text-sm font-semibold">Raj Patel</p>
-                <p class="text-xs text-muted-foreground dark:text-white/60">Security Enablement Lead, </p>
-              </div>
-            </div>
-            <p class="text-sm text-muted-foreground dark:text-white/70">“We run quarterly simulations across 1,200 employees. CyberCore’s assessment data plugs straight into our compliance dashboards, so auditors see evidence within minutes. After the first quarter, phishing click rates dropped by 41% and we highlighted those results in our board report.”</p>
-          </article>
-          <article class="sera-card space-y-4">
-            <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-fuchsia-400 to-sky-500"></div>
-              <div>
-                <p class="text-sm font-semibold">Noah Bennett</p>
-                <p class="text-xs text-muted-foreground dark:text-white/60">STEM Programme Coordinator, </p>
-              </div>
-            </div>
-            <p class="text-sm text-muted-foreground dark:text-white/70">“Our sixth-form students were sceptical at first, but CyberCore’s bite-sized sections and real-world examples kept them talking after class. We now co-teach with a lecturer workspace, and students submit reflections that show they really understand the risks in their daily apps.”</p>
-          </article>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer class="border-t border-border/60 dark:border-white/5 bg-background/80 dark:bg-slate-950/80 py-10 backdrop-blur-xl">
@@ -461,6 +421,7 @@
 </style>
 </body>
 </html>
+
 
 
 

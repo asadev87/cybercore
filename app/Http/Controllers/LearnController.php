@@ -13,12 +13,14 @@ class LearnController extends Controller
 {
     public function index(Request $request)
     {
+        $userId = Auth::id();
+
         $allModules = Module::where('is_active', true)
             ->withAvg('questions', 'difficulty')
             ->orderBy('title')
             ->get();
 
-        $progress = UserProgress::where('user_id', Auth::id())
+        $progress = UserProgress::where('user_id', $userId)
             ->pluck('percent_complete', 'module_id');
 
         $difficultyLabels = $allModules->mapWithKeys(function (Module $module) {
@@ -70,21 +72,22 @@ class LearnController extends Controller
             $difficultyFilter = null;
         }
 
-        $moduleIds = $allModules->pluck('id');
+        $moduleIds = $allModules->pluck('id')->filter();
 
-        $latestAttempts = QuizAttempt::query()
-            ->where('user_id', Auth::id())
+        $attemptQuery = QuizAttempt::query()
+            ->where('user_id', $userId)
             ->whereIn('module_id', $moduleIds)
-            ->whereNotNull('completed_at')
+            ->whereNotNull('completed_at');
+
+        $latestAttempts = (clone $attemptQuery)
+            ->select('id', 'module_id', 'score', 'completed_at')
             ->orderByDesc('completed_at')
+            ->orderByDesc('id')
             ->get()
             ->unique('module_id')
             ->keyBy('module_id');
 
-        $bestScores = QuizAttempt::query()
-            ->where('user_id', Auth::id())
-            ->whereIn('module_id', $moduleIds)
-            ->whereNotNull('completed_at')
+        $bestScores = (clone $attemptQuery)
             ->selectRaw('module_id, MAX(score) as best_score')
             ->groupBy('module_id')
             ->pluck('best_score', 'module_id');

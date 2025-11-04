@@ -15,8 +15,8 @@
     }
     .wrapper {
       position: relative;
-      padding: 48px 56px;
-      min-height: 900px;
+      padding: 40px 48px;
+      min-height: 760px;
       border-radius: 28px;
       border: 6px solid transparent;
       background:
@@ -52,22 +52,22 @@
       z-index: 1;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 22px;
       align-items: center;
       text-align: center;
     }
     .logo img {
-      max-height: 78px;
+      max-height: 80px;
       filter: drop-shadow(0 16px 32px rgba(37,99,235,0.45));
     }
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 28px;
+      gap: 8px;
+      padding: 8px 24px;
       border-radius: 999px;
-      font-size: 11px;
-      letter-spacing: 0.32em;
+      font-size: 13px;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
       font-weight: 600;
       background: linear-gradient(135deg, rgba(56,189,248,0.18), rgba(59,130,246,0.12));
@@ -77,8 +77,8 @@
     .heading {
       display: flex;
       align-items: center;
-      gap: 16px;
-      font-size: 13px;
+      gap: 12px;
+      font-size: 14px;
       color: #334155;
     }
     .heading .line {
@@ -87,9 +87,9 @@
       background: linear-gradient(90deg, transparent, rgba(59,130,246,0.4), transparent);
     }
     .recipient-name {
-      font-size: 52px;
+      font-size: 44px;
       font-weight: 700;
-      margin: 8px 0 4px;
+      margin: 4px 0 2px;
       color: #0f172a;
     }
     .subtitle {
@@ -99,16 +99,16 @@
       text-transform: uppercase;
     }
     .module-title {
-      font-size: 30px;
+      font-size: 26px;
       font-weight: 600;
       color: #0f172a;
-      margin: 12px 0 0;
+      margin: 10px 0 0;
     }
     .stats {
       display: flex;
       justify-content: center;
-      gap: 18px;
-      font-size: 15px;
+      gap: 12px;
+      font-size: 14px;
       color: #1e293b;
     }
     .stats strong {
@@ -116,62 +116,86 @@
       font-weight: 600;
     }
     .info-grid {
-      margin-top: 12px;
+      margin-top: 10px;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 240px));
-      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 210px));
+      gap: 14px;
     }
     .info-card {
-      padding: 18px 20px;
-      border-radius: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
       border: 1px solid rgba(148,163,184,0.35);
       background: linear-gradient(135deg, rgba(248,250,252,0.95), rgba(241,245,249,0.9));
       text-align: left;
     }
     .info-card .label {
-      font-size: 11px;
-      letter-spacing: 0.28em;
+      font-size: 14px;
+      letter-spacing: 0.26em;
       color: #1d4ed8;
       text-transform: uppercase;
       font-weight: 600;
     }
     .info-card .value {
-      margin-top: 8px;
-      font-size: 15px;
+      margin-top: 6px;
+      font-size: 14px;
       color: #0f172a;
       font-weight: 500;
     }
     .divider {
-      margin: 28px auto 0;
-      width: 70%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(56,189,248,0.75), transparent);
-      box-shadow: 0 0 22px rgba(56,189,248,0.35);
+      margin: 22px auto 0;
+      width: 66%;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(56,189,248,0.65), transparent);
+      box-shadow: 0 0 18px rgba(56,189,248,0.3);
     }
     .signature-area {
-      margin-top: 36px;
+      margin: 26px auto 0;
+      width: 100%;
+      max-width: 640px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px;
+      justify-items: center;
+      color: #0f172a;
+    }
+    .signature-block {
+      width: 100%;
+      max-width: 280px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
-      color: #0f172a;
+      gap: 10px;
+      text-align: center;
       text-transform: uppercase;
-      letter-spacing: 0.24em;
+      letter-spacing: 0.2em;
     }
-    .signature-area .line {
-      width: 240px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(148,163,184,0.65), transparent);
+    .signature-block img {
+      max-height: 72px;
+      filter: drop-shadow(0 12px 24px rgba(37,99,235,0.3));
     }
-    .signature-area img {
-      max-height: 82px;
-      filter: drop-shadow(0 16px 32px rgba(37,99,235,0.35));
+    .signature-line {
+      width: 100%;
+      max-width: 220px;
+      height: 1.5px;
+      background: #0f172a;
+    }
+    .signature-name {
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      line-height: 1.4;
+      display: block;
+    }
+    .signature-title {
+      font-size: 11px;
+      line-height: 1.5;
+      letter-spacing: 0.16em;
+      color: #475569;
     }
     .footer {
-      margin-top: 32px;
-      font-size: 12px;
+      margin-top: 24px;
+      font-size: 11px;
       color: #475569;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
     }
   </style>
@@ -182,6 +206,7 @@
       @php
         $logoPath = public_path('images/logo.png');
         $signaturePath = public_path('images/signature.png');
+        $secondarySignaturePath = public_path('images/signature2.png');
       @endphp
 
       <div class="logo">
@@ -228,23 +253,31 @@
       <div class="divider"></div>
 
       <div class="signature-area">
-        @if(file_exists($signaturePath))
-          <img src="{{ $signaturePath }}" alt="Executive Signature">
-        @else
-          <span style="font-size:14px;">[Signature]</span>
-        @endif
-        <div class="line"></div>
-        <span>Executive Manager from CyberCore</span>
+        <div class="signature-block">
+          @if(file_exists($signaturePath))
+            <img src="{{ $signaturePath }}" alt="Executive Signature">
+          @else
+            <span style="font-size:14px;">[Signature]</span>
+          @endif
+          <div class="signature-line"></div>
+          <span class="signature-title">Executive Manager from CyberCore</span>
+        </div>
+        <div class="signature-block">
+          @if(file_exists($secondarySignaturePath))
+            <img src="{{ $secondarySignaturePath }}" alt="Department Head Signature">
+          @else
+            <span style="font-size:14px;">[Signature]</span>
+          @endif
+          <div class="signature-line"></div>
+          <span class="signature-name">IDRIS BIN MOHAMED MOBIN</span>
+          <span class="signature-title">Ketua Jabatan Teknologi Maklumat dan Komunikasi</span>
+        </div>
       </div>
 
       <div class="footer">
-        CyberCore Security Office &mdash; Verified credential
+        
       </div>
     </div>
   </div>
 </body>
 </html>
-
-
-
-

@@ -258,23 +258,9 @@
                   @endif
                 </div>
 
-                @auth
-                  <div class="mt-4 flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-primary-600 dark:text-primary-200">
-                    <span>Helpful?</span>
-                    <form action="{{ route('notes.feedback.store') }}" method="POST" class="inline-flex gap-2">
-                      @csrf
-                      <input type="hidden" name="context" value="question">
-                      <input type="hidden" name="module_id" value="{{ $attempt->module_id }}">
-                      <input type="hidden" name="question_id" value="{{ $qa->question_id }}">
-                      <input type="hidden" name="source" value="quiz-result">
-                      <button class="btn btn-outline text-[11px] px-3 py-1" name="helpful" value="1">Yes</button>
-                      <button class="btn btn-muted text-[11px] px-3 py-1" name="helpful" value="0">Not really</button>
-                    </form>
-                  </div>
-                @endauth
-              </div>
-            @endif
-          </div>
+                </div>
+              @endif
+            </div>
         @endforeach
       </div>
     </div>
