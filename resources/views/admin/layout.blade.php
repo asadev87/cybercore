@@ -60,6 +60,9 @@
         @can('view-reports')
           <a class="btn btn-outline text-sm" href="{{ route('admin.reports.index') }}">Reports</a>
         @endcan
+        @if (auth()->user()?->hasRole('admin'))
+          <a class="btn btn-outline text-sm" href="{{ route('admin.performance.monitor') }}">Performance</a>
+        @endif
         <a class="btn btn-outline text-sm" href="{{ url('/') }}">Landing</a>
         @unless (auth()->user()?->hasRole('lecturer'))
           <a class="btn btn-muted text-sm" href="{{ route('dashboard') }}">Learner view</a>

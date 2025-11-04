@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\ImportController;
+use App\Http\Controllers\Admin\AdminPerformanceController;
 use App\Http\Controllers\LearnController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\PerformanceController;
@@ -64,6 +65,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified'])->group(f
         Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
         Route::get('reports/export/excel', [ReportsController::class, 'exportExcel'])->name('reports.export.excel');
         Route::get('reports/export/pdf', [ReportsController::class, 'exportPdf'])->name('reports.export.pdf');
+        Route::get('performance-monitor', [AdminPerformanceController::class, 'index'])->name('performance.monitor');
     });
 
     Route::middleware('role:admin|lecturer')->group(function () {

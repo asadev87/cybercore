@@ -59,7 +59,16 @@
         </script>
     </head>
     <body class="bg-background text-foreground antialiased">
-        <div class="min-h-screen bg-gradient-to-b from-primary/5 via-background to-background/60">
+        <div class="relative min-h-screen overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background/60">
+            <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+                <div class="guest-wave guest-wave--one"></div>
+                <div class="guest-wave guest-wave--two"></div>
+                <div class="guest-wave guest-wave--three"></div>
+            </div>
+            <div class="pointer-events-none absolute -top-24 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl animate-[pulse_12s_ease-in-out_infinite] -z-20" aria-hidden="true"></div>
+            <div class="pointer-events-none absolute bottom-0 left-0 h-72 w-72 -translate-x-1/3 translate-y-1/3 rounded-full bg-sky-300/30 blur-3xl mix-blend-screen animate-[float_16s_linear_infinite] -z-20" aria-hidden="true"></div>
+            <div class="pointer-events-none absolute -bottom-10 right-0 h-96 w-96 translate-x-1/4 rounded-full bg-emerald-300/20 blur-3xl mix-blend-screen animate-[floatReverse_18s_linear_infinite] -z-20" aria-hidden="true"></div>
+
             <div class="container relative flex min-h-screen flex-col items-center justify-center py-12">
                 <button
                     type="button"
@@ -87,7 +96,5 @@
         </div>
     </body>
 </html>
-
-
 
 

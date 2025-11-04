@@ -50,7 +50,11 @@
           @endcan
           <a href="{{ route('admin.users.index') }}" class="btn btn-outline w-full">Manage users</a>
           <a href="{{ route('admin.modules.index', ['view' => 'owners']) }}" class="btn btn-outline w-full">Manage ownership</a>
-          <a href="{{ route('performance.index') }}" class="btn btn-outline w-full">Performance insight</a>
+          @if (auth()->user()?->hasRole('admin'))
+            <a href="{{ route('admin.performance.monitor') }}" class="btn btn-outline w-full">Performance monitor</a>
+          @else
+            <a href="{{ route('performance.index') }}" class="btn btn-outline w-full">Performance insight</a>
+          @endif
           <a href="{{ route('leaderboard.index') }}" class="btn btn-outline w-full">Leaderboard</a>
         </div>
       </div>

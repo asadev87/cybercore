@@ -155,19 +155,21 @@ class QuizController extends Controller
 
         // upsert QA (avoid dupes if user refreshes)
         $qa = QuestionAttempt::firstOrCreate(
-  ['quiz_attempt_id' => $attempt->id, 'question_id' => $question->id],
-  [
-    'user_answer' => $userAns,
-    'is_correct'  => $isCorrect,
-  ]
-);
+            ['quiz_attempt_id' => $attempt->id, 'question_id' => $question->id],
+            [
+                'user_id'     => $attempt->user_id,
+                'user_answer' => $userAns,
+                'is_correct'  => $isCorrect,
+            ]
+        );
 
-if ($qa->wasRecentlyCreated === false) {
-  $qa->update([
-    'user_answer' => $userAns,
-    'is_correct'  => $isCorrect,
-  ]);
-}
+        if ($qa->wasRecentlyCreated === false) {
+            $qa->update([
+                'user_id'     => $attempt->user_id,
+                'user_answer' => $userAns,
+                'is_correct'  => $isCorrect,
+            ]);
+        }
 
         // progress hint
         $asked = $attempt->questionAttempts()->count();
