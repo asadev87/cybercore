@@ -7,7 +7,9 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\{
     DeduplicateModules,
     SyncModuleNotes,
-    RegenerateCertificates
+    RegenerateCertificates,
+    BackfillWallets,
+    SyncUserRoleColumns
 };
 
 class Kernel extends ConsoleKernel
@@ -16,6 +18,8 @@ class Kernel extends ConsoleKernel
         DeduplicateModules::class,
         SyncModuleNotes::class,
         RegenerateCertificates::class,
+        BackfillWallets::class,
+        SyncUserRoleColumns::class,
     ];
 
     protected function schedule(Schedule $schedule): void

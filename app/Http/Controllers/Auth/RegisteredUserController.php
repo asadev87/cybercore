@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\EmailOtpService;
 use Illuminate\Auth\Events\Registered;
@@ -12,7 +13,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -50,9 +50,23 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        if ($accountType === 'lecturer') {
-            $lecturerRole = Role::firstOrCreate(['name' => 'lecturer']);
-            $user->assignRole($lecturerRole);
+        $guard = config('auth.defaults.guard', 'web');
+
+        $roleName = $accountType === 'lecturer' ? 'lecturer' : 'learner';
+        $roleLabel = $accountType === 'lecturer' ? 'Lecturer' : 'Learner';
+
+        $role = Role::firstOrCreate(
+            ['name' => $roleName, 'guard_name' => $guard],
+            ['label' => $roleLabel]
+        );
+
+        if (! $user->hasRole($role)) {
+            $user->assignRole($role);
+        }
+
+        if ($user->role_id !== $role->id) {
+            $user->role_id = $role->id;
+            $user->save();
         }
 
         event(new Registered($user));

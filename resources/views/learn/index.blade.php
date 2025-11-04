@@ -17,6 +17,7 @@
   $difficultyOptions = ['Beginner', 'Intermediate', 'Advanced', 'Unrated'];
   $latestAttempts = collect($latestAttempts ?? []);
   $bestScores = collect($bestScores ?? []);
+  $attemptCost = (int) config('tokens.module_attempt_cost', 0);
 @endphp
 
 <section class="space-y-10">
@@ -258,19 +259,38 @@
                   <a href="{{ route('quiz.result', $recentAttempt) }}" class="btn btn-primary">Review results</a>
                   <form action="{{ route('quiz.start', $m) }}" method="POST" class="inline-flex">
                     @csrf
-                    <button class="btn btn-outline">Retake module</button>
+                    <button class="btn btn-outline">
+                      <span>Retake module</span>
+                      @if($attemptCost > 0)
+                        <span class="ml-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">{{ $attemptCost }} tokens</span>
+                      @endif
+                    </button>
                   </form>
                 @else
                   <a href="{{ route('quiz.result', $recentAttempt) }}" class="btn btn-muted">Review last attempt</a>
                   <form action="{{ route('quiz.start', $m) }}" method="POST" class="inline-flex">
                     @csrf
-                    <button class="btn btn-primary">Retake module</button>
+                    <button class="btn btn-primary">
+                      <span>Retake module</span>
+                      @if($attemptCost > 0)
+                        <span class="ml-2 text-xs font-semibold uppercase tracking-wide text-white/80">{{ $attemptCost }} tokens</span>
+                      @endif
+                    </button>
                   </form>
                 @endif
               @else
                 <form action="{{ route('quiz.start', $m) }}" method="POST" class="inline-flex">
                   @csrf
-                  <button class="btn btn-primary">{{ $pct > 0 ? 'Resume module' : 'Begin module' }}</button>
+                  @php
+                    $startLabel = $pct > 0 ? 'Resume module' : 'Begin module';
+                    $showStartCost = $startLabel === 'Begin module' && $attemptCost > 0;
+                  @endphp
+                  <button class="btn btn-primary">
+                    <span>{{ $startLabel }}</span>
+                    @if($showStartCost)
+                      <span class="ml-2 text-xs font-semibold uppercase tracking-wide text-white/80">{{ $attemptCost }} tokens</span>
+                    @endif
+                  </button>
                 </form>
               @endif
               @can('update', $m)
@@ -289,5 +309,3 @@
   </div>
 </section>
 @endsection
-
-

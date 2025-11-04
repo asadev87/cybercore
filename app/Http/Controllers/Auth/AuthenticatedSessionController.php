@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\UserLogin;
 use App\Services\EmailOtpService;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -31,13 +34,24 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
+        $defaultRedirect = route('dashboard', absolute: false);
+        $remember = $request->boolean('remember');
 
-        // Capture intended destination before we alter auth state
-        $intended = $request->session()->pull('url.intended', route('dashboard', absolute: false));
+        $requiresVerification = $user instanceof MustVerifyEmail;
+        $isVerified = ! $requiresVerification || $user->hasVerifiedEmail();
+
+        if ($isVerified) {
+            $this->logLogin($request, $user, $remember, EmailOtpService::CONTEXT_LOGIN);
+            $request->session()->regenerate();
+
+            return redirect()->intended($defaultRedirect);
+        }
+
+        $intended = $request->session()->pull('url.intended', $defaultRedirect);
 
         // Ensure the user is not left authenticated if sending the OTP fails.
-        // We already have the $user reference, so log out first to enforce OTP.
         Auth::logout();
 
         // Start OTP flow (may throw ValidationException if email fails to send)
@@ -47,7 +61,7 @@ class AuthenticatedSessionController extends Controller
             EmailOtpService::CONTEXT_LOGIN,
             $intended,
             'email',
-            $request->boolean('remember')
+            $remember
         );
 
         return redirect()->route('verification.otp.notice')
@@ -66,5 +80,21 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    private function logLogin(Request $request, $user, bool $remember, string $context): void
+    {
+        if (! Schema::hasTable('user_logins')) {
+            return;
+        }
+
+        UserLogin::create([
+            'user_id' => $user->id,
+            'context' => $context,
+            'remember' => $remember,
+            'ip_address' => $request->ip(),
+            'user_agent' => substr((string) $request->userAgent(), 0, 512),
+            'logged_in_at' => now(),
+        ]);
     }
 }

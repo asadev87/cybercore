@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserLogin;
 use App\Services\EmailOtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -79,6 +81,17 @@ class EmailOtpController extends Controller
         }
 
         Auth::login($user, $result['remember'] ?? false);
+
+        if (Schema::hasTable('user_logins')) {
+            UserLogin::create([
+                'user_id' => $user->id,
+                'context' => $result['context'] ?? null,
+                'remember' => (bool) ($result['remember'] ?? false),
+                'ip_address' => $request->ip(),
+                'user_agent' => substr((string) $request->userAgent(), 0, 512),
+                'logged_in_at' => now(),
+            ]);
+        }
         $request->session()->regenerate();
 
         if (! empty($result['intended'])) {

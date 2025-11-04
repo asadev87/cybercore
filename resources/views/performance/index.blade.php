@@ -8,30 +8,64 @@
     <div>
       <p class="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">Analytics</p>
       <h1 class="text-3xl font-semibold tracking-tight">Your performance</h1>
-      <p class="text-sm text-muted-foreground">Track how your scores evolve each week and review recent attempts.</p>
+      <p class="text-sm text-muted-foreground">Review how often you log in and keep tabs on your recent quiz progress.</p>
     </div>
     <a class="btn btn-outline" href="{{ route('learn.index') }}">Back to modules</a>
   </header>
 
   <div class="grid gap-6 lg:grid-cols-2">
-    <article class="card-surface p-6">
-      <div class="flex items-center justify-between">
-        <h2 class="text-lg font-semibold">Weekly trend (last 7 days)</h2>
-        <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Scores & attempts</span>
+    <article class="card-surface p-6 lg:col-span-2">
+      <div class="flex flex-col gap-2 pb-4 border-b border-border/60">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold">Average score by module</h2>
+          <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Overall avg: {{ !is_null($overallAverageScore) ? number_format($overallAverageScore, 1) : '—' }}%</span>
+        </div>
+        <p class="text-sm text-muted-foreground">Latest average per active module.</p>
       </div>
-      <canvas id="ccWeekly" class="mt-6 h-48 w-full"></canvas>
-      <p id="ccWeeklyHint" class="mt-3 text-xs text-muted-foreground hidden">No attempts yet. Your activity will appear here after your first quiz.</p>
+      <div class="mt-6 flex min-h-[18rem] flex-col">
+        <div class="flex-1">
+          <canvas id="chartModuleScores" class="h-full w-full"></canvas>
+        </div>
+        <p id="chartModuleScoresHint" class="mt-3 text-xs text-muted-foreground hidden">Scores will appear here once you complete a quiz.</p>
+        <div class="mt-4 flex flex-wrap items-center gap-2 border-t border-border/60 pt-4 text-sm text-muted-foreground">
+          @php
+            $trendNote = __('No trend yet. Complete more attempts to calculate progress.');
+            if (!empty($moduleScoreAverages) && count($moduleScoreAverages) > 1) {
+                $delta = end($moduleScoreAverages) - $moduleScoreAverages[array_key_first($moduleScoreAverages)];
+                $trendNote = $delta >= 0
+                    ? __('Trending up by :value points since your earliest module.', ['value' => number_format($delta, 1)])
+                    : __('Down by :value points compared to your earliest module.', ['value' => number_format(abs($delta), 1)]);
+            }
+          @endphp
+          <span class="font-medium text-foreground">{{ $trendNote }}</span>
+        </div>
+      </div>
     </article>
 
     <article class="card-surface p-6">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-semibold">Monthly trend (last 30 days)</h2>
-        <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Scores & attempts</span>
+        <h2 class="text-lg font-semibold">Login activity (last 7 days)</h2>
+        <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Daily sign-ins</span>
       </div>
-      <canvas id="ccMonthly" class="mt-6 h-48 w-full"></canvas>
-      <p id="ccMonthlyHint" class="mt-3 text-xs text-muted-foreground hidden">No attempts yet. Your activity will appear here after your first quiz.</p>
+      <div class="pt-4">
+        <canvas id="chartWeekly" class="h-48 w-full"></canvas>
+      </div>
+      <p id="chartWeeklyHint" class="mt-3 text-xs text-muted-foreground hidden">No logins recorded yet. Once you sign in, your activity will show here.</p>
+    </article>
+
+    <article class="card-surface p-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">Login activity (last 30 days)</h2>
+        <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Daily sign-ins</span>
+      </div>
+      <div class="pt-4">
+        <canvas id="chartMonthly" class="h-48 w-full"></canvas>
+      </div>
+      <p id="chartMonthlyHint" class="mt-3 text-xs text-muted-foreground hidden">No logins recorded yet. Your sign-ins will appear once you access your account.</p>
     </article>
   </div>
+
+</div>
 
   <article class="card-surface overflow-hidden">
     <header class="border-b border-border/60 px-6 py-4">
@@ -44,18 +78,18 @@
             <th scope="col" class="px-6 py-3 text-left font-semibold">Date</th>
             <th scope="col" class="px-6 py-3 text-left font-semibold">Module</th>
             <th scope="col" class="px-6 py-3 text-left font-semibold">Score</th>
-            <th scope="col" class="px-6 py-3 text-left font-semibold">Duration</th>
+            <th scope="col" class="px-6 py-3 text-left font-semibold">Status</th>
             <th scope="col" class="px-6 py-3 text-left font-semibold"></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-border/60">
-          @forelse($recent as $a)
+          @forelse($recent as $attempt)
             <tr class="transition hover:bg-secondary/40">
-              <td class="px-6 py-4 text-sm text-muted-foreground">{{ optional($a->completed_at)->format('Y-m-d H:i') }}</td>
-              <td class="px-6 py-4 text-sm font-medium text-foreground">{{ $a->module->title ?? '—' }}</td>
-              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $a->score }}%</td>
-              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $a->score >= ($a->module->pass_score ?? 70) ? "Passed" : "In progress" }}</td>
-              <td class="px-6 py-4 text-right"><a class="btn btn-outline" href="{{ route('quiz.result', $a) }}">View</a></td>
+              <td class="px-6 py-4 text-sm text-muted-foreground">{{ optional($attempt->completed_at)->format('Y-m-d H:i') }}</td>
+              <td class="px-6 py-4 text-sm font-medium text-foreground">{{ $attempt->module->title ?? '—' }}</td>
+              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $attempt->score }}%</td>
+              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $attempt->score >= ($attempt->module->pass_score ?? 70) ? 'Passed' : 'In progress' }}</td>
+              <td class="px-6 py-4 text-right"><a class="btn btn-outline" href="{{ route('quiz.result', $attempt) }}">View</a></td>
             </tr>
           @empty
             <tr>
@@ -81,16 +115,16 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-border/60">
-          @foreach($modules as $m)
-            @php $pct = (int) ($progress[$m->id] ?? 0); @endphp
+          @foreach($modules as $module)
+            @php $percent = (int) ($progress[$module->id] ?? 0); @endphp
             <tr class="transition hover:bg-secondary/40">
-              <td class="px-6 py-4 text-sm font-medium text-foreground">{{ $m->title }}</td>
+              <td class="px-6 py-4 text-sm font-medium text-foreground">{{ $module->title }}</td>
               <td class="px-6 py-4">
                 <div class="h-2 max-w-md rounded-full bg-secondary">
-                  <div class="h-2 rounded-full bg-primary" style="width: {{ $pct }}%" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100" aria-label="Module progress"></div>
+                  <div class="h-2 rounded-full bg-primary" style="width: {{ $percent }}%" role="progressbar" aria-valuenow="{{ $percent }}" aria-valuemin="0" aria-valuemax="100" aria-label="Module progress"></div>
                 </div>
               </td>
-              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $pct }}%</td>
+              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $percent }}%</td>
             </tr>
           @endforeach
         </tbody>
@@ -104,110 +138,121 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   <script>
-    // Weekly chart with placeholder series when no data
-    const wCtx = document.getElementById('ccWeekly');
-    if (wCtx) {
-      const weeklyLabels = @json($weeklyLabels);
-      const weeklyAvg = @json($weeklyAvg);
-      const weeklyCount = @json($weeklyCount);
+    (() => {
+      window.cybercoreCharts = window.cybercoreCharts || {};
 
-      const hasWeeklyData = (Array.isArray(weeklyAvg) && weeklyAvg.some(v => v !== null && v !== undefined))
-        || (Array.isArray(weeklyCount) && weeklyCount.some(v => Number(v) > 0));
+      const weeklyLabels = @json($login7Labels);
+      const weeklyRaw = @json($login7Counts).map((value) => Number(value) || 0);
+      const monthlyLabels = @json($login30Labels);
+      const monthlyRaw = @json($login30Counts).map((value) => Number(value) || 0);
+      const moduleLabels = @json($moduleScoreLabels);
+      const moduleRaw = @json($moduleScoreAverages).map((value) => Number(value) || 0);
 
-      const weeklyDatasets = [
-        { label: 'Avg score', data: weeklyAvg, yAxisID: 'y1', tension: 0.4, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.15)', fill: true, spanGaps: true },
-        { label: 'Attempts', data: weeklyCount, yAxisID: 'y2', tension: 0.4, borderColor: '#0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.1)', spanGaps: true }
-      ];
+      const loginMax = Math.max(
+        weeklyRaw.length ? Math.max(...weeklyRaw) : 0,
+        monthlyRaw.length ? Math.max(...monthlyRaw) : 0
+      );
+      const loginSuggestedMax = Math.max(10, loginMax + 1);
 
-      if (!hasWeeklyData) {
-        weeklyDatasets.push({
-          label: 'No data yet',
-          data: weeklyLabels.map(() => 8), // low baseline on score axis
-          yAxisID: 'y1',
-          tension: 0.4,
-          borderColor: 'rgba(148, 163, 184, 0.8)', // slate-400
-          backgroundColor: 'transparent',
-          borderDash: [6, 4],
-          pointRadius: 0,
-          fill: false
+      const buildLineChart = (canvasId, hintId, labels, source) => {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        window.cybercoreCharts[canvasId]?.destroy();
+
+        const hasData = source.some((value) => value > 0);
+        const chartData = hasData ? source : labels.map(() => 0);
+        const hint = document.getElementById(hintId);
+
+        hint?.classList.toggle('hidden', hasData);
+
+        const strokeColor = hasData ? '#2563eb' : 'rgba(148, 163, 184, 0.6)';
+        const fillColor = hasData ? 'rgba(37, 99, 235, 0.1)' : 'transparent';
+
+        window.cybercoreCharts[canvasId] = new Chart(canvas, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Daily sign-ins',
+              data: chartData,
+              fill: false,
+              borderColor: strokeColor,
+              backgroundColor: fillColor,
+              tension: 0.3,
+              pointRadius: hasData ? 4 : 0,
+              pointHoverRadius: hasData ? 6 : 0,
+              pointBackgroundColor: hasData ? '#2563eb' : 'rgba(148, 163, 184, 0.6)',
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                grid: { color: 'rgba(148, 163, 184, 0.15)' },
+                ticks: { autoSkip: true, autoSkipPadding: 16, maxRotation: 0 },
+                title: { display: true, text: 'Date' },
+              },
+              y: {
+                beginAtZero: true,
+                suggestedMax: loginSuggestedMax,
+                ticks: { stepSize: 1, precision: 0 },
+                title: { display: true, text: 'Login count' },
+                grid: { color: 'rgba(148, 163, 184, 0.1)' },
+              },
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: hasData },
+            },
+          },
+        });
+      };
+
+      buildLineChart('chartWeekly', 'chartWeeklyHint', weeklyLabels, weeklyRaw);
+      buildLineChart('chartMonthly', 'chartMonthlyHint', monthlyLabels, monthlyRaw);
+
+      const moduleCanvas = document.getElementById('chartModuleScores');
+      if (moduleCanvas) {
+        window.cybercoreCharts.chartModuleScores?.destroy();
+
+        const hasModuleData = moduleLabels.length > 0;
+        const labels = hasModuleData ? moduleLabels : ['No attempts yet'];
+        const scores = hasModuleData ? moduleRaw : [0];
+        const hint = document.getElementById('chartModuleScoresHint');
+
+        hint?.classList.toggle('hidden', hasModuleData);
+
+        const palette = ['#ef4444', '#3b82f6', '#facc15', '#22c55e', '#a855f7', '#fb923c'];
+        const backgroundColor = labels.map((_, index) => palette[index % palette.length]);
+
+        window.cybercoreCharts.chartModuleScores = new Chart(moduleCanvas, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Average score (%)',
+              data: scores,
+              backgroundColor,
+              borderWidth: 1,
+              borderRadius: 12,
+              borderSkipped: false,
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                suggestedMax: 100,
+              },
+            },
+          },
         });
       }
-
-      const weeklyHint = document.getElementById('ccWeeklyHint');
-      if (weeklyHint) {
-        weeklyHint.classList.toggle('hidden', hasWeeklyData);
-      }
-
-      new Chart(wCtx, {
-        type: 'line',
-        data: { labels: weeklyLabels, datasets: weeklyDatasets },
-        options: {
-          parsing: false,
-          maintainAspectRatio: false,
-          scales: {
-            x: { type: 'time', time: { unit: 'day' }, grid: { color: 'rgba(148, 163, 184, 0.15)' } },
-            y1: { type: 'linear', position: 'left', suggestedMin: 0, suggestedMax: 100, title: { display: true, text: 'Score %' }, grid: { color: 'rgba(148, 163, 184, 0.1)' } },
-            y2: { type: 'linear', position: 'right', suggestedMin: 0, ticks: { stepSize: 1 }, grid: { drawOnChartArea: false }, title: { display: true, text: 'Attempts' } }
-          },
-          plugins: {
-            legend: { display: true, labels: { usePointStyle: true } },
-            tooltip: { enabled: hasWeeklyData }
-          }
-        }
-      });
-    }
-
-    // Monthly chart with placeholder series when no data
-    const mCtx = document.getElementById('ccMonthly');
-    if (mCtx) {
-      const monthlyLabels = @json($monthlyLabels);
-      const monthlyAvg = @json($monthlyAvg);
-      const monthlyCount = @json($monthlyCount);
-
-      const hasMonthlyData = (Array.isArray(monthlyAvg) && monthlyAvg.some(v => v !== null && v !== undefined))
-        || (Array.isArray(monthlyCount) && monthlyCount.some(v => Number(v) > 0));
-
-      const monthlyDatasets = [
-        { label: 'Avg score', data: monthlyAvg, yAxisID: 'y1', tension: 0.4, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.15)', fill: true, spanGaps: true },
-        { label: 'Attempts', data: monthlyCount, yAxisID: 'y2', tension: 0.4, borderColor: '#0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.1)', spanGaps: true }
-      ];
-
-      if (!hasMonthlyData) {
-        monthlyDatasets.push({
-          label: 'No data yet',
-          data: monthlyLabels.map(() => 8),
-          yAxisID: 'y1',
-          tension: 0.4,
-          borderColor: 'rgba(148, 163, 184, 0.8)',
-          backgroundColor: 'transparent',
-          borderDash: [6, 4],
-          pointRadius: 0,
-          fill: false
-        });
-      }
-
-      const monthlyHint = document.getElementById('ccMonthlyHint');
-      if (monthlyHint) {
-        monthlyHint.classList.toggle('hidden', hasMonthlyData);
-      }
-
-      new Chart(mCtx, {
-        type: 'line',
-        data: { labels: monthlyLabels, datasets: monthlyDatasets },
-        options: {
-          parsing: false,
-          maintainAspectRatio: false,
-          scales: {
-            x: { type: 'time', time: { unit: 'day' }, grid: { color: 'rgba(148, 163, 184, 0.15)' } },
-            y1: { type: 'linear', position: 'left', suggestedMin: 0, suggestedMax: 100, title: { display: true, text: 'Score %' }, grid: { color: 'rgba(148, 163, 184, 0.1)' } },
-            y2: { type: 'linear', position: 'right', suggestedMin: 0, ticks: { stepSize: 1 }, grid: { drawOnChartArea: false }, title: { display: true, text: 'Attempts' } }
-          },
-          plugins: {
-            legend: { display: true, labels: { usePointStyle: true } },
-            tooltip: { enabled: hasMonthlyData }
-          }
-        }
-      });
-    }
+    })();
   </script>
 @endpush
+

@@ -35,12 +35,19 @@
     $isLecturer = auth()->check() && auth()->user()->hasRole('lecturer');
     $primaryNav = array_values(array_filter([
       ['label' => 'Learn', 'route' => 'learn.index', 'active' => 'learn.*'],
+      ['label' => 'Wallet', 'route' => 'wallet.index', 'active' => 'wallet.*'],
       ['label' => 'Performance', 'route' => 'performance.index', 'active' => 'performance.*', 'hidden' => $isLecturer],
       ['label' => 'Leaderboard', 'route' => 'leaderboard.index', 'active' => 'leaderboard.*'],
       ['label' => 'Badges', 'url' => url('/badges'), 'path' => 'badges', 'hidden' => $isLecturer],
       ['label' => 'Modules editor', 'route' => 'admin.modules.index', 'active' => 'admin.modules.*', 'hidden' => ! $isLecturer],
       ['label' => 'Account', 'route' => 'account.index', 'active' => 'account.*'],
     ], fn($item) => empty($item['hidden'])));
+
+    $tokenBalance = null;
+    if (auth()->check()) {
+        $walletService = app(\App\Services\WalletService::class);
+        $tokenBalance = number_format($walletService->ensureWallet(auth()->id())->token_balance);
+    }
   @endphp
 
   <header
@@ -80,6 +87,12 @@
       </nav>
 
       <div class="hidden items-center gap-3 lg:flex">
+        @if (! is_null($tokenBalance))
+          <a href="{{ route('wallet.index') }}" class="inline-flex h-8 items-center justify-center gap-1.5 rounded-full border border-border/70 bg-white/90 px-3 text-xs font-semibold uppercase tracking-wide text-foreground shadow-sm transition hover:border-border hover:bg-white dark:border-white/10 dark:bg-white/10 dark:text-white">
+            <span class="inline-flex h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+            <span class="text-center">{{ $tokenBalance }} tokens</span>
+          </a>
+        @endif
         <button type="button" @click="toggleTheme()" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-white/80 text-foreground shadow-sm transition hover:border-border hover:bg-white dark:border-white/10 dark:bg-white/10 dark:text-white" aria-label="Toggle theme">
           <svg x-show="theme === 'dark'" x-cloak xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5m0 15V21m9-9h-1.5M4.5 12H3m15.364-6.364-1.06 1.06M6.697 17.303l-1.06 1.06M18 18l-1.06-1.06M7.757 7.757 6.697 6.697M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -88,7 +101,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3a7.5 7.5 0 009.79 9.79z" />
           </svg>
         </button>
-        <form method="POST" action="{{ route('logout') }}" class="inline-flex">
+        <form method="POST" action="{{ route('logout') }}" class="inline-flex items-center justify-center">
           @csrf
           <button type="submit" class="btn btn-destructive text-sm">Logout</button>
         </form>

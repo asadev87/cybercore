@@ -7,7 +7,9 @@ use App\Models\Question;
 use App\Models\QuizAttempt;
 use App\Models\QuestionAttempt;
 use App\Models\UserProgress;
+use App\Exceptions\InsufficientTokensException;
 use App\Services\AdaptiveSelector;
+use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,12 +28,44 @@ class QuizController extends Controller
             ->latest()->first();
 
         if (!$attempt) {
-            $attempt = new QuizAttempt();
-            $attempt->user_id = Auth::id();
-            $attempt->module_id = $module->id;
-            $attempt->target_questions = (int) config('quiz.questions_per_attempt', 8);
-            $attempt->started_at = now();
-            $attempt->save();
+            $walletService = app(WalletService::class);
+            $cost = (int) config('tokens.module_attempt_cost', 0);
+            $userId = Auth::id();
+
+            if ($cost > 0 && ! $walletService->canSpend($userId, $cost)) {
+                return redirect()
+                    ->route('wallet.index')
+                    ->with('error', __('You need at least :tokens tokens to start this module.', ['tokens' => $cost]));
+            }
+
+            try {
+                $attempt = DB::transaction(function () use ($walletService, $cost, $module, $userId) {
+                    if ($cost > 0) {
+                        $walletService->spend(
+                            $userId,
+                            $cost,
+                            'module_attempt:' . $module->id,
+                            [
+                                'module_id'   => $module->id,
+                                'module_slug' => $module->slug,
+                            ]
+                        );
+                    }
+
+                    $attempt = new QuizAttempt();
+                    $attempt->user_id = $userId;
+                    $attempt->module_id = $module->id;
+                    $attempt->target_questions = (int) config('quiz.questions_per_attempt', 8);
+                    $attempt->started_at = now();
+                    $attempt->save();
+
+                    return $attempt;
+                });
+            } catch (InsufficientTokensException) {
+                return redirect()
+                    ->route('wallet.index')
+                    ->with('error', __('You need at least :tokens tokens to start this module.', ['tokens' => $cost]));
+            }
         }
 
         $this->syncProgressDraft($attempt, 0);
@@ -248,4 +282,3 @@ return redirect()->route('quiz.result', $attempt);
         $progress->save();
     }
 }
-

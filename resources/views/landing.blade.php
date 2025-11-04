@@ -32,6 +32,7 @@
 
       <nav class="hidden items-center gap-8 text-sm font-medium text-muted-foreground dark:text-white/70 lg:flex">
         <a href="#how" class="transition hover:text-foreground dark:text-white">How it works</a>
+        <a href="#tokens" class="transition hover:text-foreground dark:text-white">Token access</a>
         <a href="#topics" class="transition hover:text-foreground dark:text-white">Topics</a>
         <a href="#lecturer" class="transition hover:text-foreground dark:text-white">Lecturers</a>
         <a href="#stories" class="transition hover:text-foreground dark:text-white">Stories</a>
@@ -124,6 +125,9 @@
       })->count();
       $activeModules = \App\Models\Module::where('is_active', true)->count();
       $assessmentCount = \App\Models\QuizAttempt::count();
+      $tokenCost = (int) config('tokens.module_attempt_cost', 15);
+      $signupBonus = (int) config('tokens.signup_bonus_tokens', 0);
+      $tokenPacks = collect(config('tokens.packs', []))->map(fn ($size) => "{$size} tokens")->implode(', ');
     @endphp
     <section id="hero" class="py-20">
       <div class="container grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -176,6 +180,61 @@
             </li>
           </ul>
           <p class="mt-6 text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60"></p>
+        </div>
+      </div>
+    </section>
+
+    {{-- Token system --}}
+    <section id="tokens" class="py-20">
+      <div class="container grid gap-12 lg:grid-cols-[minmax(0,1.05fr),minmax(0,0.95fr)] lg:items-center">
+        <div class="space-y-6">
+          <p class="sera-pill w-fit">Token-first access</p>
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Pay only when you launch a module.</h2>
+          <p class="text-base text-muted-foreground dark:text-white/70">
+            CyberCore uses tokens instead of subscriptions so learners can dip in whenever they are ready. You start with a generous balance and only spend tokens when you begin or retake a knowledge check.
+          </p>
+          <ul class="space-y-4 text-sm text-muted-foreground dark:text-white/70">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+              New accounts receive <strong class="text-foreground dark:text-white">{{ number_format($signupBonus) }} free tokens</strong> to explore the catalog right away.
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-sky-400"></span>
+              Each module attempt costs <strong class="text-foreground dark:text-white">{{ number_format($tokenCost) }} tokens</strong>, whether it&apos;s your first run or a retake.
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-indigo-400"></span>
+              Need more? Top up instantly with mock packs of <strong class="text-foreground dark:text-white">{{ $tokenPacks }}</strong> while we trial pricing—no real payments yet.
+            </li>
+          </ul>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href="{{ route('register') }}" class="sera-btn-primary w-full justify-center sm:w-auto">
+              Claim free tokens
+            </a>
+            <a href="{{ route('login') }}" class="sera-btn-subtle w-full justify-center sm:w-auto">
+              Log in to view wallet
+            </a>
+          </div>
+          <p class="text-xs uppercase tracking-[0.28em] text-muted-foreground dark:text-white/50">
+            Tokens are mock credits during beta and help us benchmark demand before enabling real MY payment rails.
+          </p>
+        </div>
+        <div class="rounded-3xl border border-border/70 bg-white/80 p-8 shadow-sm dark:border-white/10 dark:bg-white/10">
+          <h3 class="text-xl font-semibold text-foreground dark:text-white">How the wallet works</h3>
+          <dl class="mt-6 space-y-4 text-sm text-muted-foreground dark:text-white/70">
+            <div class="rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm dark:border-white/10 dark:bg-white/5">
+              <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Automatic balance</dt>
+              <dd class="mt-2">Your wallet balance is always visible in the app header so you know when you are ready for the next attempt.</dd>
+            </div>
+            <div class="rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm dark:border-white/10 dark:bg-white/5">
+              <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">One tap spending</dt>
+              <dd class="mt-2">Starting a module securely deducts tokens in the same step that we create your attempt—no surprise charges.</dd>
+            </div>
+            <div class="rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm dark:border-white/10 dark:bg-white/5">
+              <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground dark:text-white/60">Top up &amp; track</dt>
+              <dd class="mt-2">Use the wallet page to add mock tokens, review your history, and monitor upcoming pricing as we roll out Malaysian gateways.</dd>
+            </div>
+          </dl>
         </div>
       </div>
     </section>
@@ -264,8 +323,7 @@
     </section>
 
     {{-- Stories / Testimonials --}}
-    <section id="stories" class="relative overflow-hidden py-20">
-      <div class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-950 via-slate-900/95 to-slate-950"></div>
+    <section id="stories" class="py-20">
       <div class="container space-y-12">
         <div class="mx-auto max-w-2xl text-center">
           <p class="sera-pill mx-auto">Trusted by teams</p>
@@ -403,9 +461,6 @@
 </style>
 </body>
 </html>
-
-
-
 
 
 

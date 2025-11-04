@@ -13,6 +13,7 @@
     $totalQuestions = max(1, $qas->count());
     $correctCount   = $qas->where('is_correct', true)->count();
     $incorrectCount = $totalQuestions - $correctCount;
+    $attemptCost = (int) config('tokens.module_attempt_cost', 0);
   @endphp
 
   <article class="card-surface p-6 sm:p-8" x-data="skeletonLoader({ delay: 260 })">
@@ -109,7 +110,12 @@
       @unless($passed)
         <form action="{{ route('quiz.start', $attempt->module) }}" method="POST" class="inline-flex">
           @csrf
-          <button class="btn btn-primary text-xs px-3 py-2">Retake module</button>
+          <button class="btn btn-primary text-xs px-3 py-2">
+            <span>Retake module</span>
+            @if($attemptCost > 0)
+              <span class="ml-2 text-[10px] font-semibold uppercase tracking-wide text-white/80">{{ $attemptCost }} tokens</span>
+            @endif
+          </button>
         </form>
       @endunless
       <a href="{{ route('learn.index') }}" class="btn btn-outline text-xs px-3 py-2">Back to modules</a>

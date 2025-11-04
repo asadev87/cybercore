@@ -15,96 +15,48 @@
     </div>
   </header>
 
-  <div class="grid gap-6 lg:grid-cols-4 auto-rows-[minmax(200px,auto)]">
-    <article class="bento-card bento-card--hero lg:col-span-2 text-[15px] sm:text-base">
-      <div class="flex flex-col gap-6">
-        <div class="flex items-center justify-between gap-4">
-          <div class="space-y-2">
-            <span class="bento-pill">Course authoring</span>
-            <h2 class="text-2xl font-semibold tracking-tight">Build once, evolve often.</h2>
-            <p class="text-base text-muted-foreground">You have <span class="font-semibold text-foreground">{{ $modules }}</span> modules and <span class="font-semibold text-foreground">{{ $questions }}</span> questions live in the catalogue.</p>
-          </div>
-          <div class="hidden text-right text-xs font-medium text-muted-foreground sm:block">Updated {{ now()->format('M j, Y') }}</div>
+  <div class="grid gap-6">
+    <article class="bento-card bento-card--hero text-[15px] sm:text-base">
+      <div class="flex flex-col items-center gap-8 text-center">
+        <div class="space-y-2">
+          <span class="bento-pill">Admin workspace</span>
+          <h2 class="text-2xl font-semibold tracking-tight">Keep CyberCore running smoothly</h2>
+          <p class="text-sm text-muted-foreground">Snapshot of the latest activity and quick actions.</p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3">
-          <a href="{{ route('admin.modules.index') }}" class="btn btn-primary">Open builder</a>
-          @can('create', App\Models\Module::class)
-            <a href="{{ route('admin.modules.create') }}" class="btn btn-outline">New module</a>
-          @endcan
-        </div>
-
-        <dl class="grid gap-4 sm:grid-cols-2">
+        <dl class="grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
           <div class="bento-badge">
-            <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Active learners</dt>
+            <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Learners</dt>
             <dd class="bento-stat">{{ $users }}</dd>
           </div>
           <div class="bento-badge">
-            <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Total attempts</dt>
+            <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Modules</dt>
+            <dd class="bento-stat">{{ $modules }}</dd>
+          </div>
+          <div class="bento-badge">
+            <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Questions</dt>
+            <dd class="bento-stat">{{ $questions }}</dd>
+          </div>
+          <div class="bento-badge">
+            <dt class="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Attempts</dt>
             <dd class="bento-stat">{{ $attempts }}</dd>
           </div>
         </dl>
-      </div>
-    </article>
 
-    <article class="bento-card bento-card--metric text-[15px] sm:text-base">
-      <p class="bento-label">Users</p>
-      <p class="bento-stat">{{ $users }}</p>
-      <p class="bento-sub text-[15px] sm:text-base">Invite learners or staff by assigning roles in the people directory.</p>
-      <a href="{{ route('account.index') }}" class="btn btn-outline text-sm">Manage profiles →</a>
-    </article>
-
-    <article class="bento-card bento-card--metric text-[15px] sm:text-base">
-      <p class="bento-label">Modules</p>
-      <p class="bento-stat">{{ $modules }}</p>
-      <p class="bento-sub text-[15px] sm:text-base">Draft, publish, and retire modules as your curriculum evolves.</p>
-      <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-sm">View catalogue →</a>
-    </article>
-
-    <article class="bento-card bento-card--metric text-[15px] sm:text-base">
-      <p class="bento-label">Questions</p>
-      <p class="bento-stat">{{ $questions }}</p>
-      <p class="bento-sub text-[15px] sm:text-base">Refresh assessments with new scenarios to keep pace with emerging threats.</p>
-      <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-sm">Open question bank →</a>
-    </article>
-
-    <article class="bento-card bento-card--metric text-[15px] sm:text-base">
-      <p class="bento-label">Quiz attempts</p>
-      <p class="bento-stat">{{ $attempts }}</p>
-      <p class="bento-sub text-[15px] sm:text-base">Track completions to spot momentum and identify modules that need a boost.</p>
-      <a href="{{ route('performance.index') }}" class="btn btn-outline text-sm">View performance →</a>
-    </article>
-
-    @can('viewAny', App\Models\Module::class)
-    <article class="bento-card lg:col-span-2 text-[15px] sm:text-base">
-      <div class="flex items-center justify-between gap-3">
-        <div>
-          <p class="bento-label">Quick actions</p>
-          <h3 class="text-lg font-semibold">Speed up your next update</h3>
+        <div class="grid w-full max-w-3xl gap-4 sm:grid-cols-3">
+          <a href="{{ route('admin.modules.index') }}" class="btn btn-primary w-full">Open builder</a>
+          @can('create', App\Models\Module::class)
+            <a href="{{ route('admin.modules.create') }}" class="btn btn-outline w-full">New module</a>
+          @endcan
+          <a href="{{ route('admin.users.index') }}" class="btn btn-outline w-full">Manage users</a>
+          <a href="{{ route('admin.modules.index', ['view' => 'owners']) }}" class="btn btn-outline w-full">Manage ownership</a>
+          <a href="{{ route('performance.index') }}" class="btn btn-outline w-full">Performance insight</a>
+          <a href="{{ route('leaderboard.index') }}" class="btn btn-outline w-full">Leaderboard</a>
         </div>
-        <span class="bento-pill">Shortcuts</span>
       </div>
-      <ul class="bento-list">
-        <li>
-          <span class="bento-list__title">Access the module builder</span>
-          <span class="bento-list__description text-[15px] sm:text-base">Jump into the catalogue to tweak sections, questions, and metadata.</span>
-          <a href="{{ route('admin.modules.index') }}" class="btn btn-outline text-sm">Open builder →</a>
-        </li>
-        <li>
-          <span class="bento-list__title">Assign lecturers</span>
-          <span class="bento-list__description text-[15px] sm:text-base">Map each module to a subject lead to keep ownership clear.</span>
-          <a href="{{ route('admin.modules.index') }}?view=owners" class="btn btn-outline text-sm">Manage ownership →</a>
-        </li>
-        <li>
-          <span class="bento-list__title">Celebrate wins</span>
-          <span class="bento-list__description text-[15px] sm:text-base">Recognise high scores and healthy competition on the leaderboard.</span>
-          <a href="{{ route('leaderboard.index') }}" class="btn btn-outline text-sm">Open leaderboard →</a>
-        </li>
-      </ul>
     </article>
-    @endcan
 
-    <article class="bento-card lg:col-span-4 overflow-hidden text-[15px] sm:text-base">
+    <article class="bento-card overflow-hidden text-[15px] sm:text-base">
       <div class="flex items-center justify-between border-b border-border/60 pb-4">
         <div>
           <p class="bento-label">Recent activity</p>
@@ -125,8 +77,8 @@
           <tbody class="divide-y divide-border/60">
           @forelse($recent as $a)
             <tr class="transition hover:bg-secondary/40">
-              <td class="px-6 py-4 text-sm font-medium text-foreground">{{ $a->user->name ?? $a->user->email }}</td>
-              <td class="px-6 py-4 text-sm text-muted-foreground">{{ $a->module->title }}</td>
+              <td class="px-6 py-4 text-sm font-medium text-foreground">{{ optional($a->user)->name ?? optional($a->user)->email ?? __('Unknown user') }}</td>
+              <td class="px-6 py-4 text-sm text-muted-foreground">{{ optional($a->module)->title ?? __('Unknown module') }}</td>
               <td class="px-6 py-4 text-sm text-muted-foreground">{{ $a->score }}%</td>
               <td class="px-6 py-4 text-sm text-muted-foreground">{{ optional($a->completed_at)->diffForHumans() }}</td>
             </tr>
@@ -142,3 +94,4 @@
   </div>
 </section>
 @endsection
+

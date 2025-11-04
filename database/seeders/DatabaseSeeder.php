@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         // The order of seeders is important.
         // Roles must be created before users can be assigned to them.
         // Users (lecturers) must be created before courses can be assigned to them.
+        $this->call(RoleSeeder::class);
         $this->call([
             RoleAndAdminSeeder::class,
             LecturerSeeder::class,

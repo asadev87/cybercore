@@ -14,10 +14,12 @@ use App\Http\Controllers\PerformanceController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
 use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\BadgesController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\NoteFeedbackController;
@@ -57,6 +59,8 @@ Route::get('/_mail/test', function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified'])->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
+        Route::patch('users/{user}', [UserManagementController::class, 'update'])->name('users.update');
         Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
         Route::get('reports/export/excel', [ReportsController::class, 'exportExcel'])->name('reports.export.excel');
         Route::get('reports/export/pdf', [ReportsController::class, 'exportPdf'])->name('reports.export.pdf');
@@ -75,6 +79,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified'])->group(f
 
 //Users
 Route::middleware(['auth','verified'])->group(function () {
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+    Route::post('/wallet/mock-topup', [WalletController::class, 'mockTopup'])->name('wallet.mock_topup');
+
     Route::get('/learn', [LearnController::class, 'index'])->name('learn.index');
     Route::post('/notes/feedback', [NoteFeedbackController::class, 'store'])->name('notes.feedback.store');
 
