@@ -52,6 +52,8 @@
           <a href="{{ route('admin.modules.index', ['view' => 'owners']) }}" class="btn btn-outline w-full">Manage ownership</a>
           @if (auth()->user()?->hasRole('admin'))
             <a href="{{ route('admin.performance.monitor') }}" class="btn btn-outline w-full">Performance monitor</a>
+          @elseif (auth()->user()?->hasRole('lecturer'))
+            <a href="{{ route('admin.performance.index') }}" class="btn btn-outline w-full">Lecturer performance</a>
           @else
             <a href="{{ route('performance.index') }}" class="btn btn-outline w-full">Performance insight</a>
           @endif

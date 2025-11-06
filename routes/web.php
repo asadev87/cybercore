@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\AdminPerformanceController;
+use App\Http\Controllers\Admin\LecturerPerformanceController;
 use App\Http\Controllers\LearnController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\PerformanceController;
@@ -74,6 +75,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified'])->group(f
         Route::resource('modules.questions', QuestionController::class);
         Route::post('modules/{module}/questions/import', [ImportController::class, 'questions'])->name('modules.questions.import');
         Route::get('modules/{module}/questions/template', [ImportController::class, 'template'])->name('modules.questions.template');
+        Route::get('performance', [LecturerPerformanceController::class, 'index'])->name('performance.index');
     });
 });
 

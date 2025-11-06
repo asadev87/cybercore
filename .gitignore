@@ -24,3 +24,5 @@ yarn-error.log
 pnpm-debug.log
 output_snippet.txt
 token_section.txt
+.phpunit.result.cache
+.DS_Store

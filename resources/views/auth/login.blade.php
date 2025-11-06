@@ -70,7 +70,7 @@
                 <x-input-error :messages="$errors->get('email')" />
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2" x-data="passwordPulse({ delay: 700 })">
                 <div class="flex items-center justify-between">
                     <x-input-label for="password" :value="__('Password')" />
                     @if (Route::has('password.request'))
@@ -79,7 +79,17 @@
                         </a>
                     @endif
                 </div>
-                <x-text-input id="password" type="password" name="password" required autocomplete="current-password" />
+                <x-text-input
+                    id="password"
+                    type="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                    x-ref="input"
+                    x-on:input="reveal()"
+                    x-on:blur="conceal(true)"
+                    x-on:keydown.enter="conceal(true)"
+                />
                 <x-input-error :messages="$errors->get('password')" />
             </div>
 

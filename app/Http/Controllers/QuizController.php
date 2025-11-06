@@ -43,7 +43,7 @@ class QuizController extends Controller
             }
 
             try {
-                $attempt = DB::transaction(function () use ($walletService, $cost, $module, $userId) {
+                $attempt = DB::transaction(function () use ($walletService, $cost, $module, $userId, $targetQuestions) {
                     if ($cost > 0) {
                         $walletService->spend(
                             $userId,

@@ -80,16 +80,36 @@
                 <x-input-error :messages="$errors->get('email')" />
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2" x-data="passwordPulse({ delay: 700 })">
                 <x-input-label for="password" :value="__('Password')" />
-                <x-text-input id="password" type="password" name="password" required autocomplete="new-password" />
+                <x-text-input
+                    id="password"
+                    type="password"
+                    name="password"
+                    required
+                    autocomplete="new-password"
+                    x-ref="input"
+                    x-on:input="reveal()"
+                    x-on:blur="conceal(true)"
+                    x-on:keydown.enter="conceal(true)"
+                />
                 <x-input-error :messages="$errors->get('password')" />
                 <p class="input-hint">Use 12+ characters with a phrase you remember easily.</p>
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2" x-data="passwordPulse({ delay: 700 })">
                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-                <x-text-input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" />
+                <x-text-input
+                    id="password_confirmation"
+                    type="password"
+                    name="password_confirmation"
+                    required
+                    autocomplete="new-password"
+                    x-ref="input"
+                    x-on:input="reveal()"
+                    x-on:blur="conceal(true)"
+                    x-on:keydown.enter="conceal(true)"
+                />
                 <x-input-error :messages="$errors->get('password_confirmation')" />
             </div>
 

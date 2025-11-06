@@ -126,4 +126,54 @@ Alpine.data('skeletonLoader', ({ delay = 200 } = {}) => ({
     },
 }));
 
+Alpine.data('passwordPulse', ({ delay = 700 } = {}) => ({
+    delay: Math.max(200, delay),
+    timer: null,
+    form: null,
+    init() {
+        this.form = this.$refs.input?.form ?? null;
+        if (this.form) {
+            this.form.addEventListener('submit', () => this.conceal(true));
+        }
+    },
+    reveal() {
+        const input = this.$refs.input;
+        if (!input || !input.value) {
+            this.conceal(true);
+            return;
+        }
+
+        clearTimeout(this.timer);
+
+        try {
+            input.type = 'text';
+        } catch (error) {
+            input.setAttribute('type', 'text');
+        }
+
+        this.timer = window.setTimeout(() => this.conceal(true), this.delay);
+    },
+    conceal(force = false) {
+        const input = this.$refs.input;
+        if (!input) {
+            return;
+        }
+
+        clearTimeout(this.timer);
+
+        if (!force && document.activeElement === input) {
+            this.timer = window.setTimeout(() => this.conceal(true), this.delay);
+            return;
+        }
+
+        if (input.type !== 'password') {
+            try {
+                input.type = 'password';
+            } catch (error) {
+                input.setAttribute('type', 'password');
+            }
+        }
+    },
+}));
+
 Alpine.start();
